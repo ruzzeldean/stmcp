@@ -1,0 +1,33 @@
+.wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+header, nav {
+  opacity: .9;
+}
+
+.offcanvas {
+  --bs-offcanvas-width: auto;
+}
+
+.hero {
+  background-image: url('../img/hero-img.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* min-height: 50vh;
+  min-height: 50dvh; */
+}
+
+/* For mobile phones */
+/* @media screen and (max-width: 425px) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+} */
