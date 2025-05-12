@@ -6,28 +6,24 @@
   width: 100%;
 }
 
-header, nav {
-  opacity: .9;
-}
+/* header,
+nav {
+  opacity: 0.9;
+} */
 
 .offcanvas {
   --bs-offcanvas-width: auto;
 }
 
 .hero {
-  background-image: url('../img/hero-img.png');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+    url("../img/hero-img.jpg");
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* min-height: 50vh;
-  min-height: 50dvh; */
 }
 
-/* For mobile phones */
-/* @media screen and (max-width: 425px) {
-  .hero {
-    min-height: 100vh;
-    min-height: 100dvh;
-  }
-} */
+.dark-section {
+  background: var(--bs-gray-dark);
+}

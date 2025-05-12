@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Star Touring Motorcycle Club Philippines</title>
-  <link rel="shortcut icon" href="./assets/img/logo.png" type="image/x-icon">
+  <link rel="shortcut icon" href="./assets/img/logo/logo.png" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
+
 <body>
   <div class="wrapper bg-dark text-white">
     <!-- Header -->
@@ -65,33 +67,52 @@
     <!-- Main -->
     <main>
       <!-- Hero section -->
-      <section class="hero">
+      <section class="hero py-5">
         <!-- Hero content -->
-        <div class="hero-content text-center px-3 py-5">
-          <h1 class="display-3 mt-5">Welcome to STMCP!</h1>
-          <p class="lead">Start you adventure with us.</p>
-          <button class="btn btn-warning" type="button">Join Us</button>
+        <div class="container">
+          <div class="row align-items-center justify-content-center pt-5">
+            <!-- Hero text -->
+            <div class="col-lg-8 col-xl-7 col-xxl-6">
+              <div class="my-5 text-center text-xl-start">
+                <h1 class="display-5 fw-bolder text-white mb-2">Star Touring Motorcycle Club Philippines</h1>
+
+                <p class="lead fw-normal text-white-50 mb-4">People on their quest to share and explore the Philippines's greatest adventures.</p>
+
+                <a class="btn btn-warning btn-lg px-4" href="join-us.php">Join Us</a>
+              </div>
+            </div>
+            <!-- End of hero text -->
+
+            <!-- Hero image, hidden on small screens -->
+            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+              <img class="img-fluid rounded-3 my-5" src="./assets/img/logo/one-star-logo.png" alt="One star logo" />
+            </div>
+            <!-- End of hero image -->
+          </div>
         </div>
         <!-- End of hero content -->
       </section>
       <!-- End of hero section -->
 
       <!-- About us section -->
-      <section class="about-us">
+      <section class="about-us py-5">
         <div class="container">
-          <div class="row px-2 px-sm-0 py-4 gy-3 gy-md-0">
+          <div class="row px-2 px-sm-0 py-4 gy-4 gy-md-0">
             <!-- About us image -->
             <div class="col-md-6">
               <img class="img-fluid rounded" src="./assets/img/about-us-4-pillars.jpg" alt="Image of 4 pillars">
             </div>
             <!-- End of about us image -->
-            
+
             <!-- About us text -->
-            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-              <p>
+            <div class="col-md-6 d-flex flex-column justify-content-center align-items-start">
+              <h2 class="mb-4">About us</h2>
+
+              <p class="lh-base">
                 <span class="text-warning">STMCP</span> is a motorcycle club driven by passion, camaraderie, and a commitment to helping others— combining the thrill of the ride with meaningful community service.
               </p>
-              <a class="btn btn-warning align-self-center align-self-md-start" type="button" href="about-us">More about us</a>
+
+              <a class="btn btn-outline-warning align-self-center align-self-lg-start mt-4 mt-sm-2 px-3 py-2" type="button" href="about-us">More about us</a>
             </div>
             <!-- End of about us text -->
           </div>
@@ -100,10 +121,11 @@
       <!-- End of about us section -->
 
       <!-- Activities section -->
-      <section class="activities">
+      <section class="activities dark-section py-5">
         <div class="container">
-          <h2>Activities Section</h2>
-          <!-- This will be cards -->
+          <h2>Activities</h2>
+
+          
         </div>
       </section>
       <!-- End of activities section -->
@@ -117,4 +139,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 </body>
+
 </html>
