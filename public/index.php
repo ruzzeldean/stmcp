@@ -21,7 +21,7 @@
         <div class="container">
           <!-- Navbar brand and toggler button -->
           <a href="./" class="navbar-brand">STMCP</a>
-          <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar" aria-controls="navbar" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar" aria-controls="navbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <!-- End of navbar brand and toggler button -->
@@ -36,8 +36,8 @@
             <!-- End of offcanvas header(title) -->
 
             <!-- Offcanvas body (nav buttons) -->
-            <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <div class="offcanvas-body pe-5 pe-lg-0">
+              <ul class="navbar-nav justify-content-end flex-grow-1">
                 <li class="nav-item">
                   <a href="./" class="nav-link active" aria-current="page">Home</a>
                 </li>
@@ -109,11 +109,11 @@
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-start">
               <h2 class="mb-4">About us</h2>
 
-              <p class="lh-base">
-                <span class="text-warning">STMCP</span> is a motorcycle club driven by passion, camaraderie, and a commitment to helping others— combining the thrill of the ride with meaningful community service.
+              <p class="lead lh-base">
+                <span class="text-warning">STMCP</span> is a motorcycle club driven by passion, camaraderie, and a commitment to helping others — combining the thrill of the ride with meaningful community service.
               </p>
 
-              <a class="btn btn-outline-warning align-self-center align-self-lg-start mt-4 mt-sm-2 px-3 py-2" type="button" href="about-us">More about us</a>
+              <a class="btn btn-outline-warning align-self-center align-self-lg-start mt-4 mt-sm-2 px-3 py-2" type="button" href="about-us.php">More about us</a>
             </div>
             <!-- End of about us text -->
           </div>
@@ -151,7 +151,7 @@
             <!-- Second Card -->
             <div class="col-lg-4">
               <div class="card h-100 shadow">
-                <img class="card-img-top" src="./assets/img/home-page/activities-section/sample-img-1.jpg" alt="...">
+                <img class="card-img-top" src="./assets/img/home-page/activities-section/hello-bobo.jpg" alt="...">
 
                 <!-- Card body -->
                 <div class="card-body">
@@ -172,7 +172,7 @@
             <!-- Third Card -->
             <div class="col-lg-4">
               <div class="card h-100 shadow">
-                <img class="card-img-top" src="./assets/img/home-page/activities-section/sample-img-1.jpg" alt="...">
+                <img class="card-img-top" src="./assets/img/home-page/activities-section/chihara-san.jpg" alt="...">
 
                 <!-- Card body -->
                 <div class="card-body">
