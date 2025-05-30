@@ -1,0 +1,8 @@
+# AdminLTE 4
+AdminLTE-4.0.0-beta3
+
+# Bootstrap 5 default root variables for reference
+default-root-variables.css
+
+# SQL
+admin/sql/

@@ -1,3 +1,7 @@
+/* :root {
+  
+} */
+
 .wrapper {
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -6,33 +10,66 @@
   width: 100%;
 }
 
-/* header,
-nav {
-  opacity: 0.9;
-} */
+.gray-section {
+  background: var(--bs-gray-dark);
+}
 
+.yellow-text-emphasis {
+  color: var(--bs-warning-text-emphasis);
+}
+
+/* Nav styles */
 .offcanvas {
   --bs-offcanvas-width: auto;
 }
 
+.navbar-toggler,
+.btn-close,
+.navbar-toggler:focus,
+.btn-close:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Home page styles */
 .hero {
   background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
     url("../img/home-page/hero-section/hero-img.jpg");
-  background-attachment: fixed;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.gray-section {
-  background: var(--bs-gray-dark);
+.activities img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .join-us {
   background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
     url("../img/home-page/join-us-section/join-us-img.jpg");
-  background-attachment: fixed;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
+
+/* About us page styles */
+#about-us-hero {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+    url("../img/about-us-page/hero-section/hero-img.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#history-img {
+  max-width: 250px;
+}
+
+/* Styles for md-breakpoints */
+/* @media screen and (max-width: 993px) {
+  #history-img {
+    max-width: 250px;
+  }
+} */
