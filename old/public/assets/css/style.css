@@ -6,14 +6,11 @@
   width: 100%;
 }
 
-/* header,
-nav {
-  opacity: 0.9;
-} */
-
 .offcanvas {
   --bs-offcanvas-width: auto;
 }
+
+/* Style for Home Page */
 
 .hero {
   background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
@@ -35,4 +32,20 @@ nav {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+/* Style for About Us page */
+
+#about-us-hero {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+    url("../img/about-us-page/hero-section/hero-img.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  aspect-ratio: 16 / 9;
+}
+
+#history-img {
+  width: 100%;
+  max-width: 250px;
 }

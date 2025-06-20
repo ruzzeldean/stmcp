@@ -3,12 +3,12 @@ $('#login-button').click(() => {
   const username = $('#username').val();
   const password = $('#password').val();
 
-  if (username === "") {
+  if (username.trim() === "") {
     Swal.fire({
       text: "Username is required.",
       icon: "warning"
     });
-  } else if (password === "") {
+  } else if (password.trim() === "") {
     Swal.fire({
       text: "Password is required.",
       icon: "warning"

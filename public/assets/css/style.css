@@ -1,0 +1,70 @@
+:root {
+  --darkest-bg-color: var(--bs-secondary-bg-subtle);
+}
+
+.wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Override bootstrap styles */
+
+.card {
+  border: 0 !important;
+}
+
+.navbar,
+.offcanvas,
+footer {
+  background: var(--darkest-bg-color) !important;
+}
+
+.offcanvas {
+  --bs-offcanvas-width: auto;
+}
+
+/* Styles for navbar toggler and close button */
+.navbar-toggler,
+.navbar-toggler:focus,
+.btn-close,
+.btn-close:focus {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.hero {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Styles for home page */
+
+#home-hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+    url("../img/home-page/hero-section/hero-img.jpg") center/cover;
+}
+
+.post-thumbnail {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: transform ease 0.3s;
+}
+
+.post-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+#join-us-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../img/home-page/join-us-section/join-us-img.jpg") center/cover;
+}
+
+/* Styles for about page */
+
+#four-pillar-img {
+  background: url("../img/four-pillars/four-pillars.jpg") center/cover;
+  aspect-ratio: 4 / 3;
+}

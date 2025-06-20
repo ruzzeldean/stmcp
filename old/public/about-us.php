@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
   <meta charset="UTF-8">
@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <div class="wrapper bg-dark text-white">
+  <div class="wrapper">
     <!-- Header -->
     <header>
       <!-- Navigation -->
