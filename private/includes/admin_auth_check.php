@@ -1,0 +1,11 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
+
+if (!isset($_SESSION['adminGatepass'])) {
+  header('Location: ../');
+  exit;
+}
+
+include_once '../../config/connection.php';
