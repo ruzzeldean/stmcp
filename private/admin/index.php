@@ -1,3 +1,4 @@
+<?php include_once '../includes/admin_auth_check.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,11 +6,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin | Star Touring Motorcycle Club</title>
-
+  <link rel="shortcut icon" href="../assets/img/logo/logo.png" type="image/x-icon">
   <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- AdminLTE 4 -->
   <link rel="stylesheet" href="../assets/css/adminlte.min.css">
 </head>
@@ -23,15 +27,6 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-        </li>
-      </ul>
-
-      <!-- Right navbar links -->
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-            <i class="fas fa-expand-arrows-alt"></i>
-          </a>
         </li>
       </ul>
     </nav>
@@ -53,7 +48,7 @@
             <img src="../assets/img/user-icon/user-icon.png" alt="User Icon">
           </div>
           <div class="info">
-            <a href="#" class="d-block">FIRST NAME</a>
+            <a href="#" class="d-block"><?php echo strtoupper($_SESSION['firstName']); ?></a>
           </div>
         </div>
 
@@ -74,35 +69,24 @@
             <li class="nav-header">MEMBERS</li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fa-solid fa-users"></i>
+              <a href="./aspirants.php" class="nav-link">
+                <i class="nav-icon fa-solid fa-user-clock"></i>
                 <p>
-                  Members
-                  <i class="right fas fa-angle-left"></i>
+                  Aspirants
                 </p>
               </a>
-
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./aspirants.php" class="nav-link">
-                    <i class="nav-icon fa-solid fa-user-clock"></i>
-                    <p>
-                      Aspirants
-                      <span class="right badge badge-info">3</span>
-                    </p>
-                  </a>
-                </li>
-
-                <li class="nav-item">
-                  <a href="./official_members.php" class="nav-link">
-                    <i class="nav-icon fa-solid fa-user-check"></i>
-                    <p>Official Members</p>
-                  </a>
-                </li>
-              </ul>
             </li>
 
-            <li class="nav-header">POSTS & DONATIONS</li>
+            <li class="nav-item">
+              <a href="./official_members.php" class="nav-link">
+                <i class="nav-icon fa-solid fa-user-check"></i>
+                <p>
+                  Official Members
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-header">CLUB CONTENTS</li>
 
             <li class="nav-item">
               <a href="./posts.php" class="nav-link">
@@ -118,7 +102,7 @@
               </a>
             </li>
 
-            <li class="nav-header">CONFIGURATIONS</li>
+            <li class="nav-header">ACCOUNT</li>
 
             <li class="nav-item">
               <a href="./settings.php" class="nav-link">
@@ -162,7 +146,67 @@
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-          
+          <!-- Info boxes -->
+          <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fa-solid fa-user-clock"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Aspirants</span>
+                  <span class="info-box-number">
+                    35
+                  </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-success elevation-1"><i class="fa-solid fa-user-check"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Official Members</span>
+                  <span class="info-box-number">1,500</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+
+            <!-- fix for small devices only -->
+            <div class="clearfix hidden-md-up"></div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-primary elevation-1"><i class="fa-solid fa-user-shield"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Admins</span>
+                  <span class="info-box-number">5</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-secondary elevation-1"><i class="fa-solid fa-user-pen"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Moderators</span>
+                  <span class="info-box-number">14</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content -->
@@ -171,11 +215,6 @@
 
     <!-- Main Footer -->
     <footer class="main-footer">
-      <!-- To the right -->
-      <!-- <div class="float-right d-none d-sm-inline">
-        Anything you want
-      </div> -->
-      <!-- Default to the left -->
       <strong>&copy; 2025 <span class="text-warning">STMCP</span>. All rights reserved.
     </footer>
   </div>
@@ -189,6 +228,8 @@
   <script src="../assets/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../assets/js/adminlte.min.js"></script>
+  <!-- Custom Script -->
+  <script src="../assets/js/script.js"></script>
 </body>
 
 </html>
