@@ -16,21 +16,19 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         session_start();
       }
 
-      // $_SESSION['gatepass'] = 'admin';
-      $_SESSION['username'] = $row['username']; // First name dapat eh, update na lang database later :o
+      $_SESSION['firstName'] = $row['first_name'];
 
       if ($roleID === "1") {
-        $_SESSION["gatepass"] = "super";
+        $_SESSION["superGatepass"] = "super";
         echo "super";
       } else if ($roleID === "2") {
-        $_SESSION["gatepass"] = "admin";
+        $_SESSION["adminGatepass"] = "admin";
         echo "admin";
       } else if ($roleID === "3") {
-        $_SESSION["gatepass"] = "moderator";
+        $_SESSION["moderatorGatepass"] = "moderator";
         echo "moderator";
       }
 
-      // echo "success";
     } else {
       // Incorrect password
       echo "Incorrect username or password.";

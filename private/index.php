@@ -1,14 +1,24 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
+
+session_unset();
+session_destroy();
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | STMCP</title>
-  <!-- Bootstrap 4 -->
+  <!-- AdminLTE 4 -->
   <link rel="stylesheet" href="./assets/css/adminlte.min.css">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
+
 <body>
   <div id="wrapper" class="bg-light p-3">
     <div id="login-form" class="bg-white rounded shadow p-4">
@@ -45,4 +55,5 @@
   <!-- Custom script -->
   <script src="./assets/js/script.js"></script>
 </body>
+
 </html>
