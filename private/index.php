@@ -13,6 +13,9 @@ session_destroy();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | STMCP</title>
+  <link rel="shortcut icon" href="./assets/img/logo/logo.png" type="image/x-icon">
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- AdminLTE 4 -->
   <link rel="stylesheet" href="./assets/css/adminlte.min.css">
   <!-- Custom CSS -->
@@ -53,7 +56,7 @@ session_destroy();
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.all.min.js"></script>
   <!-- Custom script -->
-  <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/login.js"></script>
 </body>
 
 </html>
