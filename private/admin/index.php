@@ -228,8 +228,6 @@
   <script src="../assets/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../assets/js/adminlte.min.js"></script>
-  <!-- Custom Script -->
-  <script src="../assets/js/script.js"></script>
 </body>
 
 </html>
