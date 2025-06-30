@@ -12,19 +12,19 @@ if (
   $password = $_POST['password'];
 
   if (empty($username)) {
-    echo "Username is required.";
+    echo 'Username is required.';
     exit;
   }
-  
+
   if (empty($password)) {
-    echo "Password is required.";
+    echo 'Password is required.';
     exit;
   }
 
   require_once '../config/connection.php';
 
   try {
-    $stmt = $conn->prepare("SELECT username, password, first_name, role_id FROM admins WHERE username = :username");
+    $stmt = $conn->prepare('SELECT username, password, first_name, role_id FROM admins WHERE username = :username');
     $stmt->execute(['username' => $username]);
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
