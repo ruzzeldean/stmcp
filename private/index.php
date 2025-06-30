@@ -42,7 +42,7 @@ session_destroy();
       </div>
 
       <div class="form-group">
-        <button id="login-button" class="btn btn-primary w-100">Login</button>
+        <button id="login-btn" class="btn btn-primary w-100">Login</button>
       </div>
 
       <p class="mb-0 text-center"><a href="">Forgot password?</a></p>
