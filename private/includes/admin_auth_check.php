@@ -4,8 +4,8 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 if (!isset($_SESSION['adminGatepass'])) {
-  header('Location: ../');
+  header('Location: /stmcp/private/');
   exit;
 }
 
-include_once '../../config/connection.php';
+require_once '../../config/connection.php';
