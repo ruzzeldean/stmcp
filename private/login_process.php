@@ -1,42 +1,67 @@
 <?php
-if (isset($_POST['username']) && isset($_POST['password'])) {
-  $username = $_POST['username'];
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+if (
+  $_SERVER['REQUEST_METHOD'] === 'POST' &&
+  isset($_POST['username']) &&
+  isset($_POST['password'])
+) {
+  $username = trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS));
   $password = $_POST['password'];
 
-  include '../config/connection.php';
+  if (empty($username)) {
+    echo "Username is required.";
+    exit;
+  }
+  
+  if (empty($password)) {
+    echo "Password is required.";
+    exit;
+  }
 
-  $query = mysqli_query($conn, "SELECT * FROM admins WHERE username = '$username'");
+  require_once '../config/connection.php';
 
-  if (mysqli_num_rows($query) > 0) {
-    $row = mysqli_fetch_assoc($query);
-    $roleID = $row['role_id'];
+  try {
+    $stmt = $conn->prepare("SELECT username, password, first_name, role_id FROM admins WHERE username = :username");
+    $stmt->execute(['username' => $username]);
 
-    if (password_verify($password, $row['password'])) {
-      if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-      }
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row && password_verify($password, $row['password'])) {
+      session_regenerate_id(true);
 
       $_SESSION['firstName'] = $row['first_name'];
+      $roleID = $row['role_id'];
 
-      if ($roleID === "1") {
-        $_SESSION["superGatepass"] = "super";
-        echo "super";
-      } else if ($roleID === "2") {
-        $_SESSION["adminGatepass"] = "admin";
-        echo "admin";
-      } else if ($roleID === "3") {
-        $_SESSION["moderatorGatepass"] = "moderator";
-        echo "moderator";
+      switch ($roleID) {
+        case 1:
+          $_SESSION['superGatepass'] = 'super';
+          echo 'super';
+          break;
+        case 2:
+          $_SESSION['adminGatepass'] = 'admin';
+          echo 'admin';
+          break;
+        case 3:
+          $_SESSION['moderatorGatepass'] = 'moderator';
+          echo 'moderator';
+          break;
+        default:
+          echo 'Invalid role assigned.';
       }
 
+      exit;
     } else {
-      // Incorrect password
-      echo "Incorrect username or password.";
+      echo 'Incorrect username or password.';
+      exit;
     }
-  } else {
-    // Username not found
-    echo "Incorrect username or password.";
+  } catch (PDOException $ex) {
+    error_log("Login failed: " . $ex->getMessage());
+    echo 'An error occured. Please try again later.';
   }
 } else {
-  echo "Intruder!";
+  echo 'Invalid request.';
+  exit;
 }
