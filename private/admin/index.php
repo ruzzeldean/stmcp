@@ -1,4 +1,4 @@
-<?php include_once '../includes/admin_auth_check.php'; ?>
+<?php require_once '../includes/admin_auth_check.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -97,12 +97,26 @@
 
             <li class="nav-item">
               <a href="./donations.php" class="nav-link">
-                <i class="nav-icon fa-solid fa-donate"></i>
+                <i class="nav-icon fa-solid fa-coins"></i>
                 <p>Donations</p>
               </a>
             </li>
 
+            <li class="nav-item">
+              <a href="./donations.php" class="nav-link">
+                <i class="nav-icon fa-solid fa-tags"></i>
+                <p>Merchandise</p>
+              </a>
+            </li>
+
             <li class="nav-header">ACCOUNT</li>
+
+            <li class="nav-item">
+              <a href="./user_accounts.php" class="nav-link">
+                <i class="nav-icon fa-solid fa-users"></i>
+                <p>User Accounts</p>
+              </a>
+            </li>
 
             <li class="nav-item">
               <a href="./settings.php" class="nav-link">
@@ -155,7 +169,19 @@
                 <div class="info-box-content">
                   <span class="info-box-text">Aspirants</span>
                   <span class="info-box-number">
-                    35
+                    <?php
+                    $countSql = 'SELECT COUNT(*) AS total FROM aspirants';
+
+                    try {
+                      $result = $conn->query($countSql);
+
+                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                      echo $row['total'];
+                    } catch (PDOException $ex) {
+                      error_log("Count query failed: " . $ex->getMessage());
+                      echo 'Unable to retrieve aspirant count. Please try again later.';
+                    }
+                    ?>
                   </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -169,7 +195,21 @@
 
                 <div class="info-box-content">
                   <span class="info-box-text">Official Members</span>
-                  <span class="info-box-number">1,500</span>
+                  <span class="info-box-number">
+                    <?php
+                    $countSql = 'SELECT COUNT(*) AS total FROM official_members';
+
+                    try {
+                      $result = $conn->query($countSql);
+
+                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                      echo $row['total'];
+                    } catch (PDOException $ex) {
+                      error_log("Count query failed: " . $ex->getMessage());
+                      echo 'Unable to retrieve official member count. Please try again later.';
+                    }
+                    ?>
+                  </span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -185,7 +225,21 @@
                 <span class="info-box-icon bg-primary elevation-1"><i class="fa-solid fa-user-shield"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">Admins</span>
-                  <span class="info-box-number">5</span>
+                  <span class="info-box-number">
+                    <?php
+                    $countSql = 'SELECT COUNT(*) AS total FROM admins WHERE role_id = 2';
+
+                    try {
+                      $result = $conn->query($countSql);
+
+                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                      echo $row['total'];
+                    } catch (PDOException $ex) {
+                      error_log("Count query failed: " . $ex->getMessage());
+                      echo 'Unable to retrieve admin count. Please try again later.';
+                    }
+                    ?>
+                  </span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -198,7 +252,21 @@
 
                 <div class="info-box-content">
                   <span class="info-box-text">Moderators</span>
-                  <span class="info-box-number">14</span>
+                  <span class="info-box-number">
+                    <?php
+                    $countSql = 'SELECT COUNT(*) AS total FROM admins WHERE role_id = 3';
+
+                    try {
+                      $result = $conn->query($countSql);
+
+                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                      echo $row['total'];
+                    } catch (PDOException $ex) {
+                      error_log("Count query failed: " .  $ex->getMessage());
+                      echo 'Unable to retrieve moderator count. Please try again later.';
+                    }
+                    ?>
+                  </span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
