@@ -242,7 +242,7 @@
                             </tr>
                         <?php
                           }
-                        } catch (PDOException $ex) {
+                        } catch (Throwable $ex) {
                           error_log("Database error in: " . __FILE__ . " at line " . __LINE__ . $ex->getMessage());
                           echo '<div class="alert alert-warning" role="alert">An error occured while fetching data. Please try again later.</div>';
                         }
