@@ -15,3 +15,7 @@
   max-width: 175px;
   height: auto;
 }
+
+#update-member-form {
+  max-width: 500px;
+}
