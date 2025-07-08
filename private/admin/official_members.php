@@ -1,4 +1,12 @@
-<?php require_once '../includes/admin_auth_check.php'; ?>
+<?php
+require_once '../includes/admin_auth_check.php';
+
+if (empty($_SESSION['csrfToken'])) {
+  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+}
+
+$csrfToken = $_SESSION['csrfToken'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -237,13 +245,13 @@
                                   href="./edit_member.php?id=<?php echo htmlspecialchars($row['member_id']); ?>">Edit</a>
 
                                 <button class="reject-btn btn btn-danger"
-                                  data-member-id="<?php echo htmlspecialchars($row['member_id']); ?>">Delete</button>
+                                  data-member-id="<?php echo htmlspecialchars($row['member_id']); ?>" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Delete</button>
                               </td>
                             </tr>
                         <?php
                           }
                         } catch (Throwable $ex) {
-                          error_log("Error in: " . __FILE__ . " at line " . __LINE__ . $ex->getMessage());
+                          error_log('Error in: ' . $ex->getMessage());
                           echo '<div class="alert alert-warning" role="alert">An error occured while fetching data. Please try again later.</div>';
                         }
                         ?>

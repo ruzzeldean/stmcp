@@ -7,7 +7,13 @@ if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT) || $_GE
   exit;
 }
 
-$memberID = (int)$_GET['id'];
+$memberID = (int) $_GET['id'];
+
+if (empty($_SESSION['csrfToken'])) {
+  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+}
+
+$csrfToken = $_SESSION['csrfToken'];
 
 try {
   $stmt = $conn->prepare('SELECT * FROM official_members WHERE member_id = :member_id');
@@ -334,7 +340,7 @@ $affiliations = $row['affiliations'] ?? '';
                 </div>
 
                 <div class="form-group">
-                  <button id="update-btn" class="btn btn-primary w-100" data-admin-id="<?php echo $memberID; ?>">Update</button>
+                  <button id="update-btn" class="btn btn-primary w-100" data-admin-id="<?php echo $memberID; ?>" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Update</button>
                 </div>
               </div> <!-- /.card-body -->
             </div> <!-- /.card -->

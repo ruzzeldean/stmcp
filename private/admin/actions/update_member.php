@@ -1,6 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
+
 require_once __DIR__ . '/../../../config/connection.php';
 
 function sendResponse($status, $message) {
@@ -19,7 +23,11 @@ function sanitizeString($input) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  sendResponse('error', 'Invalid request method. Use POST');
+  sendResponse('error', 'Invalid request method');
+}
+
+if (!isset($_POST['csrfToken']) || $_POST['csrfToken'] !== $_SESSION['csrfToken']) {
+  sendResponse('error', 'Invalid token');
 }
 
 $requiredFields = [
@@ -128,6 +136,7 @@ try {
   } else {
     $check = $conn->prepare('SELECT member_id FROM official_members WHERE member_id = :memberID');
     $check->execute(['memberID' => $memberID]);
+    
     if ($check->fetch(PDO::FETCH_ASSOC)) {
       sendResponse('success', 'No changes were made. Data is already up to date');
     } else {

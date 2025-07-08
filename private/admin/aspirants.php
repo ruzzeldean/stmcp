@@ -1,4 +1,12 @@
-<?php require_once '../includes/admin_auth_check.php'; ?>
+<?php
+require_once '../includes/admin_auth_check.php';
+
+if (empty($_SESSION['csrfToken'])) {
+  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+}
+
+$csrfToken = $_SESSION['csrfToken'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -234,10 +242,10 @@
                               <td><?php echo htmlspecialchars($row['updated_at']); ?></td>
                               <td>
                                 <button class="approve-btn btn btn-success"
-                                  data-aspirant-id="<?php echo htmlspecialchars($row['aspirant_id']); ?>">Approve</button>
+                                  data-aspirant-id="<?php echo htmlspecialchars($row['aspirant_id']); ?>" data-csrf-token="<?php echo $csrfToken; ?>">Approve</button>
 
                                 <button class="reject-btn btn btn-danger"
-                                  data-aspirant-id="<?php echo htmlspecialchars($row['aspirant_id']); ?>">Reject</button>
+                                  data-aspirant-id="<?php echo htmlspecialchars($row['aspirant_id']); ?>" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Reject</button>
                               </td>
                             </tr>
                         <?php

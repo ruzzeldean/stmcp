@@ -34,6 +34,7 @@ $(function () {
     const engineSizeCC = $('#engine-size-cc').val().trim();
     const sponsoredBy = $('#sponsor').val().trim();
     const affiliations = $('#affiliations').val().trim();
+    const csrfToken = $(this).data('csrf-token');
 
     if (firstName === '') {
       alert('First name is required.');
@@ -91,6 +92,7 @@ $(function () {
           sponsoredBy: sponsoredBy,
           affiliations: affiliations,
           chapter: chapter,
+          csrfToken: csrfToken,
         },
         success: (response) => {
           if (response.status === 'success') {
