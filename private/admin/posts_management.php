@@ -16,6 +16,10 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- AdminLTE 4 -->
   <link rel="stylesheet" href="../assets/css/adminlte.min.css">
+  <!-- DataTables -->
+  <?php require_once '../includes/datatables/styles_include.php'; ?>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
@@ -89,9 +93,9 @@
             <li class="nav-header">CLUB CONTENTS</li>
 
             <li class="nav-item">
-              <a href="./posts.php" class="nav-link active">
+              <a href="./posts_management.php" class="nav-link active">
                 <i class="nav-icon fa-solid fa-newspaper"></i>
-                <p>Posts</p>
+                <p>Posts Management</p>
               </a>
             </li>
 
@@ -145,11 +149,11 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Posts</h1>
+              <h1 class="m-0">Posts Management</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item active">Posts</li>
+                <li class="breadcrumb-item active">Posts Management</li>
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -161,14 +165,44 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row mb-3">
-            <a class="btn btn-app bg-primary">
-              <i class="fas fa-table-list"></i> List
-            </a>
-
             <a class="btn btn-app bg-primary" href="./create_post.php">
               <i class="fas fa-square-plus"></i> Create
             </a>
           </div> <!-- /.row -->
+
+          <div class="xxl">
+            <div class="card p-3">
+              <div class="table-responsive">
+                <table class="data-table table table-striped table-hover text-nowrap my-3">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Image</th>
+                      <th>Content</th>
+                      <th>Date Created</th>
+                      <th>Created By</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <td></td>
+                    <td>Anniversary</td>
+                    <td>Past Event</td>
+                    <td>None</td>
+                    <td>Wilcam @everyone</td>
+                    <td>16 June 2025</td>
+                    <td>John Doe</td>
+                    <th>
+                      <button class="btn btn-success">Approve</button>
+                      <button class="btn btn-danger">Reject</button>
+                    </th>
+                  </tbody>
+                </table>
+              </div> <!-- /.table-responsive -->
+            </div> <!-- /.card -->
+          </div> <!-- /.xxl -->
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content -->
@@ -190,6 +224,9 @@
   <script src="../assets/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../assets/js/adminlte.min.js"></script>
+  <!-- DataTables -->
+  <?php require_once '../includes/datatables/scripts_include.php'; ?>
+  <script src="../assets/js/data-tables.js"></script>
 </body>
 
 </html>
