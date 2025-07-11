@@ -14,31 +14,38 @@ $(function () {
         icon: 'warning',
       });
     } else {
+      $('#login-btn').prop('disabled', true);
+
       $.ajax({
         url: './login_process.php',
         method: 'POST',
+        dataType: 'json',
         data: {
           username: username,
           password: password,
         },
         success: (response) => {
-          if (response === 'Incorrect username or password.') {
-            Swal.fire({
-              text: 'Incorrect username or password',
-              icon: 'error',
-            });
-          } else {
-            Swal.fire({
-              text: 'Access Granted',
-              icon: 'success',
-            }).then(() => {
-              if (response === 'admin') {
+          if (response.status === 'success') {
+            Swal.fire('Success', 'Access Granted', 'success').then(() => {
+              if (response.message === '1') {
+                location.href = './super/';
+              } else if (response.message === '2') {
                 location.href = './admin/';
-              } else if (response === 'moderator') {
-                location.href = './moderator';
+              } else if (response.message === '3') {
+                location.href = './moderator/';
+              } else if (response.message === '4') {
+                location.href = './member/';
               }
             });
+          } else {
+            Swal.fire('Error', response.message, 'error');
+            $('#login-btn').prop('disabled', false);
           }
+        },
+        error: () => {
+          Swal.fire('Oops!', 'Something went wrong. Please try again later', 'error');
+          
+          $('#login-btn').prop('disabled', false);
         },
       });
     }
