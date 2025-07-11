@@ -6,6 +6,10 @@
   min-height: 100dvh;
 }
 
+.xxl {
+  max-width: 1200px !important;
+}
+
 #login-form {
   width: 100%;
   max-width: 350px;
