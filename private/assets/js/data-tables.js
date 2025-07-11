@@ -1,12 +1,12 @@
-$(".data-table").DataTable({
+$('.data-table').DataTable({
   layout: {
     topStart: {
       buttons: [
         {
-          extend: "excel",
+          extend: 'excel',
         },
         {
-          extend: "colvis",
+          extend: 'colvis',
           columns: ':not(:first-child)',
         },
       ],
@@ -14,17 +14,17 @@ $(".data-table").DataTable({
   },
   columnDefs: [
     {
-      className: "dtr-control",
+      className: 'dtr-control',
       orderable: false,
       target: 0,
       visible: true,
     },
   ],
-  order: [1, "asc"],
+  order: [1, 'asc'],
   responsive: {
     details: {
-      type: "column",
-      target: "tr",
+      type: 'column',
+      target: 'tr',
     },
   },
 });
