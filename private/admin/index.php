@@ -89,9 +89,9 @@
             <li class="nav-header">CLUB CONTENTS</li>
 
             <li class="nav-item">
-              <a href="./posts.php" class="nav-link">
+              <a href="./posts_management.php" class="nav-link">
                 <i class="nav-icon fa-solid fa-newspaper"></i>
-                <p>Posts</p>
+                <p>Posts Management</p>
               </a>
             </li>
 

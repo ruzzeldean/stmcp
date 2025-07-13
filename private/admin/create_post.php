@@ -97,9 +97,9 @@ $csrfToken = $_SESSION['csrfToken'];
             <li class="nav-header">CLUB CONTENTS</li>
 
             <li class="nav-item">
-              <a href="./posts.php" class="nav-link active">
+              <a href="./posts_management.php" class="nav-link active">
                 <i class="nav-icon fa-solid fa-newspaper"></i>
-                <p>Posts</p>
+                <p>Posts Management</p>
               </a>
             </li>
 
