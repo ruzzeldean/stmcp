@@ -181,23 +181,50 @@
                       <th>Category</th>
                       <th>Image</th>
                       <th>Content</th>
-                      <th>Date Created</th>
                       <th>Created By</th>
+                      <th>Created At</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <td></td>
-                    <td>Anniversary</td>
-                    <td>Past Event</td>
-                    <td>None</td>
-                    <td>Wilcam @everyone</td>
-                    <td>16 June 2025</td>
-                    <td>John Doe</td>
-                    <th>
-                      <button class="btn btn-success">Approve</button>
-                      <button class="btn btn-danger">Reject</button>
-                    </th>
+                    <?php
+                    try {
+                      $loadPosts = $conn->prepare(
+                        'SELECT posts.*, admins.first_name, admins.last_name
+                        FROM posts JOIN admins
+                        WHERE posts.created_by = admins.admin_id'
+                      );
+                      $loadPosts->execute();
+
+                      while ($row = $loadPosts->fetch(PDO::FETCH_ASSOC)) {
+                    ?>
+                        <tr>
+                          <td></td>
+                          <td class="text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($row['title']); ?></td>
+                          <td><?php echo htmlspecialchars($row['category']); ?></td>
+                          <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?php echo htmlspecialchars($row['image_path']); ?>" alt=""></td>
+                          <td class="text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($row['content']); ?></td>
+                          <td><?php echo htmlspecialchars($row['first_name'] . " " . $row['last_name']); ?></td>
+                          <td>
+                            <?php
+                            $date = $row['created_at'];
+                            $formatted = date('F j, Y g:i A', strtotime($date));
+                            echo htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
+                            ?>
+                          </td>
+                          <td>
+                            <button class="btn btn-primary">View</button>
+                            <button class="btn btn-success">Approve</button>
+                            <button class="btn btn-danger">Reject</button>
+                          </td>
+                        </tr>
+                    <?php
+                      }
+                    } catch (Throwable $ex) {
+                      error_log('Error fetching posts (admin): ' . $ex->getMessage());
+                      echo '<div class="alert alert-warning" role="alert">An error occured while fetching data. Please try again later.</div>';
+                    }
+                    ?>
                   </tbody>
                 </table>
               </div> <!-- /.table-responsive -->
