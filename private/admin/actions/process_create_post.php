@@ -24,10 +24,10 @@ if (!isset($_POST['csrfToken']) || $_POST['csrfToken'] !== $_SESSION['csrfToken'
   sendResponse('error', 'Invalid token');
 }
 
-/* $moderatorID = $_SESSION['admin_id'] ?? null;
+$moderatorID = $_SESSION['adminID'] ?? null;
 if (!$moderatorID) {
   sendResponse('error', 'Unauthorized access');
-} */
+}
 
 $maxTitleLength = 100;
 $maxContentLength = 5000;
@@ -97,12 +97,13 @@ if (!move_uploaded_file($imageTmpPath, $uploadPath)) {
 }
 
 try {
-  $createPost = $conn->prepare('INSERT INTO posts (title, category, image_path, content) VALUES (:title, :category, :image_path, :content)');
+  $createPost = $conn->prepare('INSERT INTO posts (title, category, image_path, content, created_by) VALUES (:title, :category, :image_path, :content, :moderator_id)');
   $createPost->execute([
     'title' => $title,
     'category' => $category,
     'image_path' => $newImageName,
-    'content' => $content
+    'content' => $content,
+    'moderator_id' => $moderatorID
   ]);
 
   sendResponse('success', 'Post created successfully');
