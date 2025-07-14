@@ -20,7 +20,7 @@ $('.data-table').DataTable({
       visible: true,
     },
   ],
-  order: [5, 'desc'],
+  order: [6, 'desc'],
   responsive: {
     details: {
       type: 'column',
