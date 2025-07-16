@@ -1,4 +1,12 @@
-<?php require_once '../includes/admin_auth_check.php'; ?>
+<?php
+require_once '../includes/admin_auth_check.php';
+
+if (empty($_SESSION['csrfToken'])) {
+  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+}
+
+$csrfToken = $_SESSION['csrfToken'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -172,6 +180,14 @@
 
           <div class="xxl">
             <div class="card p-3">
+              <div class="card-header border-bottom-0">
+                <select id="status" class="custom-select" style="max-width: 150px;">
+                  <option value="" disabled>Post Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Published" class="text-success">Published</option>
+                  <option value="Rejected" class="text-danger">Rejected</option>
+                </select>
+              </div>
               <div class="table-responsive">
                 <table class="data-table table table-striped table-hover text-nowrap my-3">
                   <thead>
@@ -181,9 +197,10 @@
                       <th>Category</th>
                       <th>Image</th>
                       <th>Content</th>
+                      <th>Status</th>
                       <th>Created By</th>
                       <th>Created At</th>
-                      <th>Actions</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -204,6 +221,7 @@
                           <td><?php echo htmlspecialchars($row['category']); ?></td>
                           <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?php echo htmlspecialchars($row['image_path']); ?>" alt=""></td>
                           <td class="text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($row['content']); ?></td>
+                          <td><span class="badge"><?php echo htmlspecialchars($row['status']); ?></span></td>
                           <td><?php echo htmlspecialchars($row['first_name'] . " " . $row['last_name']); ?></td>
                           <td>
                             <?php
@@ -213,9 +231,7 @@
                             ?>
                           </td>
                           <td>
-                            <button class="btn btn-primary">View</button>
-                            <button class="btn btn-success">Approve</button>
-                            <button class="btn btn-danger">Reject</button>
+                            <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?php echo htmlspecialchars($row['post_id']); ?>" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Preview</button>
                           </td>
                         </tr>
                     <?php
@@ -231,6 +247,34 @@
             </div> <!-- /.card -->
           </div> <!-- /.xxl -->
         </div><!-- /.container-fluid -->
+
+        <div class="modal fade" id="preview-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="modalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <h3 id="post-title" class="mb-1"></h3>
+                <div>
+                  <small id="post-date" class="badge text-muted"></small> | <span id="post-category" class="badge badge-secondary"></span>
+                </div>
+
+                <img id="post-image" class="img-fluid rounded my-3" src="" alt="Post image">
+
+                <p id="post-content"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="approve-btn btn btn-success">Approve</button>
+                <button type="button" class="reject-btn btn btn-danger">Reject</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /.modal -->
       </div>
       <!-- /.content -->
     </div>
@@ -253,7 +297,10 @@
   <script src="../assets/js/adminlte.min.js"></script>
   <!-- DataTables -->
   <?php require_once '../includes/datatables/scripts_include.php'; ?>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.all.min.js"></script>
   <script src="../assets/js/data-tables.js"></script>
+  <script src="../assets/js/posts_management.js"></script>
 </body>
 
 </html>
