@@ -5,9 +5,10 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-require_once __DIR__ . '/../../../config/connection.php';
+require_once __DIR__ . '/../../../../config/connection.php';
 
-function sendResponse($status, $message) {
+function sendResponse($status, $message)
+{
   echo json_encode([
     'status' => $status,
     'message' => $message
@@ -15,7 +16,8 @@ function sendResponse($status, $message) {
   exit;
 }
 
-function sanitizeString($input) {
+function sanitizeString($input)
+{
   $input = trim((string) $input);
   $input = strip_tags($input);
   $input = preg_replace('/[\x00-\x1F\x7F]/u', '', $input);
@@ -136,14 +138,14 @@ try {
   } else {
     $check = $conn->prepare('SELECT member_id FROM official_members WHERE member_id = :memberID');
     $check->execute(['memberID' => $memberID]);
-    
-    if ($check->fetch(PDO::FETCH_ASSOC)) {
+
+    if ($check->fetch()) {
       sendResponse('success', 'No changes were made. Data is already up to date');
     } else {
       sendResponse('error', 'No member found with the ID provided');
     }
   }
 } catch (Throwable $ex) {
-  error_log('Error: ' . $ex->getMessage());
+  error_log('Failed updating member: ' . $ex->getMessage());
   sendResponse('error', 'An error occured while updating the member. Please try again later');
 }

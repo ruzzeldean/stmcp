@@ -1,0 +1,40 @@
+[18-Jul-2025 11:09:33 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:09:33 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:09:50 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:09:50 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:10:45 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:10:45 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:26 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:26 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:27 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:27 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:27 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:27 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:27 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:27 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:42 Europe/Berlin] PHP Warning:  require_once(../includes/datatables/styles_include.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28
+[18-Jul-2025 11:11:42 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/datatables/styles_include.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\stmcp\private\admin\pages\posts_management.php on line 28

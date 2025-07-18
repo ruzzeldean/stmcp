@@ -36,41 +36,41 @@ $(function () {
     const affiliations = $('#affiliations').val().trim();
     const csrfToken = $(this).data('csrf-token');
 
-    if (firstName === '') {
+    if (!firstName) {
       alert('First name is required.');
-    } else if (lastName === '') {
+    } else if (!lastName) {
       alert('Last name is required.');
-    } else if (chapter === null) {
+    } else if (!chapter) {
       alert('Chapter is required.');
     } else if (!dateOfBirth) {
       alert('Date is required.');
-    } else if (bloodType === null) {
+    } else if (!bloodType) {
       alert('Blood type is required');
-    } else if (address === '') {
+    } else if (!address) {
       alert('Address is required.');
-    } else if (phoneNumber === '') {
+    } else if (!phoneNumber) {
       alert('Phone number is required.');
-    } else if (contactPersonNumber === '') {
+    } else if (!contactPersonNumber) {
       alert('Emergency contact is required.');
-    } else if (email === '') {
+    } else if (!email) {
       alert('Email is required.');
-    } else if (occupation === '') {
+    } else if (!occupation) {
       alert('Occupation is required.');
-    } else if (driversLicenseNumber === '') {
+    } else if (!driversLicenseNumber) {
       alert("Driver's license is required.");
-    } else if (brand === '') {
+    } else if (!brand) {
       alert('Motorcycle brand is required.');
-    } else if (model === '') {
+    } else if (!model) {
       alert('Motorcycle model is required.');
-    } else if (engineSizeCC === '') {
+    } else if (!engineSizeCC) {
       alert('Engine size (cc) is required.');
-    } else if (sponsoredBy === '') {
+    } else if (!sponsoredBy) {
       alert('Required field.');
-    } else if (affiliations === '') {
+    } else if (!affiliations) {
       alert('Required field.');
     } else {
       $.ajax({
-        url: './actions/update_member.php',
+        url: '../actions/official_members/update_member.php',
         method: 'POST',
         dataType: 'json',
         data: {

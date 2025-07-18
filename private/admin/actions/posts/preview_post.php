@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-require_once __DIR__ . '/../../../config/connection.php';
+require_once __DIR__ . '/../../../../config/connection.php';
 
 function sendResponse($status, $message)
 {
@@ -31,7 +31,7 @@ try {
   $stmt = $conn->prepare('SELECT title, category, content, image_path, created_at FROM posts WHERE post_id = :post_id');
   $stmt->execute(['post_id' => $postID]);
 
-  $post = $stmt->fetch(PDO::FETCH_ASSOC);
+  $post = $stmt->fetch();
 
   if ($post) {
     $post['formattedDate'] = date('F j, Y g:i A', strtotime($post['created_at']));

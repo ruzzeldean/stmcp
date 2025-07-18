@@ -5,7 +5,7 @@ $(function () {
     const csrfToken = $(this).data('csrf-token');
 
     $.ajax({
-      url: './actions/preview_post.php',
+      url: '../actions/posts/preview_post.php',
       method: 'POST',
       dataType: 'json',
       data: {
@@ -51,7 +51,7 @@ $(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: './actions/approve_post.php',
+          url: '../actions/posts/approve_post.php',
           method: 'POST',
           dataType: 'json',
           data: {
@@ -113,7 +113,7 @@ $(function () {
 
           if (result.isConfirmed) {
             $.ajax({
-              url: './actions/reject_post.php',
+              url: '../actions/posts/reject_post.php',
               method: 'POST',
               dataType: 'json',
               data: {

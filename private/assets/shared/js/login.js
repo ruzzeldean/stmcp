@@ -3,16 +3,10 @@ $(function () {
     const username = $('#username').val().trim();
     const password = $('#password').val().trim();
 
-    if (username === '') {
-      Swal.fire({
-        text: 'Username is required.',
-        icon: 'warning',
-      });
-    } else if (password === '') {
-      Swal.fire({
-        text: 'Password is required.',
-        icon: 'warning',
-      });
+    if (!username) {
+      Swal.fire('', 'Username is required', 'warning');
+    } else if (!password) {
+      Swal.fire('', 'Password is required', 'warning');
     } else {
       $('#login-btn').prop('disabled', true);
 
@@ -30,11 +24,11 @@ $(function () {
               if (response.message === '1') {
                 location.href = './super/';
               } else if (response.message === '2') {
-                location.href = './admin/';
+                location.href = './admin/pages/';
               } else if (response.message === '3') {
-                location.href = './moderator/';
+                location.href = './moderator/pages/';
               } else if (response.message === '4') {
-                location.href = './member/';
+                location.href = './member/pages';
               }
             });
           } else {
@@ -43,8 +37,12 @@ $(function () {
           }
         },
         error: () => {
-          Swal.fire('Oops!', 'Something went wrong. Please try again later', 'error');
-          
+          Swal.fire(
+            'Oops!',
+            'Something went wrong. Please try again later',
+            'error'
+          );
+
           $('#login-btn').prop('disabled', false);
         },
       });

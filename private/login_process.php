@@ -7,11 +7,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../config/connection.php';
 
-function sendResponse($status, $message) {
-  echo json_encode([
-    'status' => $status,
-    'message' => $message
-  ]);
+function sendResponse($status, $message)
+{
+  echo json_encode(['status' => $status, 'message' => $message]);
   exit;
 }
 
@@ -38,7 +36,7 @@ try {
   $login = $conn->prepare('SELECT admin_id, username, password, first_name, role_id FROM admins WHERE username = :username');
   $login->execute(['username' => $username]);
 
-  $row = $login->fetch(PDO::FETCH_ASSOC);
+  $row = $login->fetch();
 
   if ($row && password_verify($password, $row['password'])) {
     session_regenerate_id(true);

@@ -1,4 +1,4 @@
-<?php require_once '../includes/admin_auth_check.php'; ?>
+<?php require_once __DIR__ . '/../../includes/admin_auth_check.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin | Star Touring Motorcycle Club</title>
-  <link rel="shortcut icon" href="../assets/img/logo/logo.png" type="image/x-icon">
+  <link rel="shortcut icon" href="../../assets/shared/images/logo/logo.png" type="image/x-icon">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -15,7 +15,7 @@
     integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- AdminLTE 4 -->
-  <link rel="stylesheet" href="../assets/css/adminlte.min.css">
+  <link rel="stylesheet" href="../../assets/shared/css/adminlte.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
@@ -36,7 +36,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="./" class="brand-link">
-        <img src="../assets/img/logo/logo.png" alt="STMCP Logo" class="brand-image">
+        <img src="../../assets/shared/images/logo/logo.png" alt="STMCP Logo" class="brand-image">
         <span class="brand-text font-weight-light">ADMIN | STMCP</span>
       </a>
 
@@ -45,7 +45,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="../assets/img/user-icon/user-icon.png" alt="User Icon">
+            <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
           </div>
           <div class="info">
             <a href="#" class="d-block"><?php echo strtoupper($_SESSION['firstName']); ?></a>
@@ -55,7 +55,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-header">HOME</li>
+            <li class="nav-header">MAIN</li>
 
             <li class="nav-item">
               <a href="./" class="nav-link active">
@@ -69,15 +69,6 @@
             <li class="nav-header">MEMBERS</li>
 
             <li class="nav-item">
-              <a href="./aspirants.php" class="nav-link">
-                <i class="nav-icon fa-solid fa-user-clock"></i>
-                <p>
-                  Aspirants
-                </p>
-              </a>
-            </li>
-
-            <li class="nav-item">
               <a href="./official_members.php" class="nav-link">
                 <i class="nav-icon fa-solid fa-user-check"></i>
                 <p>
@@ -86,7 +77,14 @@
               </a>
             </li>
 
-            <li class="nav-header">CLUB CONTENTS</li>
+            <li class="nav-item">
+              <a href="./user_accounts.php" class="nav-link">
+                <i class="nav-icon fa-solid fa-users"></i>
+                <p>User Accounts</p>
+              </a>
+            </li>
+
+            <li class="nav-header">CONTENT MANAGEMENT</li>
 
             <li class="nav-item">
               <a href="./posts_management.php" class="nav-link">
@@ -109,14 +107,7 @@
               </a>
             </li>
 
-            <li class="nav-header">ACCOUNT</li>
-
-            <li class="nav-item">
-              <a href="./user_accounts.php" class="nav-link">
-                <i class="nav-icon fa-solid fa-users"></i>
-                <p>User Accounts</p>
-              </a>
-            </li>
+            <li class="nav-header">SYSTEM</li>
 
             <li class="nav-item">
               <a href="./settings.php" class="nav-link">
@@ -126,7 +117,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="../" class="nav-link">
+              <a href="../../" class="nav-link">
                 <i class="nav-icon fa-solid fa-arrow-right-from-bracket"></i>
                 <p>Logout</p>
               </a>
@@ -163,33 +154,6 @@
           <!-- Info boxes -->
           <div class="row">
             <div class="col-12 col-sm-6 col-md-3">
-              <div class="info-box">
-                <span class="info-box-icon bg-info elevation-1"><i class="fa-solid fa-user-clock"></i></span>
-
-                <div class="info-box-content">
-                  <span class="info-box-text">Aspirants</span>
-                  <span class="info-box-number">
-                    <?php
-                    $countSql = 'SELECT COUNT(*) AS total FROM aspirants';
-
-                    try {
-                      $result = $conn->query($countSql);
-
-                      $row = $result->fetch(PDO::FETCH_ASSOC);
-                      echo $row['total'];
-                    } catch (PDOException $ex) {
-                      error_log("Count query failed: " . $ex->getMessage());
-                      echo 'Unable to retrieve aspirant count. Please try again later.';
-                    }
-                    ?>
-                  </span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-            </div>
-            <!-- /.col -->
-            <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box mb-3">
                 <span class="info-box-icon bg-success elevation-1"><i class="fa-solid fa-user-check"></i></span>
 
@@ -202,7 +166,7 @@
                     try {
                       $result = $conn->query($countSql);
 
-                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                      $row = $result->fetch();
                       echo $row['total'];
                     } catch (PDOException $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
@@ -232,7 +196,7 @@
                     try {
                       $result = $conn->query($countSql);
 
-                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                      $row = $result->fetch();
                       echo $row['total'];
                     } catch (PDOException $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
@@ -259,7 +223,7 @@
                     try {
                       $result = $conn->query($countSql);
 
-                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                      $row = $result->fetch();
                       echo $row['total'];
                     } catch (PDOException $ex) {
                       error_log("Count query failed: " .  $ex->getMessage());
@@ -291,11 +255,11 @@
   <!-- REQUIRED SCRIPTS -->
 
   <!-- jQuery -->
-  <script src="../assets/js/jquery.min.js"></script>
+  <script src="../../assets/shared/js/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
-  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/shared/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
-  <script src="../assets/js/adminlte.min.js"></script>
+  <script src="../../assets/shared/js/adminlte.min.js"></script>
 </body>
 
 </html>

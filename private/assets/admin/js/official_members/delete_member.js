@@ -10,7 +10,7 @@ $(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: './actions/delete_member.php',
+          url: '../actions/official_members/delete_member.php',
           method: 'POST',
           dataType: 'json',
           data: {
