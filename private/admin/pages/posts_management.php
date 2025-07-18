@@ -183,6 +183,7 @@ $csrfToken = $_SESSION['csrfToken'];
                       <th>Image</th>
                       <th>Content</th>
                       <th>Status</th>
+                      <th>Reason</th>
                       <th>Created By</th>
                       <th>Created At</th>
                       <th>Action</th>
@@ -202,21 +203,33 @@ $csrfToken = $_SESSION['csrfToken'];
                     ?>
                         <tr>
                           <td></td>
-                          <td class="text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($row['title']); ?></td>
-                          <td><?php echo htmlspecialchars($row['category']); ?></td>
-                          <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?php echo htmlspecialchars($row['image_path']); ?>" alt=""></td>
-                          <td class="text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($row['content']); ?></td>
-                          <td><span class="badge"><?php echo htmlspecialchars($row['status']); ?></span></td>
-                          <td><?php echo htmlspecialchars($row['first_name'] . " " . $row['last_name']); ?></td>
+                          <td class="text-truncate" style="max-width: 150px;"><?php echo e($row['title']); ?></td>
+                          <td><?php echo e($row['category']); ?></td>
+                          <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?php echo e($row['image_path']); ?>" alt="Post image"></td>
+                          <td class="text-truncate" style="max-width: 150px;"><?php echo e($row['content']); ?></td>
+                          <td>
+                            <?php
+                              $status = $row['status'];
+                              $badge = match($status) {
+                                'Pending' => 'secondary',
+                                'Published' => 'success',
+                                'Rejected' => 'danger',
+                                default => 'secondary'
+                              }
+                            ?>
+                            <span class="badge badge-<?php echo e($badge); ?>"><?php echo e($status); ?></span>
+                          </td>
+                          <td><?php echo e($row['reason']); ?></td>
+                          <td><?php echo e($row['first_name'] . " " . $row['last_name']); ?></td>
                           <td>
                             <?php
                             $date = $row['created_at'];
                             $formatted = date('F j, Y g:i A', strtotime($date));
-                            echo htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
+                            echo e($formatted, ENT_QUOTES, 'UTF-8');
                             ?>
                           </td>
                           <td>
-                            <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?php echo htmlspecialchars($row['post_id']); ?>" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Preview</button>
+                            <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?php echo e($row['post_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Preview</button>
                           </td>
                         </tr>
                     <?php
@@ -251,7 +264,7 @@ $csrfToken = $_SESSION['csrfToken'];
 
                 <img id="post-image" class="img-fluid rounded my-3" src="" alt="Post image">
 
-                <p id="post-content"></p>
+                <div id="post-content"></div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="approve-btn btn btn-success">Approve</button>
