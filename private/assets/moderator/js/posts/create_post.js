@@ -35,11 +35,11 @@ $(function () {
     const content = $('#content').val().trim();
     const csrfToken = $(this).data('csrfToken');
 
-    if (title === '') {
+    if (!title) {
       alert('Title is required');
     } else if (title.length > MAX_TITLE_LENGTH) {
       alert(`Title must be less than ${MAX_TITLE_LENGTH} characters`);
-    } else if (category === null) {
+    } else if (!category) {
       alert('Category is required');
     } else if (!image) {
       alert('Image is required');
@@ -47,7 +47,7 @@ $(function () {
       alert('Only JPG and PNG images are allowed');
     } else if (image.size > MAX_FILE_SIZE) {
       alert('Image is too large. Max is 5MB');
-    } else if (content === '') {
+    } else if (!content) {
       alert('Content is required');
     } else if (content.length > MAX_CONTENT_LENGTH) {
       alert(`Content must be less than ${MAX_CONTENT_LENGTH} characters`);
@@ -62,7 +62,7 @@ $(function () {
       $('#create-btn').prop('disabled', true);
 
       $.ajax({
-        url: './actions/process_create_post.php',
+        url: '../actions/posts/process_create_post.php',
         method: 'POST',
         data: formData,
         processData: false,

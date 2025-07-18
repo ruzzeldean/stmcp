@@ -1,12 +1,4 @@
-<?php
-require_once __DIR__ . '/../../includes/moderator_auth_check.php';
-
-if (empty($_SESSION['csrfToken'])) {
-  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
-}
-
-$csrfToken = $_SESSION['csrfToken'];
-?>
+<?php require_once __DIR__ . '/../../includes/moderator_auth_check.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,8 +16,6 @@ $csrfToken = $_SESSION['csrfToken'];
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- AdminLTE 4 -->
   <link rel="stylesheet" href="../../assets/shared/css/adminlte.min.css">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="../../assets/shared/css/style.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
@@ -68,7 +58,7 @@ $csrfToken = $_SESSION['csrfToken'];
             <li class="nav-header">MAIN</li>
 
             <li class="nav-item">
-              <a href="./" class="nav-link">
+              <a href="./" class="nav-link active">
                 <i class="nav-icon fa-solid fa-gauge-high"></i>
                 <p>
                   Dashboard
@@ -90,7 +80,7 @@ $csrfToken = $_SESSION['csrfToken'];
             <li class="nav-header">CONTENT MANAGEMENT</li>
 
             <li class="nav-item">
-              <a href="./posts.php" class="nav-link active">
+              <a href="./posts.php" class="nav-link">
                 <i class="nav-icon fa-solid fa-newspaper"></i>
                 <p>Posts</p>
               </a>
@@ -139,12 +129,11 @@ $csrfToken = $_SESSION['csrfToken'];
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Create Post</h1>
+              <h1 class="m-0">Dashboard</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="./posts.php">Posts</a></li>
-                <li class="breadcrumb-item active">Create</li>
+                <li class="breadcrumb-item active">Dashboard</li>
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -155,49 +144,40 @@ $csrfToken = $_SESSION['csrfToken'];
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-          <div class="row mb-3">
-            <a class="btn btn-app bg-primary active">
-              <i class="fas fa-square-plus"></i> Create
-            </a>
-          </div> <!-- /.row -->
-
+          <!-- Info boxes -->
           <div class="row">
-            <div class="col-md-8 col-lg-6">
-              <div class="card">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="title">Post Title</label>
-                    <input class="form-control" type="text" id="title" placeholder="Enter title (max: 100 characters)" maxlength="100">
-                  </div>
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-success elevation-1"><i class="fa-solid fa-user-check"></i></span>
 
-                  <div class="form-group">
-                    <label for="category">Category</label>
-                    <select class="custom-select" id="category">
-                      <option value="" selected disabled>Select category</option>
-                      <option value="Upcoming">Upcoming</option>
-                      <option value="Past Event">Past Event</option>
-                    </select>
-                  </div>
+                <div class="info-box-content">
+                  <span class="info-box-text">Aspirants</span>
+                  <span class="info-box-number">
+                    <?php
+                    $countSql = 'SELECT COUNT(*) AS total FROM aspirants';
 
-                  <div class="form-group">
-                    <label for="image">Image</label>
-                    <input class="form-control-file border rounded p-1" type="file" id="image" accept="image/*">
-                    <br>
-                    <img id="image-preview" class="d-none img-fluid rounded" src="" alt="Image Preview">
-                  </div>
+                    try {
+                      $result = $conn->query($countSql);
 
-                  <div class="form-group">
-                    <label for="content">Content</label>
-                    <textarea class="form-control" id="content" rows="5" placeholder="Post content..." maxlength="5000"></textarea>
-                  </div>
+                      $row = $result->fetch();
+                      echo $row['total'];
+                    } catch (PDOException $ex) {
+                      error_log("Count query failed: " . $ex->getMessage());
+                      echo 'Unable to retrieve official member count. Please try again later.';
+                    }
+                    ?>
+                  </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
 
-                  <div class="form-group">
-                    <button id="create-btn" class="btn btn-primary w-100" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Create</button>
-                  </div>
-                </div> <!-- /.card-body -->
-              </div> <!-- /.card -->
-            </div> <!-- /.col -->
-          </div> <!-- /.row -->
+            <!-- fix for small devices only -->
+            <div class="clearfix hidden-md-up"></div>
+          </div>
+          <!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content -->
@@ -219,8 +199,6 @@ $csrfToken = $_SESSION['csrfToken'];
   <script src="../../assets/shared/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../../assets/shared/js/adminlte.min.js"></script>
-  <!-- Custom script -->
-   <script src="../../assets/moderator/js/posts/create_post.js"></script>
 </body>
 
 </html>

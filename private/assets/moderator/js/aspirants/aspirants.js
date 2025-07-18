@@ -10,7 +10,7 @@ $(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: './actions/approve_application.php',
+          url: '../actions/aspirants/approve_application.php',
           method: 'POST',
           dataType: 'json',
           data: {
@@ -45,7 +45,7 @@ $(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: './actions/reject_application.php',
+          url: '../actions/aspirants/reject_application.php',
           method: 'POST',
           dataType: 'json',
           data: {

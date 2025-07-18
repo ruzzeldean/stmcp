@@ -23,3 +23,7 @@
 #update-member-form {
   max-width: 500px;
 }
+
+textarea {
+  resize: none;
+}

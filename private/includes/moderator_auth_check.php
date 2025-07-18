@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-if (!isset($_SESSION['adminGatepass']) || $_SESSION['roleID'] === '2') {
+if (!isset($_SESSION['moderatorGatepass']) || $_SESSION['roleID'] === '3') {
   header('Location: /stmcp/private/');
   exit;
 }

@@ -5,9 +5,10 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-require_once __DIR__ . '/../../../config/connection.php';
+require_once __DIR__ . '/../../../../config/connection.php';
 
-function sendResponse($status, $message) {
+function sendResponse($status, $message)
+{
   echo json_encode([
     'status' => $status,
     'message' => $message

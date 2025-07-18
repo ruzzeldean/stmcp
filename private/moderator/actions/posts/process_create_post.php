@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-require_once __DIR__ . '/../../../config/connection.php';
+require_once __DIR__ . '/../../../../config/connection.php';
 
 function sendResponse($status, $message)
 {
@@ -78,7 +78,7 @@ if (!getimagesize($imageTmpPath)) {
 }
 
 $newImageName = uniqid('post_', true) . '.' . $imageExtension;
-$uploadDirectory = __DIR__ . '/../../../uploads/posts/';
+$uploadDirectory = __DIR__ . '/../../../../uploads/posts/';
 
 if (!is_dir($uploadDirectory)) {
   if (!mkdir($uploadDirectory, 0755, true)) {
@@ -97,12 +97,13 @@ if (!move_uploaded_file($imageTmpPath, $uploadPath)) {
 }
 
 try {
-  $createPost = $conn->prepare('INSERT INTO posts (title, category, image_path, content, created_by) VALUES (:title, :category, :image_path, :content, :moderator_id)');
+  $createPost = $conn->prepare('INSERT INTO posts (title, category, image_path, status, content, created_by) VALUES (:title, :category, :image_path, :status, :content, :moderator_id)');
   $createPost->execute([
     'title' => $title,
     'category' => $category,
     'image_path' => $newImageName,
     'content' => $content,
+    'status' => 'Pending',
     'moderator_id' => $moderatorID
   ]);
 
