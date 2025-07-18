@@ -26,4 +26,11 @@
 
 textarea {
   resize: none;
+<<<<<<< HEAD
+=======
+}
+
+#post-content {
+  white-space: pre-wrap;
+>>>>>>> 98b0c14 (style: textarea unresizable and post content line break)
 }
