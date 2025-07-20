@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../includes/admin_auth_check.php';
+require_once __DIR__ . '/../../includes/moderator_auth_check.php';
 
 if (empty($_SESSION['csrfToken'])) {
   $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
@@ -13,7 +13,7 @@ $csrfToken = $_SESSION['csrfToken'];
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin | Star Touring Motorcycle Club</title>
+  <title>Moderator | Star Touring Motorcycle Club</title>
   <link rel="shortcut icon" href="../../assets/shared/images/logo/logo.png" type="image/x-icon">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -49,7 +49,7 @@ $csrfToken = $_SESSION['csrfToken'];
       <!-- Brand Logo -->
       <a href="./" class="brand-link">
         <img src="../../assets/shared/images/logo/logo.png" alt="STMCP Logo" class="brand-image">
-        <span class="brand-text font-weight-light">ADMIN | STMCP</span>
+        <span class="brand-text font-weight-light">MODERATOR | STMCP</span>
       </a>
 
       <!-- Sidebar -->
@@ -81,27 +81,20 @@ $csrfToken = $_SESSION['csrfToken'];
             <li class="nav-header">MEMBERS</li>
 
             <li class="nav-item">
-              <a href="./official_members.php" class="nav-link">
+              <a href="./aspirants.php" class="nav-link">
                 <i class="nav-icon fa-solid fa-user-check"></i>
                 <p>
-                  Official Members
+                  Aspirants
                 </p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="./user_accounts.php" class="nav-link">
-                <i class="nav-icon fa-solid fa-users"></i>
-                <p>User Accounts</p>
               </a>
             </li>
 
             <li class="nav-header">CONTENT MANAGEMENT</li>
 
             <li class="nav-item">
-              <a href="./posts_management.php" class="nav-link active">
+              <a href="./posts.php" class="nav-link active">
                 <i class="nav-icon fa-solid fa-newspaper"></i>
-                <p>Posts Management</p>
+                <p>Posts</p>
               </a>
             </li>
 
@@ -148,11 +141,11 @@ $csrfToken = $_SESSION['csrfToken'];
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Posts Management</h1>
+              <h1 class="m-0">Posts</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item active">Posts Management</li>
+                <li class="breadcrumb-item active">Posts</li>
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -163,12 +156,18 @@ $csrfToken = $_SESSION['csrfToken'];
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
+          <div class="row mb-3">
+            <a class="btn btn-app bg-primary" href="create_post.php">
+              <i class="fas fa-square-plus"></i> Create
+            </a>
+          </div> <!-- /.row -->
+
           <div class="xxl">
             <div class="card p-3">
               <div class="card-header border-bottom-0">
                 <select id="post-status" class="custom-select" style="max-width: 150px;">
-                  <option value="">All Posts</option>
-                  <option value="Pending" selected>Pending</option>
+                  <option value="">All Post</option>
+                  <option value="Pending">Pending</option>
                   <option value="Published" class="text-success">Published</option>
                   <option value="Rejected" class="text-danger">Rejected</option>
                 </select>
@@ -184,7 +183,6 @@ $csrfToken = $_SESSION['csrfToken'];
                       <th>Content</th>
                       <th>Status</th>
                       <th>Reason</th>
-                      <th>Created By</th>
                       <th>Created At</th>
                       <th>Action</th>
                     </tr>
@@ -194,10 +192,11 @@ $csrfToken = $_SESSION['csrfToken'];
                     try {
                       $loadPosts = $conn->prepare(
                         'SELECT posts.*, users.first_name, users.last_name
-                        FROM posts JOIN users
-                        WHERE posts.created_by = users.user_id'
+                        FROM posts
+                        JOIN users ON posts.created_by = users.user_id
+                        WHERE posts.created_by = :user_id'
                       );
-                      $loadPosts->execute();
+                      $loadPosts->execute(['user_id' => $_SESSION['userID']]);
 
                       while ($row = $loadPosts->fetch()) {
                     ?>
@@ -209,18 +208,17 @@ $csrfToken = $_SESSION['csrfToken'];
                           <td class="text-truncate" style="max-width: 150px;"><?php echo e($row['content']); ?></td>
                           <td>
                             <?php
-                              $status = $row['status'];
-                              $badge = match($status) {
-                                'Pending' => 'secondary',
-                                'Published' => 'success',
-                                'Rejected' => 'danger',
-                                default => 'secondary'
-                              }
+                            $status = $row['status'];
+                            $badge = match ($status) {
+                              'Pending' => 'secondary',
+                              'Published' => 'success',
+                              'Rejected' => 'danger',
+                              default => 'secondary'
+                            }
                             ?>
                             <span class="badge badge-<?php echo e($badge); ?>"><?php echo e($status); ?></span>
                           </td>
                           <td><?php echo e($row['reason']); ?></td>
-                          <td><?php echo e($row['first_name'] . " " . $row['last_name']); ?></td>
                           <td>
                             <?php
                             $date = $row['created_at'];
@@ -229,7 +227,9 @@ $csrfToken = $_SESSION['csrfToken'];
                             ?>
                           </td>
                           <td>
-                            <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?php echo e($row['post_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Preview</button>
+                            <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?php echo e($row['post_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>"><i class="fa-solid fa-eye"></i></button>
+                            <a class="btn btn-secondary" href="./edit_post.php?id=<?php echo e($row['post_id']); ?>" title="Edit" data-post-id="<?php echo e($row['post_id']); ?>"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <button class="btn btn-danger" title="Delete"><i class="fa-solid fa-trash"></i></button>
                           </td>
                         </tr>
                     <?php
@@ -245,34 +245,6 @@ $csrfToken = $_SESSION['csrfToken'];
             </div> <!-- /.card -->
           </div> <!-- /.xxl -->
         </div><!-- /.container-fluid -->
-
-        <div class="modal fade" id="preview-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="modalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Preview</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-
-              <div class="modal-body">
-                <h3 id="post-title" class="mb-1"></h3>
-                <div>
-                  <small id="post-date" class="badge text-muted"></small> | <span id="post-category" class="badge badge-secondary"></span>
-                </div>
-
-                <img id="post-image" class="img-fluid rounded my-3" src="" alt="Post image">
-
-                <div id="post-content"></div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="approve-btn btn btn-success">Approve</button>
-                <button type="button" class="reject-btn btn btn-danger">Reject</button>
-              </div>
-            </div>
-          </div>
-        </div> <!-- /.modal -->
       </div>
       <!-- /.content -->
     </div>
@@ -294,12 +266,10 @@ $csrfToken = $_SESSION['csrfToken'];
   <!-- AdminLTE App -->
   <script src="../../assets/shared/js/adminlte.min.js"></script>
   <!-- DataTables -->
-  <?php require_once __DIR__ . '/../../includes/datatables/scripts_include.php'; ?>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.all.min.js"></script>
+  <?php require_once __DIR__ . '/../../includes/datatables/scripts_include.php' ?>
+  <!-- Custom script -->
   <script src="../../assets/shared/js/data_tables.js"></script>
   <script src="../../assets/shared/js/shared.js"></script>
-  <script src="../../assets/admin/js/posts/posts_management.js"></script>
 </body>
 
 </html>
