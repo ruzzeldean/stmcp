@@ -9,10 +9,7 @@ require_once __DIR__ . '/../../../../config/connection.php';
 
 function sendResponse($status, $message)
 {
-  echo json_encode([
-    'status' => $status,
-    'message' => $message
-  ]);
+  echo json_encode(['status' => $status, 'message' => $message]);
   exit;
 }
 

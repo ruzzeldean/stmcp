@@ -28,7 +28,7 @@ if (!isset($_POST['postID'])) {
 $postID = (int) $_POST['postID'];
 
 try {
-  $approve = $conn->prepare('UPDATE posts SET status = "Published"  WHERE post_id = :post_id');
+  $approve = $conn->prepare('UPDATE posts SET status = "Published", reason = NULL WHERE post_id = :post_id');
   $approve->execute(['post_id' => $postID]);
 
   if ($approve->rowCount() > 0) {

@@ -60,7 +60,7 @@ $csrfToken = $_SESSION['csrfToken'];
             <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
           </div>
           <div class="info">
-            <a href="#" class="d-block"><?php echo strtoupper($_SESSION['firstName']); ?></a>
+            <a href="#" class="d-block"><?php echo e(strtoupper($_SESSION['firstName'])); ?></a>
           </div>
         </div>
 
@@ -193,9 +193,9 @@ $csrfToken = $_SESSION['csrfToken'];
                     <?php
                     try {
                       $loadPosts = $conn->prepare(
-                        'SELECT posts.*, admins.first_name, admins.last_name
-                        FROM posts JOIN admins
-                        WHERE posts.created_by = admins.admin_id'
+                        'SELECT posts.*, users.first_name, users.last_name
+                        FROM posts JOIN users
+                        WHERE posts.created_by = users.user_id'
                       );
                       $loadPosts->execute();
 

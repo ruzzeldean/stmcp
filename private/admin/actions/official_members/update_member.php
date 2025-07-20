@@ -9,10 +9,7 @@ require_once __DIR__ . '/../../../../config/connection.php';
 
 function sendResponse($status, $message)
 {
-  echo json_encode([
-    'status' => $status,
-    'message' => $message
-  ]);
+  echo json_encode(['status' => $status, 'message' => $message]);
   exit;
 }
 
@@ -108,7 +105,7 @@ try {
     engine_size_cc = :engineSizeCC,
     sponsored_by = :sponsoredBy,
     affiliations = :affiliations,
-    team_chapter = :chapter
+    chapter_id = :chapter
     WHERE member_id = :memberID';
 
   $update = $conn->prepare($sql);

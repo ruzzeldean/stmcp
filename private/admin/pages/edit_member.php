@@ -26,14 +26,14 @@ try {
   }
 } catch (Throwable $ex) {
   error_log('Error fetching member info: ' . $ex->getMessage());
-  echo 'Database error';
+  echo e('Database error');
   exit;
 }
 
 $firstName = $row['first_name'];
 $middleName = $row['middle_name'] ?? '';
 $lastName = $row['last_name'];
-$chapter = $row['team_chapter'];
+$chapter = $row['chapter_id'];
 $dateOfBirth = $row['date_of_birth'];
 $bloodType = $row['blood_type'];
 $address = $row['address'];
@@ -208,125 +208,125 @@ $affiliations = $row['affiliations'] ?? '';
               <div class="card-body">
                 <div class="form-group">
                   <label for="first-name">First Name <span class="text-danger">*</span></label>
-                  <input type="text" id="first-name" class="form-control" placeholder="Enter first name" value ="<?php echo htmlspecialchars($firstName); ?>">
+                  <input type="text" id="first-name" class="form-control" placeholder="Enter first name" value ="<?php echo e($firstName); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="middle-name">Middle Name</label>
-                  <input type="text" id="middle-name" class="form-control" placeholder="Enter middle name" value ="<?php echo htmlspecialchars($middleName); ?>">
+                  <input type="text" id="middle-name" class="form-control" placeholder="Enter middle name" value ="<?php echo e($middleName); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="last-name">Last Name</label>
-                  <input type="text" id="last-name" class="form-control" placeholder="Enter last name" value ="<?php echo htmlspecialchars($lastName); ?>">
+                  <input type="text" id="last-name" class="form-control" placeholder="Enter last name" value ="<?php echo e($lastName); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="chapter">Chapter</label>
                   <select id="chapter" class="custom-select">
                     <option value="" disabled selected>Select Chapter</option>
-                    <option value="1" <?php echo htmlspecialchars($chapter == "1" ? "selected" : ""); ?>>Quezon City</option>
-                    <option value="2" <?php echo htmlspecialchars($chapter == "2" ? "selected" : ""); ?>>Mandaluyong & San Juan</option>
-                    <option value="3" <?php echo htmlspecialchars($chapter == "3" ? "selected" : ""); ?>>Pasay</option>
-                    <option value="4" <?php echo htmlspecialchars($chapter == "4" ? "selected" : ""); ?>>Valuenzela</option>
-                    <option value="5" <?php echo htmlspecialchars($chapter == "5" ? "selected" : ""); ?>>Manila</option>
-                    <option value="6" <?php echo htmlspecialchars($chapter == "6" ? "selected" : ""); ?>>Taguig & Makati</option>
-                    <option value="7" <?php echo htmlspecialchars($chapter == "7" ? "selected" : ""); ?>>San Jose Del Monte, Bulacan</option>
-                    <option value="8" <?php echo htmlspecialchars($chapter == "8" ? "selected" : ""); ?>>Pampanga</option>
-                    <option value="9" <?php echo htmlspecialchars($chapter == "9" ? "selected" : ""); ?>>Pasig</option>
-                    <option value="10" <?php echo htmlspecialchars($chapter == "10" ? "selected" : ""); ?>>Santa Maria, Bulacan</option>
-                    <option value="11" <?php echo htmlspecialchars($chapter == "11" ? "selected" : ""); ?>>Taytay, Cainta, Antipolo, Angono</option>
-                    <option value="12" <?php echo htmlspecialchars($chapter == "12" ? "selected" : ""); ?>>North Caloocan</option>
-                    <option value="13" <?php echo htmlspecialchars($chapter == "13" ? "selected" : ""); ?>>Metro South (Taguig)</option>
-                    <option value="14" <?php echo htmlspecialchars($chapter == "14" ? "selected" : ""); ?>>Laguna</option>
-                    <option value="15" <?php echo htmlspecialchars($chapter == "15" ? "selected" : ""); ?>>Cavite</option>
-                    <option value="16" <?php echo htmlspecialchars($chapter == "16" ? "selected" : ""); ?>>Pangasinan</option>
-                    <option value="17"<?php echo htmlspecialchars($chapter == "17" ? "selected" : ""); ?>>Ilocos (Sur, Norte)</option>
-                    <option value="18" <?php echo htmlspecialchars($chapter == "18" ? "selected" : ""); ?>>Malabon</option>
-                    <option value="19" <?php echo htmlspecialchars($chapter == "19" ? "selected" : ""); ?>>Montalban (Rizal)</option>
-                    <option value="20" <?php echo htmlspecialchars($chapter == "20" ? "selected" : ""); ?>>San Mateo (Rizal)</option>
+                    <option value="1" <?php echo e($chapter == "1" ? "selected" : ""); ?>>Quezon City</option>
+                    <option value="2" <?php echo e($chapter == "2" ? "selected" : ""); ?>>Mandaluyong & San Juan</option>
+                    <option value="3" <?php echo e($chapter == "3" ? "selected" : ""); ?>>Pasay</option>
+                    <option value="4" <?php echo e($chapter == "4" ? "selected" : ""); ?>>Valuenzela</option>
+                    <option value="5" <?php echo e($chapter == "5" ? "selected" : ""); ?>>Manila</option>
+                    <option value="6" <?php echo e($chapter == "6" ? "selected" : ""); ?>>Taguig & Makati</option>
+                    <option value="7" <?php echo e($chapter == "7" ? "selected" : ""); ?>>San Jose Del Monte, Bulacan</option>
+                    <option value="8" <?php echo e($chapter == "8" ? "selected" : ""); ?>>Pampanga</option>
+                    <option value="9" <?php echo e($chapter == "9" ? "selected" : ""); ?>>Pasig</option>
+                    <option value="10" <?php echo e($chapter == "10" ? "selected" : ""); ?>>Santa Maria, Bulacan</option>
+                    <option value="11" <?php echo e($chapter == "11" ? "selected" : ""); ?>>Taytay, Cainta, Antipolo, Angono</option>
+                    <option value="12" <?php echo e($chapter == "12" ? "selected" : ""); ?>>North Caloocan</option>
+                    <option value="13" <?php echo e($chapter == "13" ? "selected" : ""); ?>>Metro South (Taguig)</option>
+                    <option value="14" <?php echo e($chapter == "14" ? "selected" : ""); ?>>Laguna</option>
+                    <option value="15" <?php echo e($chapter == "15" ? "selected" : ""); ?>>Cavite</option>
+                    <option value="16" <?php echo e($chapter == "16" ? "selected" : ""); ?>>Pangasinan</option>
+                    <option value="17"<?php echo e($chapter == "17" ? "selected" : ""); ?>>Ilocos (Sur, Norte)</option>
+                    <option value="18" <?php echo e($chapter == "18" ? "selected" : ""); ?>>Malabon</option>
+                    <option value="19" <?php echo e($chapter == "19" ? "selected" : ""); ?>>Montalban (Rizal)</option>
+                    <option value="20" <?php echo e($chapter == "20" ? "selected" : ""); ?>>San Mateo (Rizal)</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label for="date-of-birth">Date of Birth</label>
-                  <input type="date" id="date-of-birth" class="form-control" value ="<?php echo htmlspecialchars($dateOfBirth); ?>">
+                  <input type="date" id="date-of-birth" class="form-control" value ="<?php echo e($dateOfBirth); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="blood-type">Blood Type</label>
                   <select id="blood-type" class="custom-select">
                     <option value="" disabled selected>Select Blood Type</option>
-                    <option value="A+" <?php echo htmlspecialchars($bloodType === "A+" ? "selected" : ""); ?>>A+</option>
-                    <option value="A-" <?php echo htmlspecialchars($bloodType === "A-" ? "selected" : ""); ?>>A-</option>
-                    <option value="B+" <?php echo htmlspecialchars($bloodType === "B+" ? "selected" : ""); ?>>B+</option>
-                    <option value="B-" <?php echo htmlspecialchars($bloodType === "B-" ? "selected" : ""); ?>>B-</option>
-                    <option value="AB+" <?php echo htmlspecialchars($bloodType === "AB+" ? "selected" : ""); ?>>AB+</option>
-                    <option value="AB-" <?php echo htmlspecialchars($bloodType === "AB-" ? "selected" : ""); ?>>AB-</option>
-                    <option value="O+" <?php echo htmlspecialchars($bloodType === "O+" ? "selected" : ""); ?>>O+</option>
-                    <option value="O-" <?php echo htmlspecialchars($bloodType === "O-" ? "selected" : ""); ?>>O-</option>
-                    <option value="Unknown" <?php echo htmlspecialchars($bloodType === "Unknown" ? "selected" : ""); ?>>Unknown</option>
+                    <option value="A+" <?php echo e($bloodType === "A+" ? "selected" : ""); ?>>A+</option>
+                    <option value="A-" <?php echo e($bloodType === "A-" ? "selected" : ""); ?>>A-</option>
+                    <option value="B+" <?php echo e($bloodType === "B+" ? "selected" : ""); ?>>B+</option>
+                    <option value="B-" <?php echo e($bloodType === "B-" ? "selected" : ""); ?>>B-</option>
+                    <option value="AB+" <?php echo e($bloodType === "AB+" ? "selected" : ""); ?>>AB+</option>
+                    <option value="AB-" <?php echo e($bloodType === "AB-" ? "selected" : ""); ?>>AB-</option>
+                    <option value="O+" <?php echo e($bloodType === "O+" ? "selected" : ""); ?>>O+</option>
+                    <option value="O-" <?php echo e($bloodType === "O-" ? "selected" : ""); ?>>O-</option>
+                    <option value="Unknown" <?php echo e($bloodType === "Unknown" ? "selected" : ""); ?>>Unknown</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label for="address">Address</label>
-                  <input type="text" id="address" class="form-control" placeholder="Enter complete address" value ="<?php echo htmlspecialchars($address); ?>">
+                  <input type="text" id="address" class="form-control" placeholder="Enter complete address" value ="<?php echo e($address); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="phone-number">Phone Number</label>
-                  <input type="tel" id="phone-number" class="phone form-control" placeholder="Personal #: 0912 345 6789" value ="<?php echo htmlspecialchars($phoneNumber); ?>">
+                  <input type="tel" id="phone-number" class="phone form-control" placeholder="Personal #: 0912 345 6789" value ="<?php echo e($phoneNumber); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="contact-person-number">Emergency Contact</label>
-                  <input type="tel" id="contact-person-number" class="phone form-control" placeholder="Emergency #: 0998 767 4321" value ="<?php echo htmlspecialchars($contactPersonNumber); ?>">
+                  <input type="tel" id="contact-person-number" class="phone form-control" placeholder="Emergency #: 0998 767 4321" value ="<?php echo e($contactPersonNumber); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="email">Email</label>
-                  <input type="email" id="email" class="form-control" placeholder="Enter email" value ="<?php echo htmlspecialchars($email); ?>">
+                  <input type="email" id="email" class="form-control" placeholder="Enter email" value ="<?php echo e($email); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="occupation">Occupation</label>
-                  <input type="text" id="occupation" class="form-control" placeholder="Enter occupation" value ="<?php echo htmlspecialchars($occupation); ?>">
+                  <input type="text" id="occupation" class="form-control" placeholder="Enter occupation" value ="<?php echo e($occupation); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="drivers-license-number">Driver's Licence Number</label>
-                  <input type="text" id="drivers-license-number" class="form-control" placeholder="Enter driver's licence number" value ="<?php echo htmlspecialchars($driversLicenseNumber); ?>">
+                  <input type="text" id="drivers-license-number" class="form-control" placeholder="Enter driver's licence number" value ="<?php echo e($driversLicenseNumber); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="brand">Motorcycle Brand</label>
-                  <input type="text" id="brand" class="form-control" placeholder="Enter motorcycle brand" value ="<?php echo htmlspecialchars($brand); ?>">
+                  <input type="text" id="brand" class="form-control" placeholder="Enter motorcycle brand" value ="<?php echo e($brand); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="model">Motorcycle model</label>
-                  <input type="text" id="model" class="form-control" placeholder="Enter motorcycle model" value ="<?php echo htmlspecialchars($model); ?>">
+                  <input type="text" id="model" class="form-control" placeholder="Enter motorcycle model" value ="<?php echo e($model); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="engine-size-cc">Engine Size (cc)</label>
-                  <input type="text" id="engine-size-cc" class="form-control" placeholder="Enter engince size (cc)" value ="<?php echo htmlspecialchars($engineSizeCC); ?>">
+                  <input type="text" id="engine-size-cc" class="form-control" placeholder="Enter engince size (cc)" value ="<?php echo e($engineSizeCC); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="sponsor">Sponsored By</label>
-                  <input type="text" id="sponsor" class="form-control" placeholder="Enter sponsor" value ="<?php echo htmlspecialchars($sponsoredBy); ?>">
+                  <input type="text" id="sponsor" class="form-control" placeholder="Enter sponsor" value ="<?php echo e($sponsoredBy); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="affiliations">Other Club Affiliations</label>
-                  <input type="text" id="affiliations" class="form-control" placeholder="Enter other club affiliations" value ="<?php echo htmlspecialchars($affiliations); ?>">
+                  <input type="text" id="affiliations" class="form-control" placeholder="Enter other club affiliations" value ="<?php echo e($affiliations); ?>">
                   <small class="form-text text-muted">Other *motorcycle* club affiliations</small>
                 </div>
 
                 <div class="form-group">
-                  <button id="update-btn" class="btn btn-primary w-100" data-admin-id="<?php echo $memberID; ?>" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Update</button>
+                  <button id="update-btn" class="btn btn-primary w-100" data-admin-id="<?php echo $memberID; ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Update</button>
                 </div>
               </div> <!-- /.card-body -->
             </div> <!-- /.card -->

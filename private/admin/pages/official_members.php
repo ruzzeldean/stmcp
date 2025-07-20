@@ -57,7 +57,7 @@ $csrfToken = $_SESSION['csrfToken'];
             <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
           </div>
           <div class="info">
-            <a href="#" class="d-block"><?php echo strtoupper($_SESSION['firstName']); ?></a>
+            <a href="#" class="d-block"><?php echo e(strtoupper($_SESSION['firstName'])); ?></a>
           </div>
         </div>
 
@@ -199,7 +199,7 @@ $csrfToken = $_SESSION['csrfToken'];
                           $qry = $conn->prepare(
                             'SELECT official_members.*, chapters.chapter_name
                             FROM official_members
-                            JOIN chapters ON official_members.team_chapter = chapters.chapter_id'
+                            JOIN chapters ON official_members.chapter_id = chapters.chapter_id'
                           );
                           $qry->execute();
 
@@ -207,33 +207,33 @@ $csrfToken = $_SESSION['csrfToken'];
                         ?>
                             <tr>
                               <td></td>
-                              <td><?php echo htmlspecialchars($row['member_id']); ?></td>
-                              <td><?php echo htmlspecialchars($row['first_name']); ?></td>
-                              <td><?php echo htmlspecialchars($row['middle_name'] ?? ''); ?></td>
-                              <td><?php echo htmlspecialchars($row['last_name']); ?></td>
-                              <td><?php echo htmlspecialchars($row['chapter_name']); ?></td>
-                              <td><?php echo htmlspecialchars($row['date_of_birth']); ?></td>
-                              <td><?php echo htmlspecialchars($row['blood_type']); ?></td>
-                              <td><?php echo htmlspecialchars($row['address']); ?></td>
-                              <td><?php echo htmlspecialchars($row['phone_number']); ?></td>
-                              <td><?php echo htmlspecialchars($row['contact_person_number']); ?></td>
-                              <td><?php echo htmlspecialchars($row['email']); ?></td>
-                              <td><?php echo htmlspecialchars($row['occupation']); ?></td>
-                              <td><?php echo htmlspecialchars($row['drivers_license_number']); ?></td>
-                              <td><?php echo htmlspecialchars($row['brand']); ?></td>
-                              <td><?php echo htmlspecialchars($row['model']); ?></td>
-                              <td><?php echo htmlspecialchars($row['engine_size_cc']); ?></td>
-                              <td><?php echo htmlspecialchars($row['sponsored_by']); ?></td>
-                              <td><?php echo htmlspecialchars($row['affiliations']); ?></td>
+                              <td><?php echo e($row['member_id']); ?></td>
+                              <td><?php echo e($row['first_name']); ?></td>
+                              <td><?php echo e($row['middle_name'] ?? ''); ?></td>
+                              <td><?php echo e($row['last_name']); ?></td>
+                              <td><?php echo e($row['chapter_name']); ?></td>
+                              <td><?php echo e($row['date_of_birth']); ?></td>
+                              <td><?php echo e($row['blood_type']); ?></td>
+                              <td><?php echo e($row['address']); ?></td>
+                              <td><?php echo e($row['phone_number']); ?></td>
+                              <td><?php echo e($row['contact_person_number']); ?></td>
+                              <td><?php echo e($row['email']); ?></td>
+                              <td><?php echo e($row['occupation']); ?></td>
+                              <td><?php echo e($row['drivers_license_number']); ?></td>
+                              <td><?php echo e($row['brand']); ?></td>
+                              <td><?php echo e($row['model']); ?></td>
+                              <td><?php echo e($row['engine_size_cc']); ?></td>
+                              <td><?php echo e($row['sponsored_by']); ?></td>
+                              <td><?php echo e($row['affiliations']); ?></td>
 
-                              <td><?php echo htmlspecialchars($row['created_at']); ?></td>
-                              <td><?php echo htmlspecialchars($row['updated_at']); ?></td>
+                              <td><?php echo e($row['created_at']); ?></td>
+                              <td><?php echo e($row['updated_at']); ?></td>
                               <td>
                                 <a class="edit-btn btn btn-secondary"
-                                  href="./edit_member.php?id=<?php echo htmlspecialchars($row['member_id']); ?>">Edit</a>
+                                  href="./edit_member.php?id=<?php echo e($row['member_id']); ?>">Edit</a>
 
                                 <button class="reject-btn btn btn-danger"
-                                  data-member-id="<?php echo htmlspecialchars($row['member_id']); ?>" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Delete</button>
+                                  data-member-id="<?php echo e($row['member_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Delete</button>
                               </td>
                             </tr>
                         <?php

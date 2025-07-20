@@ -48,7 +48,7 @@
             <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
           </div>
           <div class="info">
-            <a href="#" class="d-block"><?php echo strtoupper($_SESSION['firstName']); ?></a>
+            <a href="#" class="d-block"><?php echo e(strtoupper($_SESSION['firstName'])); ?></a>
           </div>
         </div>
 
@@ -167,8 +167,8 @@
                       $result = $conn->query($countSql);
 
                       $row = $result->fetch();
-                      echo $row['total'];
-                    } catch (PDOException $ex) {
+                      echo e($row['total']);
+                    } catch (Throwable $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
                       echo 'Unable to retrieve official member count. Please try again later.';
                     }
@@ -191,14 +191,14 @@
                   <span class="info-box-text">Admins</span>
                   <span class="info-box-number">
                     <?php
-                    $countSql = 'SELECT COUNT(*) AS total FROM admins WHERE role_id = 2';
+                    $countSql = 'SELECT COUNT(*) AS total FROM users WHERE role_id = 2';
 
                     try {
                       $result = $conn->query($countSql);
 
                       $row = $result->fetch();
-                      echo $row['total'];
-                    } catch (PDOException $ex) {
+                      echo e($row['total']);
+                    } catch (Throwable $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
                       echo 'Unable to retrieve admin count. Please try again later.';
                     }
@@ -218,14 +218,14 @@
                   <span class="info-box-text">Moderators</span>
                   <span class="info-box-number">
                     <?php
-                    $countSql = 'SELECT COUNT(*) AS total FROM admins WHERE role_id = 3';
+                    $countSql = 'SELECT COUNT(*) AS total FROM users WHERE role_id = 3';
 
                     try {
                       $result = $conn->query($countSql);
 
                       $row = $result->fetch();
-                      echo $row['total'];
-                    } catch (PDOException $ex) {
+                      echo e($row['total']);
+                    } catch (Throwable $ex) {
                       error_log("Count query failed: " .  $ex->getMessage());
                       echo 'Unable to retrieve moderator count. Please try again later.';
                     }
