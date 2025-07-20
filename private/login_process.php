@@ -33,7 +33,7 @@ if (empty($password)) {
 }
 
 try {
-  $login = $conn->prepare('SELECT admin_id, username, password, first_name, role_id FROM admins WHERE username = :username');
+  $login = $conn->prepare('SELECT user_id, username, password, first_name, last_name, role_id FROM users WHERE username = :username');
   $login->execute(['username' => $username]);
 
   $row = $login->fetch();
@@ -41,8 +41,9 @@ try {
   if ($row && password_verify($password, $row['password'])) {
     session_regenerate_id(true);
 
-    $_SESSION['adminID'] = $row['admin_id'];
+    $_SESSION['userID'] = $row['user_id'];
     $_SESSION['firstName'] = $row['first_name'];
+    $_SESSION['lastName'] = $row['last_name'];
     $_SESSION['roleID'] = $row['role_id'];
     $roleID = $_SESSION['roleID'];
 
