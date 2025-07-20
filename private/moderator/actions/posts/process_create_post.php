@@ -9,10 +9,7 @@ require_once __DIR__ . '/../../../../config/connection.php';
 
 function sendResponse($status, $message)
 {
-  echo json_encode([
-    'status' => $status,
-    'message' => $message
-  ]);
+  echo json_encode(['status' => $status, 'message' => $message]);
   exit;
 }
 
@@ -24,7 +21,7 @@ if (!isset($_POST['csrfToken']) || $_POST['csrfToken'] !== $_SESSION['csrfToken'
   sendResponse('error', 'Invalid token');
 }
 
-$moderatorID = $_SESSION['adminID'] ?? null;
+$moderatorID = $_SESSION['userID'] ?? null;
 if (!$moderatorID) {
   sendResponse('error', 'Unauthorized access');
 }

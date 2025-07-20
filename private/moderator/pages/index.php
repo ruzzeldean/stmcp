@@ -48,7 +48,7 @@
             <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
           </div>
           <div class="info">
-            <a href="#" class="d-block"><?php echo strtoupper($_SESSION['firstName']); ?></a>
+            <a href="#" class="d-block"><?php echo e(strtoupper($_SESSION['firstName'])); ?></a>
           </div>
         </div>
 
@@ -160,10 +160,10 @@
                       $result = $conn->query($countSql);
 
                       $row = $result->fetch();
-                      echo $row['total'];
-                    } catch (PDOException $ex) {
+                      echo e($row['total']);
+                    } catch (Throwable $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
-                      echo 'Unable to retrieve official member count. Please try again later.';
+                      echo e('Unable to retrieve official member count. Please try again later.');
                     }
                     ?>
                   </span>

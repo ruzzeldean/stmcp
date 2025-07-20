@@ -58,7 +58,7 @@ $csrfToken = $_SESSION['csrfToken'];
             <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
           </div>
           <div class="info">
-            <a href="#" class="d-block"><?php echo strtoupper($_SESSION['firstName']); ?></a>
+            <a href="#" class="d-block"><?php echo e(strtoupper($_SESSION['firstName'])); ?></a>
           </div>
         </div>
 
@@ -155,12 +155,6 @@ $csrfToken = $_SESSION['csrfToken'];
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-          <div class="row mb-3">
-            <a class="btn btn-app bg-primary active">
-              <i class="fas fa-square-plus"></i> Create
-            </a>
-          </div> <!-- /.row -->
-
           <div class="row">
             <div class="col-md-8 col-lg-6">
               <div class="card">
@@ -192,7 +186,7 @@ $csrfToken = $_SESSION['csrfToken'];
                   </div>
 
                   <div class="form-group">
-                    <button id="create-btn" class="btn btn-primary w-100" data-csrf-token="<?php echo htmlspecialchars($csrfToken); ?>">Create</button>
+                    <button id="create-btn" class="btn btn-primary w-100" data-csrf-token="<?php echo e($csrfToken); ?>">Create</button>
                   </div>
                 </div> <!-- /.card-body -->
               </div> <!-- /.card -->

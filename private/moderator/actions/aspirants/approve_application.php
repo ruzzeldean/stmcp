@@ -9,10 +9,7 @@ require_once __DIR__ . '/../../../../config/connection.php';
 
 function sendResponse($status, $message)
 {
-  echo json_encode([
-    'status' => $status,
-    'message' => $message
-  ]);
+  echo json_encode(['status' => $status, 'message' => $message]);
   exit;
 }
 
@@ -35,10 +32,10 @@ try {
 
   $insertSql = '
     INSERT INTO official_members (
-      first_name, middle_name, last_name, date_of_birth, blood_type, address, phone_number, contact_person_number, email, occupation, drivers_license_number, brand, model, engine_size_cc, sponsored_by, affiliations, team_chapter
+      first_name, middle_name, last_name, date_of_birth, blood_type, address, phone_number, contact_person_number, email, occupation, drivers_license_number, brand, model, engine_size_cc, sponsored_by, affiliations, chapter_id
     )
     SELECT
-      first_name, middle_name, last_name, date_of_birth, blood_type, address, phone_number, contact_person_number, email, occupation, drivers_license_number, brand, model, engine_size_cc, sponsored_by, affiliations, team_chapter
+      first_name, middle_name, last_name, date_of_birth, blood_type, address, phone_number, contact_person_number, email, occupation, drivers_license_number, brand, model, engine_size_cc, sponsored_by, affiliations, chapter_id
     FROM aspirants
     WHERE aspirant_id = :aspirant_id
   ';
