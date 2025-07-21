@@ -220,7 +220,7 @@ $content = $post['content'];
                   </div>
 
                   <div class="form-group">
-                    <button id="create-btn" class="btn btn-primary w-100" data-csrf-token="<?php echo e($csrfToken); ?>">Create</button>
+                    <button id="update-btn" class="btn btn-primary w-100" data-post-id="<?php echo e($postID); ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Update</button>
                   </div>
                 </div> <!-- /.card-body -->
               </div> <!-- /.card -->
