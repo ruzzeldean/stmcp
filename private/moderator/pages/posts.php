@@ -204,8 +204,8 @@ $csrfToken = $_SESSION['csrfToken'];
                           <td></td>
                           <td class="text-truncate" style="max-width: 150px;"><?php echo e($row['title']); ?></td>
                           <td><?php echo e($row['category']); ?></td>
-                          <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?php echo e($row['image_path']); ?>" alt="Post image"></td>
-                          <td class="text-truncate" style="max-width: 150px;"><?php echo e($row['content']); ?></td>
+                          <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?php echo e($row['image_path']); ?>" alt="Post image" style="max-width: 100px;"></td>
+                          <td class="text-truncate"><?php echo e($row['content']); ?></td>
                           <td>
                             <?php
                             $status = $row['status'];
@@ -228,8 +228,10 @@ $csrfToken = $_SESSION['csrfToken'];
                           </td>
                           <td>
                             <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?php echo e($row['post_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>"><i class="fa-solid fa-eye"></i></button>
+
                             <a class="btn btn-secondary" href="./edit_post.php?id=<?php echo e($row['post_id']); ?>" title="Edit" data-post-id="<?php echo e($row['post_id']); ?>"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <button class="btn btn-danger" title="Delete"><i class="fa-solid fa-trash"></i></button>
+
+                            <button class="delete-btn btn btn-danger" title="Delete" data-post-id="<?php echo e($row['post_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>"><i class="fa-solid fa-trash"></i></button>
                           </td>
                         </tr>
                     <?php
@@ -246,6 +248,33 @@ $csrfToken = $_SESSION['csrfToken'];
           </div> <!-- /.xxl -->
         </div><!-- /.container-fluid -->
       </div>
+
+      <div class="modal fade" id="preview-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">Preview</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <h3 id="post-title" class="mb-1"></h3>
+              <div>
+                <small id="post-date" class="badge text-muted"></small> | <span id="post-category" class="badge badge-secondary"></span>
+              </div>
+
+              <img id="post-image" class="img-fluid rounded my-3" src="" alt="Post image">
+
+              <div id="post-content"></div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div> <!-- /.modal -->
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -267,9 +296,13 @@ $csrfToken = $_SESSION['csrfToken'];
   <script src="../../assets/shared/js/adminlte.min.js"></script>
   <!-- DataTables -->
   <?php require_once __DIR__ . '/../../includes/datatables/scripts_include.php' ?>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Custom script -->
   <script src="../../assets/shared/js/data_tables.js"></script>
   <script src="../../assets/shared/js/shared.js"></script>
+  <script src="../../assets/moderator/js/posts/preview_post.js"></script>
+  <script src="../../assets/moderator/js/posts/delete_post.js"></script>
 </body>
 
 </html>
