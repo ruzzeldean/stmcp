@@ -35,16 +35,11 @@ footer {
   outline: none;
 }
 
-.hero {
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
 /* Styles for home page */
 
 #home-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-    url("../img/home-page/hero-section/hero-img.jpg") center/cover;
+    url('../img/home-page/hero-section/hero-img.jpg') center/cover;
 }
 
 .post-thumbnail {
@@ -59,12 +54,32 @@ footer {
 
 #join-us-section {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("../img/home-page/join-us-section/join-us-img.jpg") center/cover;
+    url('../img/home-page/join-us-section/join-us-img.jpg') center/cover;
 }
 
 /* Styles for about page */
 
 #four-pillar-img {
-  background: url("../img/four-pillars/four-pillars.jpg") center/cover;
+  background: url('../img/four-pillars/four-pillars.jpg') center/cover;
   aspect-ratio: 4 / 3;
+}
+
+/* Styles for activities page */
+
+/* Card img */
+.upcoming-card-img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  min-height: 100%;
+}
+
+.past-act-img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+@media (max-width: 576px) {
+  .text-truncate {
+    white-space: wrap;
+  }
 }
