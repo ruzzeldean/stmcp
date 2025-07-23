@@ -1,10 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/error_logging.php';
-
-$host = 'localhost';
-$database = 'stmcp';
-$user = 'root';
-$pass = '';
+require_once __DIR__ . '/../.env/credentials.php';
 
 try {
   $conn = new PDO("mysql:host=$host;dbname=$database;charset=utf8mb4", $user, $pass);
