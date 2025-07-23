@@ -1,0 +1,224 @@
+<?php
+require_once __DIR__ . '/../config/connection.php';
+
+try {
+  $sql = 'SELECT post_id, title, category, image_path, content, created_at FROM posts WHERE category = :category AND status = :status ORDER BY created_at DESC';
+
+  $loadUpcoming = $conn->prepare($sql);
+  $loadUpcoming->execute(['category' => 'Upcoming', 'status' => 'Published']);
+
+  $loadPastActivities = $conn->prepare($sql);
+  $loadPastActivities->execute(['category' => 'Past Event', 'status' => 'Published']);
+
+  $upcomingPosts = $loadUpcoming->fetchAll();
+  $pastActivities = $loadPastActivities->fetchAll();
+} catch (Throwable $ex) {
+  error_log('Error fetching posts: ' . $ex->getMessage());
+  exit('Error fetching posts. Please try again later');
+}
+?>
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star Touring Motorcycle Club Philippines</title>
+  <link rel="shortcut icon" href="./assets/img/logo/logo.png" type="image/x-icon">
+  <!-- Font Awesome Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Header -->
+    <header>
+      <nav class="navbar navbar-expand-lg bg-dark fixed-top">
+        <div class="container">
+          <!-- Brand Logo and Name -->
+          <a class="navbar-brand" href="./">
+            <img class="d-inline-block align-text-top" src="./assets/img/logo/logo.png" alt="STMCP Logo" width="32" height="31">
+            STMCP
+          </a> <!-- End of .navbar-brand -->
+          <!-- End of Brand Logo and Name -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navMenu" aria-controls="navMenu" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button> <!-- End of .navbar-toggler -->
+            
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="navMenu" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title pe-5" id="offcanvasNavbarLabel">STMCP</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div> <!-- End of .offcanvas-header -->
+            
+            <div class="offcanvas-body pe-5 pe-lg-0">
+              <ul class="navbar-nav justify-content-end flex-grow-1">
+                <li class="nav-item">
+                  <a class="nav-link" href="./">Home</a>
+                </li> <!-- End of .nav-item (home) -->
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="./about.php">About</a>
+                </li> <!-- End of .nav-item (about) -->
+
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="./activities.php">Activities</a>
+                </li> <!-- End of .nav-item (activities) -->
+
+                <li class="nav-item">
+                  <a class="nav-link" href="./news_and_updates.php">News and Updates</a> <!-- End of .nav-item (news and updates) -->
+                </li> <!-- End of .nav-item (activities) -->
+              </ul> <!-- End of .navbar-nav nav-links -->
+            </div> <!-- End of .offcanvas-body -->
+          </div> <!-- End of .offcanvas -->
+        </div> <!-- End of .container -->
+      </nav> <!-- End of nav -->
+    </header>
+    <!-- End of header -->
+    
+    <!-- Main -->
+    <main>
+      <section id="home-hero" class="hero d-flex justify-content-center align-items-center py-5">
+        <div class="container py-5">
+          <div class="row py-5">
+            <div class="d-flex justify-content-center align-items-center mt-5 py-5">
+              <div id="hero-content" class="py-5 text-center">
+                <h1 class="display-3 fw-semibold">ACTIVITIES</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-body-tertiary py-5">
+        <div class="container py-5">
+          <h2 class="text-center display-4 fw-semibold mb-3">Our Club Activities</h2>
+          <p class="lead text-muted px-3">At Star Touring Motorcycle Club Philippines, we take pride in making a positive impact on the community. Below are some of our past and upcoming charity events where we strive to help those in need.</p>
+        </div>
+      </section>
+
+      <!-- <section class="py-5">
+        <div class="container pt-3">
+          <div class="mb-4">
+            <h3 class="display-5 fw-semibold text-center">UPCOMING EVENTS</h3>
+          </div>
+
+          <div class="row row-gap-3">
+            <div class="col-lg-6">
+              <div class="card shadow overflow-hidden">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img class="upcoming-card-img img-fluid" src="./assets/img/four-pillars/four-pillars.jpg" alt="">
+                  </div>
+
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title text-truncate py-1">35<sup>th</sup> Club Anniversary Long Long Long Long Long Long Long Long Title</h5>
+
+                      <p class="card-text"><small class="text-muted">22 Jul 2025</small> | <span class="badge bg-secondary">Upcoming</span></p>
+                      
+                      <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. In quis officiis dolores, nobis maiores omnis! Veniam pariatur quod tempore, vitae nesciunt sequi cum placeat eum ipsa rem repellat et quam?</p>
+                    </div>
+
+                    <div class="card-footer bg-dark border-0 py-3">
+                      <button class="btn btn-warning">Read more</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> -->
+
+      <!-- Upcoming Events -->
+      <section class="py-5">
+        <div class="container py-5">
+          <div class="mb-4">
+            <h3 class="display-5 fw-semibold text-center">UPCOMING EVENTS</h3>
+          </div>
+
+          <div class="row row-gap-3">
+            <?php if (count($upcomingPosts) === 0): ?>
+            <p class="lead text-center">There's no post yet. Come back later.</p>
+            <?php else: ?>
+              <?php foreach ($upcomingPosts as $post): ?>
+                <div class="col-lg-6">
+                  <div class="card shadow overflow-hidden">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img class="upcoming-card-img img-fluid" src="/stmcp/uploads/posts/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
+                      </div>
+
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title text-truncate mb-0 py-1" title="<?= htmlspecialchars($post['title']) ?>"><?= htmlspecialchars($post['title']) ?></h5>
+
+                          <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge bg-secondary"><?= htmlspecialchars($post['category']) ?></span></p>
+                          
+                          <div class="post-content text-truncate"><?= htmlspecialchars($post['content']) ?></div>
+                        </div>
+
+                        <div class="card-footer bg-dark border-0 py-3">
+                          <a class="btn btn-warning" href="./view_post.php?id=<?= htmlspecialchars($post['post_id']) ?>">Read more</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+        </div>
+      </section>
+
+      <!-- Past Activities -->
+      <section class="bg-body-tertiary py-5">
+        <div class="container py-5">
+          <div class="mb-4">
+            <h4 class="display-5 fw-semibold text-center">PAST ACTIVITIES</h4>
+          </div>
+
+          <div class="row row-gap-3">
+            <?php if (count($pastActivities) === 0): ?>
+              <p class="lead text-center">There's no post yet. Come back later.</p>
+            <?php else: ?>
+              <?php foreach ($pastActivities as $post): ?>
+                <div class="col-md-6 col-lg-4">
+                  <div class="card shadow overflow-hidden">
+                    <img class="bg-secondary card-img-top past-act-img" src="/stmcp/uploads/posts/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
+
+                    <div class="card-body">
+                      <h5 class="card-title text-truncate mb-0 pb-1" title="<?= htmlspecialchars($post['title']) ?>"><?= htmlspecialchars($post['title']) ?></h5>
+
+                      <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge bg-success"><?= htmlspecialchars($post['category']) ?></span></p>
+
+                      <div class="post-content text-truncate"><?= htmlspecialchars($post['content']) ?></div>
+                    </div>
+
+                    <div class="card-footer bg-dark border-0 py-3">
+                      <a class="btn btn-warning" href="./view_post.php?id=<?= htmlspecialchars($post['post_id']) ?>">Read more</a>
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- End of main -->
+    
+    <footer class="py-5">
+
+    </footer>
+    <!-- End of footer -->
+  </div>
+  <!-- End of .wrapper -->
+  
+  <!-- Bootstrap 5 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>
