@@ -1,32 +1,18 @@
 <?php
-require_once __DIR__ . '/../config/connection.php';
-
 try {
-  $limit = 2;
+  require_once __DIR__ . '/../config/connection.php';
+  require_once __DIR__ . '/includes/functions/functions.php';
+
   $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-  $offset = ($page - 1) * $limit;
+  $limit = 2;
 
-  $sql = 'SELECT post_id, title, category, image_path, content, created_at FROM posts WHERE category = :category AND status = :status ORDER BY created_at DESC LIMIT :limit OFFSET :offset';
-
-  $loadUpcoming = $conn->prepare($sql);
-  // $loadUpcoming->execute(['category' => 'Upcoming', 'status' => 'Published']);
-  $loadUpcoming->bindValue(':category', 'Upcoming', PDO::PARAM_STR);
-  $loadUpcoming->bindValue(':status', 'Published', PDO::PARAM_STR);
-  $loadUpcoming->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
-  $loadUpcoming->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
-  $loadUpcoming->execute();
-
-  $upcomingPosts = $loadUpcoming->fetchAll();
-
-  $countSql = 'SELECT COUNT(*) FROM posts WHERE category = :category AND status = :status';
-  $countStmt = $conn->prepare($countSql);
-  $countStmt->execute(['category' => 'Upcoming', 'status' => 'Published']);
-  
-  $totalPosts = $countStmt->fetchColumn();
+  $upcomingPosts = getUpcomingPosts($page, $limit);
+  $totalPosts = getUpcomingPostCount();
   $totalPages = ceil($totalPosts / $limit);
 } catch (Throwable $ex) {
-  error_log('Error fetching posts: ' . $ex->getMessage());
-  exit('Error fetching posts. Please try again later');
+  error_log('Error (activities page): ' . $ex->getMessage());
+  http_response_code(500);
+  exit('Connection failed');
 }
 ?>
 <!DOCTYPE html>
