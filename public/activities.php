@@ -3,11 +3,12 @@ try {
   require_once __DIR__ . '/../config/connection.php';
   require_once __DIR__ . '/includes/functions/functions.php';
 
+  $category = 'Past Event';
   $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-  $limit = 2;
+  $limit = 6;
 
-  $upcomingPosts = getUpcomingPosts($page, $limit);
-  $totalPosts = getUpcomingPostCount();
+  $posts = getPosts($conn, $category, $limit, $page);
+  $totalPosts = getpostCount($conn, $category);
   $totalPages = ceil($totalPosts / $limit);
 } catch (Throwable $ex) {
   error_log('Error (activities page): ' . $ex->getMessage());
@@ -42,44 +43,35 @@ try {
       <section class="bg-body-tertiary py-5">
         <div class="container py-5">
           <h2 class="text-center display-4 fw-semibold mb-3">Our Club Activities</h2>
-          <p class="lead text-muted px-3">At Star Touring Motorcycle Club Philippines, we take pride in making a positive impact on the community. Below are some of our past and upcoming charity events where we strive to help those in need.</p>
+          <p class="lead text-muted px-3">At Star Touring Motorcycle Club Philippines, we take pride in making a positive impact on the community. Below are some of our past charity events where we strive to help those in need.</p>
         </div>
       </section>
 
-      <!-- Upcoming Events -->
+      <!-- Past Events -->
       <section class="py-5">
         <div class="container py-5">
           <div class="mb-4">
-            <h3 class="display-5 fw-semibold text-center">UPCOMING EVENTS</h3>
+            <h3 class="display-5 fw-semibold text-center">PAST ACTIVITIES</h3>
           </div>
 
-          <div id="upcoming-posts-wrapper">
+          <div id="past-posts-wrapper">
             <div class="row row-gap-3">
-              <?php if (count($upcomingPosts) === 0): ?>
-                <p class="text-center lead">There's no post yet. Come back later.</p>
-
+              <?php if (count($posts) === 0): ?>
+                <p class="lead text-center">There's no post yet. Come back later.</p>
               <?php else: ?>
-                <?php foreach ($upcomingPosts as $post): ?>
-                  <div class="col-lg-6">
+                <?php foreach ($posts as $post): ?>
+                  <div class="col-md-6 col-lg-4">
                     <div class="card shadow overflow-hidden">
-                      <div class="row g-0">
-                        <div class="col-md-4">
-                          <img class="upcoming-card-img img-fluid" src="/stmcp/uploads/posts/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
-                        </div>
+                      <img class="bg-secondary card-img-top past-act-img" src="/stmcp/uploads/posts/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
 
-                        <div class="col-md-8">
-                          <div class="card-body">
-                            <h5 class="card-title text-truncate mb-0 py-1" title="<?= htmlspecialchars($post['title']) ?>"><?= htmlspecialchars($post['title']) ?></h5>
+                      <div class="card-body">
+                        <h5 class="card-title custom-text-truncate-1 mb-0 pb-1" title="<?= htmlspecialchars($post['title']) ?>"><?= htmlspecialchars($post['title']) ?></h5>
 
-                            <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge bg-secondary"><?= htmlspecialchars($post['category']) ?></span></p>
-                            
-                            <div class="post-content text-truncate"><?= htmlspecialchars($post['content']) ?></div>
-                          </div>
+                        <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge text-bg-success"><?= htmlspecialchars($post['category']) ?></span></p>
+                      </div>
 
-                          <div class="card-footer bg-dark border-0 py-3">
-                            <a class="btn btn-warning" href="./view_post.php?id=<?= htmlspecialchars($post['post_id']) ?>">Read more</a>
-                          </div>
-                        </div>
+                      <div class="card-footer bg-dark border-0 py-3">
+                        <a class="btn btn-warning" href="./view.php?id=<?= htmlspecialchars($post['post_id']) ?>">Read more</a>
                       </div>
                     </div>
                   </div>
@@ -97,13 +89,19 @@ try {
                     </ul>
                   </nav>
                 </div> <!-- /.pagination -->
+
+                <!-- Loading spinner -->
+                <div id="loading-spinner" class="text-center d-none">
+                  <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+                <!-- /.loading-spinner -->
               <?php endif; ?>
             </div> <!-- /.row -->
-          </div> <!-- /.upcoming-posts-wrapper -->
+          </div> <!-- /.past-posts-wrapper -->
         </div>
       </section>
-
-      
     </main>
     <!-- End of main -->
     
