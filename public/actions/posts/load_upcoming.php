@@ -12,27 +12,27 @@ if (
 require_once __DIR__ . '/../../../config/connection.php';
 
 try {
-  $limit = 2;
+  $limit = 6;
   $page = max((int) ($_GET['page']) ?? 1, 1);
   $offset = ($page - 1) * $limit;
 
-  $sql = 'SELECT post_id, title, category, image_path, content, created_at
+  $sql = 'SELECT post_id, title, category, image_path, created_at
           FROM posts
           WHERE category = :category AND status = :status
           ORDER BY created_at DESC
           LIMIT :limit OFFSET :offset';
 
   $stmt = $conn->prepare($sql);
-  $stmt->bindValue(':category', 'Upcoming', PDO::PARAM_STR);
+  $stmt->bindValue(':category', 'Past Event', PDO::PARAM_STR);
   $stmt->bindValue(':status', 'Published', PDO::PARAM_STR);
   $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
   $stmt->execute();
-  $upcomingPosts = $stmt->fetchAll();
+  $posts = $stmt->fetchAll();
 
   $countSql = 'SELECT COUNT(*) FROM posts WHERE category = :category AND status = :status';
   $countStmt = $conn->prepare($countSql);
-  $countStmt->execute(['category' => 'Upcoming', 'status' => 'Published']);
+  $countStmt->execute(['category' => 'Past Event', 'status' => 'Published']);
   $totalPosts = $countStmt->fetchColumn();
   $totalPages = ceil($totalPosts / $limit);
 } catch (Throwable $ex) {
@@ -42,30 +42,22 @@ try {
 ?>
 
 <div class="row row-gap-3">
-  <?php if (count($upcomingPosts) === 0): ?>
+  <?php if (count($posts) === 0): ?>
     <p class="lead text-center">There's no post yet. Come back later.</p>
   <?php else: ?>
-    <?php foreach ($upcomingPosts as $post): ?>
-      <div class="col-lg-6">
+    <?php foreach ($posts as $post): ?>
+      <div class="col-md-6 col-lg-4">
         <div class="card shadow overflow-hidden">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img class="upcoming-card-img img-fluid" src="/stmcp/uploads/posts/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
-            </div>
+          <img class="bg-secondary card-img-top past-act-img" src="/stmcp/uploads/posts/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
 
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title text-truncate mb-0 py-1" title="<?= htmlspecialchars($post['title']) ?>"><?= htmlspecialchars($post['title']) ?></h5>
+          <div class="card-body">
+            <h5 class="card-title custom-text-truncate-1 mb-0 pb-1" title="<?= htmlspecialchars($post['title']) ?>"><?= htmlspecialchars($post['title']) ?></h5>
 
-                <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge bg-secondary"><?= htmlspecialchars($post['category']) ?></span></p>
+            <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge text-bg-success"><?= htmlspecialchars($post['category']) ?></span></p>
+          </div>
 
-                <div class="post-content text-truncate"><?= htmlspecialchars($post['content']) ?></div>
-              </div>
-
-              <div class="card-footer bg-dark border-0 py-3">
-                <a class="btn btn-warning" href="./view_post.php?id=<?= htmlspecialchars($post['post_id']) ?>">Read more</a>
-              </div>
-            </div>
+          <div class="card-footer bg-dark border-0 py-3">
+            <a class="btn btn-warning" href="./view.php?id=<?= htmlspecialchars($post['post_id']) ?>">Read more</a>
           </div>
         </div>
       </div>
