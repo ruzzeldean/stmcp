@@ -1,16 +1,16 @@
 $(function () {
-  const savedPage = sessionStorage.getItem('upcoming_page') || 1;
-  loadUpcomingPosts(savedPage);
+  const savedPage = sessionStorage.getItem('past_page') || 1;
+  loadPastPosts(savedPage);
 
   $(document).on('click', '.pagination-link', function (e) {
     e.preventDefault();
 
     const page = $(this).data('page');
-    sessionStorage.setItem('upcoming_page', page);
-    loadUpcomingPosts(page);
+    sessionStorage.setItem('past_page', page);
+    loadPastPosts(page);
   });
 
-  function loadUpcomingPosts(page) {
+  function loadPastPosts(page) {
     $('#loading-spinner').removeClass('d-none');
 
     $.ajax({
@@ -18,10 +18,10 @@ $(function () {
       method: 'GET',
       data: { page },
       success: (response) => {
-        $('#upcoming-posts-wrapper').html(response);
+        $('#past-posts-wrapper').html(response);
       },
       error: () => {
-        $('#upcoming-posts-wrapper').html(`
+        $('#past-posts-wrapper').html(`
           <div class="alert alert-warning text-center">
             Failed to load posts. Please check your internet connection.
           </div>
