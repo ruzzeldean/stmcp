@@ -1,6 +1,4 @@
-<?php
-$currentPage = basename($_SERVER['PHP_SELF']);
-?>
+<?php $currentPage = basename($_SERVER['PHP_SELF']); ?>
 
 <header>
   <nav class="navbar navbar-expand-lg bg-dark fixed-top">
@@ -36,6 +34,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
             <li class="nav-item">
               <a class="nav-link <?= $currentPage === 'news_and_updates.php' ? 'active' : '' ?>" href="./news_and_updates.php">News and Updates</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link <?= $currentPage === 'join_us.php' ? 'active' : '' ?>" href="./join_us.php">Join Us</a>
             </li>
           </ul>
         </div>
