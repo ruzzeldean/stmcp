@@ -1,112 +1,178 @@
 $(function () {
-  $('.phone').on('input', function () {
-    let input = $(this).val().replace(/\D/g, '');
-    if (input.length > 11) input = input.slice(0, 11);
+  $('#update-btn').click(function (e) {
+    e.preventDefault();
+    let valid = true;
 
-    let formatted = input;
+    const $btn = $(this);
+    $btn.prop('disabled', true);
 
-    if (input.length > 3 && input.length <= 6) {
-      formatted = input.slice(0, 4) + ' ' + input.slice(4);
-    } else if (input.length > 6) {
-      formatted =
-        input.slice(0, 4) + ' ' + input.slice(4, 7) + ' ' + input.slice(7);
+    function validateField(selector, condition, message) {
+      const $field = $(selector);
+
+      if (condition) {
+        $field.addClass('is-invalid').removeClass('is-valid');
+        $field.next('.invalid-feedback').text(message).show();
+        valid = false;
+      } else {
+        $field.removeClass('is-invalid').addClass('is-valid');
+        $field.next('.invalid-feedback').hide();
+      }
     }
 
-    $(this).val(formatted);
-  });
+    validateField(
+      '#first-name',
+      $('#first-name').val().trim() === '',
+      'First name is required'
+    );
 
-  $('#update-btn').click(function () {
-    const memberID = $(this).data('admin-id');
-    const firstName = $('#first-name').val().trim();
-    const middleName = $('#middle-name').val().trim();
-    const lastName = $('#last-name').val().trim();
-    const chapter = $('#chapter').val();
-    const dateOfBirth = $('#date-of-birth').val();
-    const bloodType = $('#blood-type').val();
-    const address = $('#address').val().trim();
-    const phoneNumber = $('#phone-number').val().trim();
-    const contactPersonNumber = $('#contact-person-number').val();
-    const email = $('#email').val().trim();
-    const occupation = $('#occupation').val().trim();
-    const driversLicenseNumber = $('#drivers-license-number').val().trim();
-    const brand = $('#brand').val().trim();
-    const model = $('#model').val().trim();
-    const engineSizeCC = $('#engine-size-cc').val().trim();
-    const sponsoredBy = $('#sponsor').val().trim();
-    const affiliations = $('#affiliations').val().trim();
-    const csrfToken = $(this).data('csrf-token');
+    validateField(
+      '#last-name',
+      $('#last-name').val().trim() === '',
+      'Last name is required'
+    );
 
-    if (!firstName) {
-      alert('First name is required.');
-    } else if (!lastName) {
-      alert('Last name is required.');
-    } else if (!chapter) {
-      alert('Chapter is required.');
-    } else if (!dateOfBirth) {
-      alert('Date is required.');
-    } else if (!bloodType) {
-      alert('Blood type is required');
-    } else if (!address) {
-      alert('Address is required.');
-    } else if (!phoneNumber) {
-      alert('Phone number is required.');
-    } else if (!contactPersonNumber) {
-      alert('Emergency contact is required.');
-    } else if (!email) {
-      alert('Email is required.');
-    } else if (!occupation) {
-      alert('Occupation is required.');
-    } else if (!driversLicenseNumber) {
-      alert("Driver's license is required.");
-    } else if (!brand) {
-      alert('Motorcycle brand is required.');
-    } else if (!model) {
-      alert('Motorcycle model is required.');
-    } else if (!engineSizeCC) {
-      alert('Engine size (cc) is required.');
-    } else if (!sponsoredBy) {
-      alert('Required field.');
-    } else if (!affiliations) {
-      alert('Required field.');
+    if ($('#middle-name').val().trim() !== '') {
+      $('#middle-name').addClass('is-valid');
     } else {
+      $('#middle-name').removeClass('is-valid');
+    }
+
+    validateField(
+      '#date-of-birth',
+      $('#date-of-birth').val().trim() === '',
+      'Date of birth is required'
+    );
+
+    validateField(
+      '#civil-status',
+      $('#civil-status').val() === null,
+      'Civil status is required'
+    );
+
+    validateField(
+      '#blood-type',
+      $('#blood-type').val() === null,
+      'Blood type is required'
+    );
+
+    validateField(
+      '#home-address',
+      $('#home-address').val().trim() === '',
+      'Home address is required'
+    );
+
+    validateField(
+      '#phone-number',
+      $('#phone-number').val().trim() === '',
+      'Phone number is required'
+    );
+
+    validateField(
+      '#email',
+      $('#email').val().trim() === '',
+      'Email is required'
+    );
+
+    validateField(
+      '#emergency-contact-name',
+      $('#emergency-contact-name').val().trim() === '',
+      'Emergency contact name is required'
+    );
+
+    validateField(
+      '#emergency-contact-number',
+      $('#emergency-contact-number').val().trim() === '',
+      'Emergency contact number is required'
+    );
+
+    validateField(
+      '#occupation',
+      $('#occupation').val().trim() === '',
+      'Occupation is required'
+    );
+
+    validateField(
+      '#license-number',
+      $('#license-number').val().trim() === '',
+      "Driver's license number is required"
+    );
+
+    validateField(
+      '#motorcycle-brand',
+      $('#motorcycle-brand').val().trim() === '',
+      'Motorcycle brand is required'
+    );
+
+    validateField(
+      '#motorcycle-model',
+      $('#motorcycle-model').val().trim() === '',
+      'Motorcycle model is required'
+    );
+
+    if ($('#sponsor').val().trim() !== '') {
+      $('#sponsor').addClass('is-valid');
+    } else {
+      $('#sponsor').removeClass('is-valid');
+    }
+
+    if ($('#other-club-affiliation').val().trim() !== '') {
+      $('#other-club-affiliation').addClass('is-valid');
+    } else {
+      $('#other-club-affiliation').removeClass('is-valid');
+    }
+
+    validateField(
+      '#chapter_id',
+      $('#chapter_id').val() === null,
+      'Chapter is required'
+    );
+
+    validateField(
+      '#date-joined',
+      $('#date-joined').val().trim() === '',
+      'Date joined is required'
+    );
+
+    function loading() {
+      $('#page-overlay').removeClass('d-none');
+      $('#membership-form')
+        .find('input, select, button')
+        .prop('disabled', true);
+    }
+
+    if (valid) {
       $.ajax({
         url: '../actions/official_members/update_member.php',
         method: 'POST',
         dataType: 'json',
-        data: {
-          memberID: memberID,
-          firstName: firstName,
-          middleName: middleName,
-          lastName: lastName,
-          dateOfBirth: dateOfBirth,
-          bloodType: bloodType,
-          address: address,
-          phoneNumber: phoneNumber,
-          contactPersonNumber: contactPersonNumber,
-          email: email,
-          occupation: occupation,
-          driversLicenseNumber: driversLicenseNumber,
-          brand: brand,
-          model: model,
-          engineSizeCC: engineSizeCC,
-          sponsoredBy: sponsoredBy,
-          affiliations: affiliations,
-          chapter: chapter,
-          csrfToken: csrfToken,
-        },
+        data: $('#membership-form').serialize(),
         success: (response) => {
           if (response.status === 'success') {
+            loading();
             Swal.fire('Success', response.message, 'success').then(() => {
               location.reload();
             });
           } else {
+            $btn.prop('disabled', false);
             Swal.fire('Error', response.message, 'error');
           }
         },
         error: () => {
+          $btn.prop('disabled', false);
           Swal.fire('Oops!', 'Something went wrong', 'error');
         },
       });
+    } else {
+      $btn.prop('disabled', false);
+      Swal.fire(
+        '',
+        'Please fill out all required fields correctly',
+        'warning'
+      );
     }
+  });
+
+  $('.form-control, .custom-select').on('input change', function () {
+    $(this).removeClass('is-invalid');
   });
 });
