@@ -21,120 +21,119 @@ function sanitizeString($input)
   return $input;
 }
 
+function validateDate($date)
+{
+  $d = DateTime::createFromFormat('Y-m-d', $date);
+  return $d && $d->format('Y-m-d') === $date;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   sendResponse('error', 'Invalid request method');
 }
 
-if (!isset($_POST['csrfToken']) || $_POST['csrfToken'] !== $_SESSION['csrfToken']) {
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrfToken']) {
   sendResponse('error', 'Invalid token');
 }
 
 $requiredFields = [
-  'memberID',
-  'firstName',
-  'lastName',
-  'dateOfBirth',
-  'bloodType',
-  'address',
-  'phoneNumber',
-  'contactPersonNumber',
+  'member_id',
+  'first_name',
+  'last_name',
+  'date_of_birth',
+  'civil_status',
+  'blood_type',
+  'home_address',
+  'phone_number',
   'email',
+  'emergency_contact_name',
+  'emergency_contact_number',
   'occupation',
-  'driversLicenseNumber',
-  'brand',
-  'model',
-  'engineSizeCC',
-  'sponsoredBy',
-  'affiliations',
-  'chapter'
+  'license_number',
+  'motorcycle_brand',
+  'motorcycle_model',
+  'chapter_id',
+  'date_joined'
 ];
 
+$data = [];
+
 foreach ($requiredFields as $field) {
-  if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+  if (empty($_POST[$field] ?? '')) {
     sendResponse('error', "Missing or empty field: $field");
   }
+  $data[$field] = trim($_POST[$field]);
 }
 
-$memberID = filter_input(INPUT_POST, 'memberID', FILTER_VALIDATE_INT);
+$memberID = filter_input(INPUT_POST, 'member_id', FILTER_VALIDATE_INT);
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-$dateOfBirth = trim((string) $_POST['dateOfBirth']);
-$phoneNumber = trim((string) $_POST['phoneNumber']);
-$contactPersonNumber = trim((string) $_POST['contactPersonNumber']);
+$dateOfBirth = trim((string) $_POST['date_of_birth']);
+$dateJoined = trim((string) $_POST['date_joined']);
+$phone_number = trim((string) $_POST['phone_number']);
+$emergency_contact_name = trim((string) $_POST['emergency_contact_name']);
 
 if (!$memberID) {
   sendResponse('error', 'Invalid member ID');
 }
 
-if (!$email) {
-  sendResponse('error', 'Invalid email address');
+if (!validateDate($data['date_of_birth'])) {
+  sendResponse('error', 'Invalid date of birth');
 }
 
-if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateOfBirth)) {
-  sendResponse('error', 'Date of Birth must be in YYYY-MM-DD format');
+if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+  sendResponse('error', 'Invalid email format');
 }
 
-$firstName = sanitizeString($_POST['firstName']);
-$middleName = sanitizeString($_POST['middleName']);
-$lastName = sanitizeString($_POST['lastName']);
-$bloodType = sanitizeString($_POST['bloodType']);
-$address = sanitizeString($_POST['address']);
-$occupation = sanitizeString($_POST['occupation']);
-$driversLicenseNumber = sanitizeString($_POST['driversLicenseNumber']);
-$brand = sanitizeString($_POST['brand']);
-$model = sanitizeString($_POST['model']);
-$engineSizeCC = sanitizeString($_POST['engineSizeCC']);
-$sponsoredBy = sanitizeString($_POST['sponsoredBy']);
-$affiliations = sanitizeString($_POST['affiliations']);
-$chapter = sanitizeString($_POST['chapter']);
+if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['phone_number'])) {
+  sendResponse('error', 'Invalid phone number');
+}
+
+$data['phone_number'] = preg_replace('/[^0-9+]/', '', $data['phone_number']);
+
+if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['emergency_contact_number'])) {
+  sendResponse('error', 'Invalid emergency contact number');
+}
+
+$data['emergency_contact_number'] = preg_replace('/[^0-9+]/', '', $data['emergency_contact_number']);
+
+if (!validateDate($data['date_joined'])) {
+  sendResponse('error', 'Invalid date joined');
+}
+
+$data['middle_name'] = trim($_POST['middle_name'] ?? '');
+$data['sponsor'] = trim($_POST['sponsor'] ?? '');
+$data['other_club_affiliation'] = trim($_POST['other_club_affiliation'] ?? '');
 
 try {
   $sql = 'UPDATE official_members SET
-    first_name = :firstName,
-    middle_name = :middleName,
-    last_name = :lastName,
-    date_of_birth = :dateOfBirth,
-    blood_type = :bloodType,
-    address = :address,
-    phone_number = :phoneNumber,
-    contact_person_number = :contactPersonNumber,
+    first_name = :first_name,
+    last_name = :last_name,
+    date_of_birth = :date_of_birth,
+    civil_status = :civil_status,
+    blood_type = :blood_type,
+    home_address = :home_address,
+    phone_number = :phone_number,
     email = :email,
+    emergency_contact_name = :emergency_contact_name,
+    emergency_contact_number = :emergency_contact_number,
     occupation = :occupation,
-    drivers_license_number = :driversLicenseNumber,
-    brand = :brand,
-    model = :model,
-    engine_size_cc = :engineSizeCC,
-    sponsored_by = :sponsoredBy,
-    affiliations = :affiliations,
-    chapter_id = :chapter
-    WHERE member_id = :memberID';
+    license_number = :license_number,
+    motorcycle_brand = :motorcycle_brand,
+    motorcycle_model = :motorcycle_model,
+    chapter_id = :chapter_id,
+    date_joined = :date_joined,
+    middle_name = :middle_name,
+    sponsor = :sponsor,
+    other_club_affiliation = :other_club_affiliation
+    WHERE member_id = :member_id';
 
   $update = $conn->prepare($sql);
-  $update->execute([
-    'memberID' => $memberID,
-    'firstName' => $firstName,
-    'middleName' => $middleName,
-    'lastName' => $lastName,
-    'dateOfBirth' => $dateOfBirth,
-    'bloodType' => $bloodType,
-    'address' => $address,
-    'phoneNumber' => $phoneNumber,
-    'contactPersonNumber' => $contactPersonNumber,
-    'email' => $email,
-    'occupation' => $occupation,
-    'driversLicenseNumber' => $driversLicenseNumber,
-    'brand' => $brand,
-    'model' => $model,
-    'engineSizeCC' => $engineSizeCC,
-    'sponsoredBy' => $sponsoredBy,
-    'affiliations' => $affiliations,
-    'chapter' => $chapter
-  ]);
+  $update->execute($data);
 
   if ($update->rowCount() > 0) {
     sendResponse('success', 'Member updated successfully');
   } else {
-    $check = $conn->prepare('SELECT member_id FROM official_members WHERE member_id = :memberID');
-    $check->execute(['memberID' => $memberID]);
+    $check = $conn->prepare('SELECT member_id FROM official_members WHERE member_id = :member_id');
+    $check->execute(['member_id' => $memberID]);
 
     if ($check->fetch()) {
       sendResponse('success', 'No changes were made. Data is already up to date');
