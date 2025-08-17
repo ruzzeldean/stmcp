@@ -30,12 +30,11 @@ $aspirantID = (int) $_POST['aspirantID'];
 try {
   $conn->beginTransaction();
 
-  $insertSql = '
-    INSERT INTO official_members (
-      first_name, middle_name, last_name, date_of_birth, blood_type, address, phone_number, contact_person_number, email, occupation, drivers_license_number, brand, model, engine_size_cc, sponsored_by, affiliations, chapter_id
+  $insertSql = 'INSERT INTO official_members (
+      first_name, last_name, middle_name, date_of_birth, civil_status, blood_type, home_address, phone_number, email, emergency_contact_name, emergency_contact_number, occupation, license_number, motorcycle_brand, motorcycle_model, sponsor, other_club_affiliation, chapter_id, date_joined
     )
     SELECT
-      first_name, middle_name, last_name, date_of_birth, blood_type, address, phone_number, contact_person_number, email, occupation, drivers_license_number, brand, model, engine_size_cc, sponsored_by, affiliations, chapter_id
+      first_name, last_name, middle_name, date_of_birth, civil_status, blood_type, home_address, phone_number, email, emergency_contact_name, emergency_contact_number, occupation, license_number, motorcycle_brand, motorcycle_model, sponsor, other_club_affiliation, chapter_id, date_joined
     FROM aspirants
     WHERE aspirant_id = :aspirant_id
   ';
@@ -56,6 +55,6 @@ try {
   sendResponse('success', 'Application approved');
 } catch (Throwable $ex) {
   $conn->rollBack();
-  error_log('Error: ' . $ex->getMessage());
+  error_log('Error: ' . $ex);
   sendResponse('error', 'Something went wrong. Please try again later');
 }
