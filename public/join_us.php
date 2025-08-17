@@ -201,8 +201,8 @@
 
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label class="form-label" for="chapter_id">Chapter <span class="asterisk">*</span></label>
-                      <select id="chapter_id" name="chapter_id" class="form-select">
+                      <label class="form-label" for="chapter-id">Chapter <span class="asterisk">*</span></label>
+                      <select id="chapter-id" name="chapter_id" class="form-select">
                         <option value="" selected disabled>Select chapter near to you</option>
                         <option value="1">Cavite</option>
                         <option value="2">Ilocos (Sur, Norte)</option>

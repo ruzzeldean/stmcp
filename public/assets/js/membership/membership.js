@@ -105,8 +105,8 @@ $(document).ready(function () {
       'Motorcycle model is required'
     );
     validateField(
-      '#chapter',
-      $('#chapter').val() === null,
+      '#chapter-id',
+      $('#chapter-id').val() === null,
       'Chapter is required'
     );
     validateField(
