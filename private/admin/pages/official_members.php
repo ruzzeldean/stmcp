@@ -175,18 +175,20 @@ $csrfToken = $_SESSION['csrfToken'];
                           <th>Last Name </th>
                           <th>Chapter </th>
                           <th>Date of Birth </th>
+                          <th>Civil Status </th>
                           <th>Blood Type </th>
-                          <th>Address </th>
+                          <th>Home Address </th>
                           <th>Phone Number </th>
-                          <th>Emergency Contact </th>
-                          <th>Email </th>
+                          <th>Email</th>
+                          <th>Emergency Contact Person </th>
+                          <th>Emergency Contact Number </th>
                           <th>Occupation </th>
-                          <th>Driver's License Number </th>
+                          <th>License Number </th>
                           <th>Motorcycle Brand </th>
                           <th>Motorcycle Model </th>
-                          <th>Engine Size (cc) </th>
-                          <th>Sponsored By </th>
-                          <th>Affiliations </th>
+                          <th>Sponsor </th>
+                          <th>Other Club Affiliation </th>
+                          <th>Date Joined </th>
                           <th>Created At </th>
                           <th>Updated At </th>
                           <th>Actions </th>
@@ -213,18 +215,21 @@ $csrfToken = $_SESSION['csrfToken'];
                               <td><?php echo e($row['last_name']); ?></td>
                               <td><?php echo e($row['chapter_name']); ?></td>
                               <td><?php echo e($row['date_of_birth']); ?></td>
+                              <td><?php echo e($row['civil_status']); ?></td>
                               <td><?php echo e($row['blood_type']); ?></td>
-                              <td><?php echo e($row['address']); ?></td>
+                              <td><?php echo e($row['home_address']); ?></td>
                               <td><?php echo e($row['phone_number']); ?></td>
-                              <td><?php echo e($row['contact_person_number']); ?></td>
                               <td><?php echo e($row['email']); ?></td>
+                              <td><?php echo e($row['emergency_contact_name']); ?></td>
+                              <td><?php echo e($row['emergency_contact_number']); ?></td>
                               <td><?php echo e($row['occupation']); ?></td>
-                              <td><?php echo e($row['drivers_license_number']); ?></td>
-                              <td><?php echo e($row['brand']); ?></td>
-                              <td><?php echo e($row['model']); ?></td>
-                              <td><?php echo e($row['engine_size_cc']); ?></td>
-                              <td><?php echo e($row['sponsored_by']); ?></td>
-                              <td><?php echo e($row['affiliations']); ?></td>
+                              <td><?php echo e($row['license_number']); ?></td>
+                              <td><?php echo e($row['motorcycle_brand']); ?></td>
+                              <td><?php echo e($row['motorcycle_model']); ?></td>
+                              <td><?php echo e($row['sponsor']); ?></td>
+
+                              <td><?php echo e($row['other_club_affiliation']); ?></td>
+                              <td><?php echo e($row['date_joined']); ?></td>
 
                               <td><?php echo e($row['created_at']); ?></td>
                               <td><?php echo e($row['updated_at']); ?></td>
