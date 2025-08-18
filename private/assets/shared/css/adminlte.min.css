@@ -34866,10 +34866,12 @@ html.maximized-card {
 .btn-app > .fal,
 .btn-app > .far,
 .btn-app > .fas,
+.btn-app > .fa-solid,
 .btn-app > .ion,
 .btn-app > .svg-inline--fa {
   display: block;
   font-size: 20px;
+  margin: 0 auto;
 }
 .btn-app > .svg-inline--fa {
   margin: 0 auto;
