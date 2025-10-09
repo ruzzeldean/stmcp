@@ -89,7 +89,7 @@
         <!-- <li class="nav-header">COMMUNICATION</li> -->
 
         <li class="nav-item">
-          <a href="./messages.php" class="nav-link <?= e($currentPage === 'messages.php' ? 'active' : '') ?>">
+          <a href="./contacts.php" class="nav-link <?= e($currentPage === 'messages.php' || $currentPage === 'contacts.php' ? 'active' : '') ?>">
             <i class="nav-icon fa-solid fa-message"></i>
             <p>Messages</p>
           </a>
