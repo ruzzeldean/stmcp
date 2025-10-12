@@ -36,15 +36,34 @@ textarea {
   white-space: pre-wrap;
 }
 
-#search-container {
+#contacts-content-wrapper {
   position: relative;
 }
 
-#search-input {
+.search-container {
+  position: relative;
+}
+
+#add-contact {
+  font-size: 1.5rem;
+  height: 3.5rem;
+  width: 3.5rem;
+  position: absolute; /* absolute | fixed */
+  bottom: 25px; /* 25px | 70px */
+  right: 25px;
+  transition: .5s ease;
+}
+
+#add-contact:hover {
+  transform: scale(1.1) rotate(90deg);
+}
+
+.search-input {
   padding-left: 2rem;
 }
 
-#search-icon {
+#search-icon,
+#search-new-icon {
   color: #3b3b3b;
   position: absolute;
   top: 50%;
@@ -56,6 +75,10 @@ textarea {
 .contact-card:hover {
   background: #c0c0c0;
   cursor: pointer;
+}
+
+#new-contact-results p {
+  margin-bottom: 0 !important;
 }
 
 /*  */
