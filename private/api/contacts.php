@@ -4,8 +4,8 @@ require_once __DIR__ . '/../includes/helpers.php';
 requireLogin();
 
 $db = new Database();
-
 $currentUser = $_SESSION['userID'];
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 $sql = 'SELECT
           u.user_id,
@@ -23,9 +23,17 @@ $sql = 'SELECT
           WHERE sender_id = ? OR receiver_id = ?
           GROUP BY contact_id
         ) recent ON u.user_id = recent.contact_id
-        INNER JOIN messages m ON m.message_id = recent.last_message_id
-        ORDER BY m.created_at DESC';
+        INNER JOIN messages m ON m.message_id = recent.last_message_id';
 
-$contacts = $db->fetchAll($sql, [$currentUser, $currentUser, $currentUser]);
+$params = [$currentUser, $currentUser, $currentUser];
+
+if ($search !== '') {
+  $sql .= ' WHERE CONCAT(u.first_name, " ", u.last_name) LIKE ?';
+  $params[] = "%$search%";
+}
+
+$sql .= ' ORDER BY m.created_at DESC';
+
+$contacts = $db->fetchAll($sql, $params);
 
 sendResponse('success', 'Contacts successfully fetched', $contacts);
