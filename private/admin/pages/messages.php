@@ -34,6 +34,10 @@ $lastName = $user['last_name'];
         <div class="card-header p-0">
           <div class="col-12 d-flex justify-content-between p-2">
             <div id="chatting-with-con" class="d-flex align-items-center rounded p-1">
+              <a href="./contacts.php" class="mr-1 text-dark">
+                <i id="msg-back-icon" class="fa-solid fa-chevron-left"></i>
+              </a>
+
               <div class="mr-2">
                 <img class="chat-avatar img-fluid rounded-circle" src="https://i.pravatar.cc/?img=12" alt="">
               </div>

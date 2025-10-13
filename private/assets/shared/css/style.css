@@ -111,6 +111,18 @@ textarea {
   background: var(--white) !important;
 }
 
+#msg-back-icon {
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+#msg-back-icon:hover {
+  background: #c0c0c0;
+}
+
 #chatting-with-con {
   max-width: 225px;
 }
