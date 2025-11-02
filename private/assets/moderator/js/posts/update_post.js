@@ -63,7 +63,7 @@ $(function () {
       formData.append('category', category);
       formData.append('image', image);
       formData.append('content', content);
-      formData.append('csrfToken', csrfToken);
+      formData.append('csrf_token', csrfToken);
 
       $('#update-btn').prop('disabled', true);
 

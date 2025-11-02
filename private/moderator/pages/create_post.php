@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../../includes/moderator_auth_check.php';
 
-if (empty($_SESSION['csrfToken'])) {
-  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-$csrfToken = $_SESSION['csrfToken'];
+$csrfToken = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

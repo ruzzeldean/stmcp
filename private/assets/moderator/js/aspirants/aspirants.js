@@ -15,15 +15,15 @@ $(function () {
           dataType: 'json',
           data: {
             aspirantID: aspirantID,
-            csrfToken: csrfToken,
+            csrf_token: csrfToken,
           },
-          success: (response) => {
-            if (response.status === 'success') {
-              Swal.fire('Success', response.message, 'success').then(() => {
+          success: (res) => {
+            if (res.status === 'success') {
+              Swal.fire('Success', res.message, 'success').then(() => {
                 location.reload();
               });
             } else {
-              Swal.fire('Error', response.message, 'error');
+              Swal.fire('Error', res.message, 'error');
             }
           },
           error: () => {
@@ -50,15 +50,15 @@ $(function () {
           dataType: 'json',
           data: {
             aspirantID: aspirantID,
-            csrfToken: csrfToken,
+            csrf_token: csrfToken,
           },
-          success: (response) => {
-            if (response.status === 'success') {
-              Swal.fire('Success', response.message, 'success').then(() => {
+          success: (res) => {
+            if (res.status === 'success') {
+              Swal.fire('Success', res.message, 'success').then(() => {
                 location.reload();
               });
             } else {
-              Swal.fire('Error', response.message, 'error');
+              Swal.fire('Error', res.message, 'error');
             }
           },
           error: () => {

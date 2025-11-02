@@ -13,7 +13,6 @@ function getData(payload, type) {
 
   $.ajax({
     url: '../../api/messages.php',
-    method: 'POST',
     data: JSON.stringify(data),
     contentType: 'application/json',
     dataType: 'json',

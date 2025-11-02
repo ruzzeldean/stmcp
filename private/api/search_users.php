@@ -4,20 +4,21 @@ require_once __DIR__ . '/../includes/helpers.php';
 requireLogin();
 
 $db = new Database();
-$currentUser = $_SESSION['userID'];
+$currentUser = $_SESSION['user_id'];
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 if ($search === '') {
-  sendResponse('success', 'No search term provided', []);
+  sendResponse('success', 'No search term provided');
 }
 
 $sql = 'SELECT
           u.user_id,
-          CONCAT(u.first_name, " ", u.last_name) AS full_name,
+          CONCAT(m.first_name, " ", m.last_name) AS full_name,
           u.username
         FROM users u
+        INNER JOIN official_members m ON u.member_id = m.member_id
         WHERE
-          (u.first_name LIKE ? OR u.last_name LIKE ? OR CONCAT(u.first_name, " ", u.last_name) LIKE ?)
+          (m.first_name LIKE ? OR m.last_name LIKE ? OR CONCAT(m.first_name, " ", m.last_name) LIKE ?)
           AND u.user_id != ?
           AND u.user_id NOT IN (
             SELECT IF (sender_id = ?, receiver_id, sender_id)

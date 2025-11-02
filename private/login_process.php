@@ -1,28 +1,14 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/includes/helpers.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
-
-require_once __DIR__ . '/../config/connection.php';
-
-function sendResponse($status, $message)
-{
-  echo json_encode(['status' => $status, 'message' => $message]);
-  exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  sendResponse('error', 'Invalid request method');
-}
+requirePost();
 
 if (!isset($_POST['username']) || !isset($_POST['password'])) {
   sendResponse('error', 'Invalid username or password');
 }
 
-$username = trim($_POST['username']);
-$password = trim($_POST['password']);
+$username = trim($_POST['username'] ?? '');
+$password = trim($_POST['password'] ?? '');
 
 if (empty($username)) {
   sendResponse('error', 'Username is required');
@@ -32,39 +18,51 @@ if (empty($password)) {
   sendResponse('error', 'Password is required');
 }
 
+$db = new Database();
+
 try {
-  $login = $conn->prepare('SELECT user_id, username, password, first_name, last_name, role_id FROM users WHERE username = :username');
-  $login->execute(['username' => $username]);
+  $sql = 'SELECT
+            om.first_name,
+            om.last_name,
+            u.user_id,
+            u.username,
+            u.password,
+            u.role_id
+          FROM official_members AS om
+          INNER JOIN users AS u
+            ON om.member_id = u.member_id
+          WHERE u.username = :username
+          LIMIT 1
+          ';
 
-  $row = $login->fetch();
+  $user = $db->fetchOne($sql, ['username' => $username]);
 
-  if ($row && password_verify($password, $row['password'])) {
+  if ($user && password_verify($password, $user['password'])) {
     session_regenerate_id(true);
 
-    $_SESSION['userID'] = $row['user_id'];
-    $_SESSION['firstName'] = $row['first_name'];
-    $_SESSION['lastName'] = $row['last_name'];
-    $_SESSION['roleID'] = $row['role_id'];
-    $roleID = $_SESSION['roleID'];
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['first_name'] = $user['first_name'];
+    $_SESSION['last_name'] = $user['last_name'];
+    $_SESSION['role_id'] = $user['role_id'];
 
-    switch ($roleID) {
+    switch ($_SESSION['role_id']) {
       case 1:
-        $_SESSION['superGatepass'] = 'super';
+        $_SESSION['gate_pass'] = 'super';
         sendResponse('success', '1');
         break;
 
       case 2:
-        $_SESSION['adminGatepass'] = 'admin';
+        $_SESSION['gate_pass'] = 'admin';
         sendResponse('success', '2');
         break;
 
       case 3:
-        $_SESSION['moderatorGatepass'] = 'moderator';
+        $_SESSION['gate_pass'] = 'moderator';
         sendResponse('success', '3');
         break;
 
       case 4:
-        $_SESSION['memberGatepass'] = 'member';
+        $_SESSION['gate_pass'] = 'member';
         sendResponse('success', '4');
         break;
 
@@ -74,7 +72,7 @@ try {
   } else {
     sendResponse('error', 'Incorrect username or password');
   }
-} catch (Throwable $ex) {
-  error_log('Login failed: ' . $ex->getMessage());
-  sendResponse('error', 'An error occured. Please try again later');
+} catch (Throwable $e) {
+  error_log('Login failed: ' . $e->getMessage());
+  sendResponse('error', 'An error occurred. Please try again later');
 }

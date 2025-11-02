@@ -5,8 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// require_once __DIR__ . '/../../config/connection.php';
-require_once __DIR__ . '/../classes/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 function sendResponse($status, $message, $data = [])
 {
@@ -22,7 +21,7 @@ function sendResponse($status, $message, $data = [])
 
 function requireLogin()
 {
-  if (!isset($_SESSION['userID'])) {
+  if (!isset($_SESSION['user_id'])) {
     sendResponse('error', 'You must be logged in');
   }
 }
@@ -36,7 +35,7 @@ function requirePost()
 
 function requireCsrf()
 {
-  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrfToken'] ?? '')) {
+  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
     sendResponse('error', 'Invalid CSRF token');
   }
 }

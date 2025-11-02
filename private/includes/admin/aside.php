@@ -27,7 +27,7 @@
         <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
       </div>
       <div class="info">
-        <a href="#" class="d-block"><?php echo e(strtoupper($_SESSION['firstName'])); ?></a>
+        <a href="#" class="d-block text-truncate"><?= e(strtoupper($_SESSION['first_name'] . ' ' . $_SESSION['last_name'])) ?></a>
       </div>
     </div>
 

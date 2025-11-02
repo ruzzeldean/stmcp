@@ -43,13 +43,11 @@
                   <span class="info-box-text">Official Members</span>
                   <span class="info-box-number">
                     <?php
-                    $countSql = 'SELECT COUNT(*) AS total FROM official_members';
-
                     try {
-                      $result = $conn->query($countSql);
+                      $sql = 'SELECT COUNT(*) AS total FROM official_members';
+                      $res = $db->fetchOne($sql);
 
-                      $row = $result->fetch();
-                      echo e($row['total']);
+                      echo e($res['total']);
                     } catch (Throwable $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
                       echo 'Unable to retrieve official member count. Please try again later.';
@@ -73,13 +71,11 @@
                   <span class="info-box-text">Admins</span>
                   <span class="info-box-number">
                     <?php
-                    $countSql = 'SELECT COUNT(*) AS total FROM users WHERE role_id = 2';
-
                     try {
-                      $result = $conn->query($countSql);
+                      $sql = 'SELECT COUNT(*) AS total FROM users WHERE role_id = 2';
+                      $res = $db->fetchOne($sql);
 
-                      $row = $result->fetch();
-                      echo e($row['total']);
+                      echo e($res['total']);
                     } catch (Throwable $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
                       echo 'Unable to retrieve admin count. Please try again later.';
@@ -100,13 +96,11 @@
                   <span class="info-box-text">Moderators</span>
                   <span class="info-box-number">
                     <?php
-                    $countSql = 'SELECT COUNT(*) AS total FROM users WHERE role_id = 3';
-
                     try {
-                      $result = $conn->query($countSql);
+                      $sql = 'SELECT COUNT(*) AS total FROM users WHERE role_id = 3';
+                      $res = $db->fetchOne($sql);
 
-                      $row = $result->fetch();
-                      echo e($row['total']);
+                      echo e($res['total']);
                     } catch (Throwable $ex) {
                       error_log("Count query failed: " .  $ex->getMessage());
                       echo 'Unable to retrieve moderator count. Please try again later.';

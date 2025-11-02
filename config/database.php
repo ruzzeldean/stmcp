@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../config/error_logging.php';
-// require_once __DIR__ . '/../../.env/credentials.php';
+require_once __DIR__ . '/error_logging.php';
 
 class Database
 {
@@ -14,11 +13,11 @@ class Database
 
   private function connect()
   {
-    $config = parse_ini_file(__DIR__ . '/../../config.ini', true);
-    $dbHost = $config ['database']['host'];
-    $dbName = $config ['database']['database'];
-    $dbUsername = $config ['database']['username'];
-    $dbPassword = $config ['database']['password'];
+    $config = parse_ini_file(__DIR__ . '/../config.ini', true);
+    $dbHost = $config['database']['host'];
+    $dbName = $config['database']['database'];
+    $dbUsername = $config['database']['username'];
+    $dbPassword = $config['database']['password'];
 
     $dsn = "mysql:host=" . $dbHost . ";dbname=" . $dbName . ";charset=utf8mb4";
 
@@ -56,6 +55,22 @@ class Database
     $stmt->execute($params);
     return $stmt->fetch() ?: null;
   }
+
+  public function beginTransaction()
+  {
+    return $this->conn->beginTransaction();
+  }
+
+  public function commit()
+  {
+    return $this->conn->commit();
+  }
+
+  public function rollBack()
+  {
+    return $this->conn->rollBack();
+  }
+
 
   public function getUserID($userID)
   {

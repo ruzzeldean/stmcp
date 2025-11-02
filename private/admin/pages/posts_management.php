@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../../includes/admin_auth_check.php';
 
-if (empty($_SESSION['csrfToken'])) {
-  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-$csrfToken = $_SESSION['csrfToken'];
+$csrfToken = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,50 +70,52 @@ $csrfToken = $_SESSION['csrfToken'];
                   <tbody>
                     <?php
                     try {
-                      $loadPosts = $conn->prepare(
-                        'SELECT posts.*, users.first_name, users.last_name
-                        FROM posts JOIN users
-                        WHERE posts.created_by = users.user_id'
-                      );
-                      $loadPosts->execute();
+                      $sql =
+                        'SELECT
+                          posts.*,
+                          om.first_name,
+                          om.last_name
+                        FROM posts
+                        JOIN users ON posts.created_by = users.user_id
+                        JOIN official_members AS om ON users.member_id = om.member_id';
 
-                      while ($row = $loadPosts->fetch()) {
+                      $posts = $db->fetchAll($sql);
+
+                      foreach ($posts as $post) :
+                        $status = $post['status'];
+                        $badge = match ($status) {
+                          'Pending' => 'secondary',
+                          'Published' => 'success',
+                          'Rejected' => 'danger',
+                          default => 'secondary'
+                        };
+
+                        $date = $post['created_at'];
+                        $formatted = date('F j, Y g:i A', strtotime($date));
                     ?>
                         <tr>
                           <td></td>
-                          <td class="text-truncate" style="max-width: 150px;"><?php echo e($row['title']); ?></td>
-                          <td><?php echo e($row['category']); ?></td>
-                          <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?php echo e($row['image_path']); ?>" alt="Post image"></td>
-                          <td class="text-truncate" style="max-width: 150px;"><?php echo e($row['content']); ?></td>
+                          <td class="text-truncate" style="max-width: 150px;"><?= e($post['title']) ?></td>
+                          <td><?= e($post['category']) ?></td>
+                          <td><img class="img-thumbnail" src="/stmcp/uploads/posts/<?= e($post['image_path']) ?>" alt="Post image"></td>
+                          <td class="text-truncate" style="max-width: 150px;"><?= e($post['content']) ?></td>
                           <td>
-                            <?php
-                              $status = $row['status'];
-                              $badge = match($status) {
-                                'Pending' => 'secondary',
-                                'Published' => 'success',
-                                'Rejected' => 'danger',
-                                default => 'secondary'
-                              }
-                            ?>
-                            <span class="badge badge-<?php echo e($badge); ?>"><?php echo e($status); ?></span>
+
+                            <span class="badge badge-<?= e($badge) ?>"><?= e($status) ?></span>
                           </td>
-                          <td><?php echo e($row['reason']); ?></td>
-                          <td><?php echo e($row['first_name'] . " " . $row['last_name']); ?></td>
+                          <td><?= e($post['reason']) ?></td>
+                          <td><?= e($post['first_name'] . " " . $post['last_name']) ?></td>
                           <td>
-                            <?php
-                            $date = $row['created_at'];
-                            $formatted = date('F j, Y g:i A', strtotime($date));
-                            echo e($formatted, ENT_QUOTES, 'UTF-8');
-                            ?>
+                            <?= e($formatted, ENT_QUOTES, 'UTF-8') ?>
                           </td>
                           <td>
-                            <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?php echo e($row['post_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Preview</button>
+                            <button class="preview-btn btn btn-primary" title="Preview" data-post-id="<?= e($post['post_id']) ?>" data-csrf-token="<?= e($csrfToken) ?>">Preview</button>
                           </td>
                         </tr>
                     <?php
-                      }
-                    } catch (Throwable $ex) {
-                      error_log('Error fetching posts (admin): ' . $ex->getMessage());
+                      endforeach;
+                    } catch (Throwable $e) {
+                      error_log('Error fetching posts (admin): ' . $e->getMessage());
                       echo '<div class="alert alert-warning" role="alert">An error occured while fetching data. Please try again later.</div>';
                     }
                     ?>
@@ -165,7 +167,7 @@ $csrfToken = $_SESSION['csrfToken'];
 
   <!-- REQUIRED SCRIPTS -->
 
-  <?php require_once __DIR__ . '/../../includes/admin/scripts.php' ?>  
+  <?php require_once __DIR__ . '/../../includes/admin/scripts.php' ?>
   <script src="../../assets/admin/js/posts/posts_management.js"></script>
 </body>
 

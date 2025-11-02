@@ -27,7 +27,7 @@
         <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
       </div>
       <div class="info">
-        <a href="#" class="d-block"><?= e(strtoupper($_SESSION['firstName'])); ?></a>
+        <a href="#" class="d-block"><?= e(strtoupper($_SESSION['first_name'])); ?></a>
       </div>
     </div>
 

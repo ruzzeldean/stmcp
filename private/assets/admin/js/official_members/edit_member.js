@@ -146,15 +146,15 @@ $(function () {
         method: 'POST',
         dataType: 'json',
         data: $('#membership-form').serialize(),
-        success: (response) => {
-          if (response.status === 'success') {
+        success: (res) => {
+          if (res.status === 'success') {
             loading();
-            Swal.fire('Success', response.message, 'success').then(() => {
+            Swal.fire('Success', res.message, 'success').then(() => {
               location.reload();
             });
           } else {
             $btn.prop('disabled', false);
-            Swal.fire('Error', response.message, 'error');
+            Swal.fire('Error', res.message, 'error');
           }
         },
         error: () => {

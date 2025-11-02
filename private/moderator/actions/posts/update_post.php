@@ -1,25 +1,9 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../../../includes/helpers.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
-
-require_once __DIR__ . '/../../../../config/connection.php';
-
-function sendResponse($status, $message)
-{
-  echo json_encode(['status' => $status, 'message' => $message]);
-  exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  sendResponse('error', 'Invalid request method');
-}
-
-if (!isset($_POST['csrfToken']) || $_POST['csrfToken'] !== $_SESSION['csrfToken']) {
-  sendResponse('error', 'Invalid token');
-}
+requireLogin();
+requirePost();
+requireCsrf();
 
 if (!isset($_POST['postID']) || !is_numeric($_POST['postID'])) {
   sendResponse('error', 'Invalid Post ID');
@@ -30,6 +14,8 @@ $postID = (int) $_POST['postID'];
 if (!isset($_POST['title']) || !isset($_POST['category']) || !isset($_POST['content'])) {
   sendResponse('error', 'Missing field');
 }
+
+$db = new Database();
 
 $title = trim($_POST['title']);
 $category = trim($_POST['category']);
@@ -83,8 +69,8 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 }
 
 if ($imagePath) {
-  $stmt = $conn->prepare('SELECT image_path FROM posts WHERE post_id = :post_id');
-  $stmt->execute(['post_id' => $postID]);
+  $sql = 'SELECT image_path FROM posts WHERE post_id = :post_id LIMIT 1';
+  $stmt = $db->execute($sql, ['post_id' => $postID]);
   $oldImage = $stmt->fetchColumn();
 
   if ($oldImage) {
@@ -97,7 +83,7 @@ if ($imagePath) {
 
 try {
   if ($imagePath) {
-    $sql = 'UPDATE posts SET title = :title, category = :category, content = :content, image_path = :image WHERE post_id = :post_id';
+    $sql = 'UPDATE posts SET title = :title, category = :category, content = :content, image_path = :image WHERE post_id = :post_id LIMIT 1';
     $params = [
       'title' => $title,
       'category' => $category,
@@ -115,11 +101,10 @@ try {
     ];
   }
 
-  $update = $conn->prepare($sql);
-  $update->execute($params);
+  $db->execute($sql, $params);
 
   sendResponse('success', 'Post updated successfully');
-} catch (Throwable $ex) {
-  error_log('Update post error: ' . $ex->getMessage());
+} catch (Throwable $e) {
+  error_log('Update post error: ' . $e->getMessage());
   sendResponse('error', 'Failed to update post. Please try again later');
 }

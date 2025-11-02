@@ -10,25 +10,25 @@ if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT) || $_GE
 
 $postID = (int) $_GET['id'];
 
-if (empty($_SESSION['csrfToken'])) {
-  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-$csrfToken = $_SESSION['csrfToken'];
+$csrfToken = $_SESSION['csrf_token'];
 
 try {
-  $stmt = $conn->prepare('SELECT posts.title, posts.category, posts.image_path, posts.content FROM posts WHERE post_id = :post_id');
-  $stmt->execute(['post_id' => $postID]);
-
-  $post = $stmt->fetch();
+  $sql = 'SELECT posts.title, posts.category, posts.image_path, posts.content
+          FROM posts
+          WHERE post_id = :post_id';
+  $post = $db->fetchOne($sql, ['post_id' => $postID]);
 
   if (!$post) {
     error_log('No post found');
     http_response_code(404);
     exit;
   }
-} catch (Throwable $ex) {
-  error_log('Error fetching post: ' . $ex->getMessage());
+} catch (Throwable $e) {
+  error_log('Error fetching post: ' . $e->getMessage());
   http_response_code(500);
   echo e('Something went wrong, please try again later');
   exit;

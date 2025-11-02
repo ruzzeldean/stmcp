@@ -1,30 +1,12 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../../../includes/helpers.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
+requireLogin();
+requirePost();
+requireCsrf();
 
-require_once __DIR__ . '/../../../../config/connection.php';
-
-function sendResponse($status, $message)
-{
-  echo json_encode(['status' => $status, 'message' => $message]);
-  exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  sendResponse('error', 'Invalid request method');
-}
-
-if (!isset($_POST['csrfToken']) || $_POST['csrfToken'] !== $_SESSION['csrfToken']) {
-  sendResponse('error', 'Invalid token');
-}
-
-$moderatorID = $_SESSION['userID'] ?? null;
-if (!$moderatorID) {
-  sendResponse('error', 'Unauthorized access');
-}
+$db = new Database();
+$moderatorID = $_SESSION['user_id'];
 
 $maxTitleLength = 100;
 $maxContentLength = 5000;
@@ -94,18 +76,21 @@ if (!move_uploaded_file($imageTmpPath, $uploadPath)) {
 }
 
 try {
-  $createPost = $conn->prepare('INSERT INTO posts (title, category, image_path, status, content, created_by) VALUES (:title, :category, :image_path, :status, :content, :moderator_id)');
-  $createPost->execute([
+  $sql = 'INSERT INTO posts (title, category, image_path, status, content, created_by)
+          VALUES (:title, :category, :image_path, :status, :content, :moderator_id)';
+  $params = [
     'title' => $title,
     'category' => $category,
     'image_path' => $newImageName,
     'content' => $content,
     'status' => 'Pending',
     'moderator_id' => $moderatorID
-  ]);
+  ];
+
+  $db->execute($sql, $params);
 
   sendResponse('success', 'Post created successfully');
-} catch (Throwable $ex) {
-  error_log('Create Post Error: ' . $ex->getMessage());
+} catch (Throwable $e) {
+  error_log('Create Post Error: ' . $e->getMessage());
   sendResponse('error', 'An unexpected error occured while createing the post');
 }

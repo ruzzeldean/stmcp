@@ -1,54 +1,55 @@
 <?php
 require_once __DIR__ . '/../../includes/admin_auth_check.php';
 
-if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT) || $_GET['id'] <= 0) {
-  error_log('Invalid request: Missing Member ID');
-  // header('Location: /stmcp/error_page.php?message=Invalid+Member+ID');
-  exit;
+$memberID = $_GET['id'] ?? null;
+
+if (! filter_var($memberID, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
+  error_log('Invalid request: Missing or invalid Member ID');
+  http_response_code(400);
+  exit('Invalid request.');
 }
 
-$memberID = (int) $_GET['id'];
-
-if (empty($_SESSION['csrfToken'])) {
-  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-$csrfToken = $_SESSION['csrfToken'];
+$csrfToken = $_SESSION['csrf_token'];
 
 try {
-  $stmt = $conn->prepare('SELECT * FROM official_members WHERE member_id = :member_id');
-  $stmt->execute(['member_id' => $memberID]);
+  $sql = 'SELECT * FROM official_members
+          WHERE member_id = :member_id LIMIT 1';
 
-  $row = $stmt->fetch();
-  if (!$row) {
+  $member = $db->fetchOne($sql, ['member_id' => $memberID]);
+
+  if (!$member) {
     error_log('No member found for ID: ' . $memberID);
-    exit;
+    http_response_code(400);
+    exit('Member not found.');
   }
-} catch (Throwable $ex) {
-  error_log('Error fetching member info: ' . $ex->getMessage());
-  echo e('Database error');
-  exit;
+} catch (Throwable $e) {
+  error_log('Error fetching member info: ' . $e->getMessage());
+  exit('An unexpected error occurred. Please try again later.');
 }
 
-$firstName = $row['first_name'];
-$lastName = $row['last_name'];
-$middleName = $row['middle_name'] ?? '';
-$chapter = $row['chapter_id'];
-$dateOfBirth = $row['date_of_birth'];
-$civilStatus = $row['civil_status'];
-$bloodType = $row['blood_type'];
-$homeAddress = $row['home_address'];
-$phoneNumber = $row['phone_number'];
-$email = $row['email'];
-$emergencyContactName = $row['emergency_contact_name'];
-$emergencyContactNumber = $row['emergency_contact_number'];
-$occupation = $row['occupation'];
-$licenseNumber = $row['license_number'];
-$motorcycleBrand = $row['motorcycle_brand'];
-$motorcycleModel = $row['motorcycle_model'];
-$sponsor = $row['sponsor'] ?? '';
-$otherClubAffiliation = $row['other_club_affiliation'] ?? '';
-$dateJoined = $row['date_joined'];
+$firstName = $member['first_name'];
+$lastName = $member['last_name'];
+$middleName = $member['middle_name'] ?? '';
+$chapter = $member['chapter_id'];
+$dateOfBirth = $member['date_of_birth'];
+$civilStatus = $member['civil_status'];
+$bloodType = $member['blood_type'];
+$homeAddress = $member['home_address'];
+$phoneNumber = $member['phone_number'];
+$email = $member['email'];
+$emergencyContactName = $member['emergency_contact_name'];
+$emergencyContactNumber = $member['emergency_contact_number'];
+$occupation = $member['occupation'];
+$licenseNumber = $member['license_number'];
+$motorcycleBrand = $member['motorcycle_brand'];
+$motorcycleModel = $member['motorcycle_model'];
+$sponsor = $member['sponsor'] ?? '';
+$otherClubAffiliation = $member['other_club_affiliation'] ?? '';
+$dateJoined = $member['date_joined'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -90,7 +91,7 @@ $dateJoined = $row['date_joined'];
               <form id="membership-form" novalidate>
                 <fieldset class="mb-4">
                   <legend>Personal Information</legend>
-                  
+
                   <div class="row row-gap-3">
                     <div class="col-lg-6">
                       <div class="form-group">
@@ -305,7 +306,7 @@ $dateJoined = $row['date_joined'];
                     </div> <!-- .col -->
                   </div> <!-- .row -->
                 </fieldset> <!-- fieldset -->
-                
+
                 <input type="hidden" name="csrf_token" value="<?= e($csrfToken) ?>">
 
                 <input type="hidden" name="member_id" value="<?= e($memberID) ?>">

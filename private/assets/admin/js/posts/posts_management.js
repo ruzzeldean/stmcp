@@ -10,7 +10,7 @@ $(function () {
       dataType: 'json',
       data: {
         postID: postID,
-        csrfToken: csrfToken,
+        csrf_token: csrfToken,
       },
       success: (data) => {
         if (data.status === 'success') {
@@ -56,15 +56,15 @@ $(function () {
           dataType: 'json',
           data: {
             postID: postID,
-            csrfToken: csrfToken,
+            csrf_token: csrfToken,
           },
-          success: (response) => {
-            if (response.status === 'success') {
-              Swal.fire('Success', response.message, 'success').then(() => {
+          success: (res) => {
+            if (res.status === 'success') {
+              Swal.fire('Success', res.message, 'success').then(() => {
                 location.reload();
               });
             } else {
-              Swal.fire('Error', response.message, 'error').then(() => {
+              Swal.fire('Error', res.message, 'error').then(() => {
                 $('#preview-modal').modal('show');
               });
             }
@@ -119,15 +119,15 @@ $(function () {
               data: {
                 postID: postID,
                 reason: reason,
-                csrfToken: csrfToken,
+                csrf_token: csrfToken,
               },
-              success: (response) => {
-                if (response.status === 'success') {
-                  Swal.fire('Success', response.message, 'success').then(() => {
+              success: (res) => {
+                if (res.status === 'success') {
+                  Swal.fire('Success', res.message, 'success').then(() => {
                     location.reload();
                   });
                 } else {
-                  Swal.fire('Error', response.message, 'error').then(() => {
+                  Swal.fire('Error', res.message, 'error').then(() => {
                     $('#preview-modal').modal('show');
                   });
                 }

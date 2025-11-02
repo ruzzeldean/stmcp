@@ -3,12 +3,13 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-if (!isset($_SESSION['moderatorGatepass'])) {
+if (!isset($_SESSION['gate_pass']) || $_SESSION['gate_pass'] !== 'moderator') {
   header('Location: /stmcp/private/');
   exit;
 }
 
-require_once __DIR__ . '/../../config/connection.php';
+require_once __DIR__ . '/../../config/database.php';
+$db = new Database();
 
 function e($value)
 {

@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../../includes/moderator_auth_check.php';
 
-if (empty($_SESSION['csrfToken'])) {
-  $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-$csrfToken = $_SESSION['csrfToken'];
+$csrfToken = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,51 +78,49 @@ $csrfToken = $_SESSION['csrfToken'];
                         <?php
 
                         try {
-                          $qry = $conn->prepare(
-                            'SELECT aspirants.*, chapters.chapter_name
-                            FROM aspirants
-                            JOIN chapters ON aspirants.chapter_id = chapters.chapter_id'
-                          );
-                          $qry->execute();
+                          $sql = 'SELECT aspirants.*, chapters.chapter_name
+                                  FROM aspirants
+                                  JOIN chapters ON aspirants.chapter_id = chapters.chapter_id';
+                          $rows = $db->fetchAll($sql);
 
-                          while ($row = $qry->fetch()) {
+                          foreach ($rows as $row) :
                         ?>
                             <tr>
                               <td></td>
-                              <td><?php echo e($row['aspirant_id']); ?></td>
-                              <td><?php echo e($row['first_name']); ?></td>
-                              <td><?php echo e($row['middle_name'] ?? ''); ?></td>
-                              <td><?php echo e($row['last_name']); ?></td>
-                              <td><?php echo e($row['chapter_name']); ?></td>
-                              <td><?php echo e($row['date_of_birth']); ?></td>
-                              <td><?php echo e($row['civil_status']); ?></td>
-                              <td><?php echo e($row['blood_type']); ?></td>
-                              <td><?php echo e($row['home_address']); ?></td>
-                              <td><?php echo e($row['phone_number']); ?></td>
-                              <td><?php echo e($row['email']); ?></td>
-                              <td><?php echo e($row['emergency_contact_name']); ?></td>
-                              <td><?php echo e($row['emergency_contact_number']); ?></td>
-                              <td><?php echo e($row['occupation']); ?></td>
-                              <td><?php echo e($row['license_number']); ?></td>
-                              <td><?php echo e($row['motorcycle_brand']); ?></td>
-                              <td><?php echo e($row['motorcycle_model']); ?></td>
-                              <td><?php echo e($row['sponsor']); ?></td>
+                              <td><?= e($row['aspirant_id']) ?></td>
+                              <td><?= e($row['first_name']) ?></td>
+                              <td><?= e($row['middle_name'] ?? '') ?></td>
+                              <td><?= e($row['last_name']) ?></td>
+                              <td><?= e($row['chapter_name']) ?></td>
+                              <td><?= e($row['date_of_birth']) ?></td>
+                              <td><?= e($row['civil_status']) ?></td>
+                              <td><?= e($row['blood_type']) ?></td>
+                              <td><?= e($row['home_address']) ?></td>
+                              <td><?= e($row['phone_number']) ?></td>
+                              <td><?= e($row['email']) ?></td>
+                              <td><?= e($row['emergency_contact_name']) ?></td>
+                              <td><?= e($row['emergency_contact_number']) ?></td>
+                              <td><?= e($row['occupation']) ?></td>
+                              <td><?= e($row['license_number']) ?></td>
+                              <td><?= e($row['motorcycle_brand']) ?></td>
+                              <td><?= e($row['motorcycle_model']) ?></td>
+                              <td><?= e($row['sponsor']) ?></td>
 
-                              <td><?php echo e($row['other_club_affiliation']); ?></td>
-                              <td><?php echo e($row['date_joined']); ?></td>
-                              <td><?php echo e($row['created_at']); ?></td>
+                              <td><?= e($row['other_club_affiliation']) ?></td>
+                              <td><?= e($row['date_joined']) ?></td>
+                              <td><?= e($row['created_at']) ?></td>
                               <td>
                                 <button class="approve-btn btn btn-success"
-                                  data-aspirant-id="<?php echo e($row['aspirant_id']); ?>" data-csrf-token="<?php echo $csrfToken; ?>">Approve</button>
+                                  data-aspirant-id="<?= e($row['aspirant_id']) ?>" data-csrf-token="<?= $csrfToken; ?>">Approve</button>
 
                                 <button class="reject-btn btn btn-danger"
-                                  data-aspirant-id="<?php echo e($row['aspirant_id']); ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Reject</button>
+                                  data-aspirant-id="<?= e($row['aspirant_id']) ?>" data-csrf-token="<?= e($csrfToken); ?>">Reject</button>
                               </td>
                             </tr>
                         <?php
-                          }
-                        } catch (Throwable $ex) {
-                          error_log("Database error in: " . __FILE__ . " at line " . __LINE__ . $ex->getMessage());
+                          endforeach;
+                        } catch (Throwable $e) {
+                          error_log("Database error in: " . __FILE__ . " at line " . __LINE__ . $e->getMessage());
                           echo '<div class="alert alert-warning" role="alert">An error occured while fetching data. Please try again later.</div>';
                         }
                         ?>

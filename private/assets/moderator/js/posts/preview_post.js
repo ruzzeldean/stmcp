@@ -9,7 +9,7 @@ $(function () {
       dataType: 'json',
       data: {
         postID: postID,
-        csrfToken: csrfToken,
+        csrf_token: csrfToken,
       },
       success: (data) => {
         if (data.status === 'success') {

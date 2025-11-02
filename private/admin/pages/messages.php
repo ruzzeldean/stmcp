@@ -1,16 +1,13 @@
 <?php
 require_once __DIR__ . '/../../includes/admin_auth_check.php';
-require_once __DIR__ . '/../../classes/database.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
   exit('Invalid or missing contact ID');
 }
 
-$db = new Database();
-
 $contactID = (int) $_GET['id'];
 
-$sql = 'SELECT * FROM users WHERE user_id = :user_id LIMIT 1';
+$sql = 'SELECT u.user_id, m.first_name, m.last_name FROM users u INNER JOIN official_members m ON u.member_id = m.member_id WHERE user_id = :user_id LIMIT 1';
 $user = $db->fetchOne($sql, ['user_id' => $contactID]);
 
 $firstName = $user['first_name'];
@@ -89,7 +86,7 @@ $lastName = $user['last_name'];
 
   <?php require_once __DIR__ . '/../../includes/admin/scripts.php'; ?>
   <script>
-    const CURRENT_USER_ID = <?= e((int) $_SESSION['userID']) ?>;
+    const CURRENT_USER_ID = <?= e((int) $_SESSION['user_id']) ?>;
     const CONTACT_ID = <?= e((int) $contactID) ?>;
   </script>
   <script defer src="../../assets/shared/js/messages.js"></script>

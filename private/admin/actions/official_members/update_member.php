@@ -1,38 +1,16 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../../../includes/helpers.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
+requireLogin();
+requirePost();
+requireCsrf();
 
-require_once __DIR__ . '/../../../../config/connection.php';
-
-function sendResponse($status, $message)
-{
-  echo json_encode(['status' => $status, 'message' => $message]);
-  exit;
-}
-
-function sanitizeString($input)
-{
-  $input = trim((string) $input);
-  $input = strip_tags($input);
-  $input = preg_replace('/[\x00-\x1F\x7F]/u', '', $input);
-  return $input;
-}
+$db = new Database();
 
 function validateDate($date)
 {
   $d = DateTime::createFromFormat('Y-m-d', $date);
   return $d && $d->format('Y-m-d') === $date;
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  sendResponse('error', 'Invalid request method');
-}
-
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrfToken']) {
-  sendResponse('error', 'Invalid token');
 }
 
 $requiredFields = [
@@ -83,7 +61,7 @@ if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
   sendResponse('error', 'Invalid email format');
 }
 
-if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['phone_number'])) {
+/* if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['phone_number'])) {
   sendResponse('error', 'Invalid phone number');
 }
 
@@ -93,7 +71,7 @@ if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['emergency_contact_nu
   sendResponse('error', 'Invalid emergency contact number');
 }
 
-$data['emergency_contact_number'] = preg_replace('/[^0-9+]/', '', $data['emergency_contact_number']);
+$data['emergency_contact_number'] = preg_replace('/[^0-9+]/', '', $data['emergency_contact_number']); */
 
 if (!validateDate($data['date_joined'])) {
   sendResponse('error', 'Invalid date joined');
@@ -126,22 +104,22 @@ try {
     other_club_affiliation = :other_club_affiliation
     WHERE member_id = :member_id';
 
-  $update = $conn->prepare($sql);
-  $update->execute($data);
+  $update = $db->execute($sql, $data);
 
   if ($update->rowCount() > 0) {
     sendResponse('success', 'Member updated successfully');
   } else {
-    $check = $conn->prepare('SELECT member_id FROM official_members WHERE member_id = :member_id');
-    $check->execute(['member_id' => $memberID]);
+    $sql = 'SELECT member_id FROM official_members
+            WHERE member_id = :member_id LIMIT 1';
+    $check = $db->fetchOne($sql, ['member_id' => $memberID]);
 
-    if ($check->fetch()) {
+    if ($check) {
       sendResponse('success', 'No changes were made. Data is already up to date');
     } else {
       sendResponse('error', 'No member found with the ID provided');
     }
   }
-} catch (Throwable $ex) {
-  error_log('Failed updating member: ' . $ex->getMessage());
+} catch (Throwable $e) {
+  error_log('Failed updating member: ' . $e->getMessage());
   sendResponse('error', 'An error occured while updating the member. Please try again later');
 }

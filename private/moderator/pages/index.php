@@ -43,13 +43,13 @@
                   <span class="info-box-text">Aspirants</span>
                   <span class="info-box-number">
                     <?php
-                    $countSql = 'SELECT COUNT(*) AS total FROM aspirants';
+                    
 
                     try {
-                      $result = $conn->query($countSql);
+                      $sql = 'SELECT COUNT(*) AS total FROM aspirants';
+                      $res = $db->fetchOne($sql);
 
-                      $row = $result->fetch();
-                      echo e($row['total']);
+                      echo e($res['total']);
                     } catch (Throwable $ex) {
                       error_log("Count query failed: " . $ex->getMessage());
                       echo e('Unable to retrieve official member count. Please try again later.');

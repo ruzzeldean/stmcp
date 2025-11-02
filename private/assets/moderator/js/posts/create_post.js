@@ -57,7 +57,7 @@ $(function () {
       formData.append('category', category);
       formData.append('image', image);
       formData.append('content', content);
-      formData.append('csrfToken', csrfToken);
+      formData.append('csrf_token', csrfToken);
 
       $('#create-btn').prop('disabled', true);
 
@@ -68,12 +68,12 @@ $(function () {
         processData: false,
         contentType: false,
         dataType: 'json',
-        success: (response) => {
-          if (response.status === 'success') {
-            alert(response.message);
+        success: (res) => {
+          if (res.status === 'success') {
+            alert(res.message);
             location.reload();
           } else {
-            alert(response.message);
+            alert(res.message);
           }
           $('#create-btn').prop('disabled', false);
         },

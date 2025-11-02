@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../includes/helpers.php';
 
 requireLogin();
-requirePost();
 
 $rawInput = file_get_contents('php://input');
 $requestData = json_decode($rawInput);
@@ -26,14 +25,14 @@ switch ($action) {
       sendResponse('error', 'Missing requiredfields');
     }
 
-    $sql = 'SELECT * FROM users WHERE user_id = :user_id LIMIT 1';
+    $sql = 'SELECT u.user_id FROM users u WHERE user_id = :user_id LIMIT 1';
     $recipient = $db->fetchOne($sql, ['user_id' => $receiverID]);
 
     if (!$recipient) {
       sendResponse('error', 'User not found');
     }
 
-    $senderID = $_SESSION['userID'];
+    $senderID = $_SESSION['user_id'];
     $conversationID = getConversationID($senderID, $receiverID);
 
     $messageData = [
@@ -62,7 +61,7 @@ switch ($action) {
       sendResponse('error', 'Missing user ID');
     }
 
-    $senderID = $_SESSION['userID'];
+    $senderID = $_SESSION['user_id'];
     $conversationID = getConversationID($senderID, $receiverID);
 
     $fetchSql = 'SELECT * FROM messages

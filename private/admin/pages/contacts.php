@@ -87,7 +87,7 @@
 
   <?php require_once __DIR__ . '/../../includes/admin/scripts.php'; ?>
   <script>
-    const CURRENT_USER_ID = <?= e((int) $_SESSION['userID']) ?>;
+    const CURRENT_USER_ID = <?= e((int) $_SESSION['user_id']) ?>;
   </script>
   <script src="../../assets/shared/js/contacts.js"></script>
 </body>

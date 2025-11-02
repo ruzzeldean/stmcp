@@ -1,12 +1,10 @@
 .env
 
+config.ini
+
 /vendor/
 
-AdminLTE-3.2.0
-
 old
-
-dark-mode.css
 
 ignore
 
