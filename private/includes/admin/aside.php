@@ -27,7 +27,7 @@
         <img src="../../assets/shared/images/user-icon/user-icon.png" alt="User Icon">
       </div>
       <div class="info">
-        <a href="#" class="d-block text-truncate"><?= e(strtoupper($_SESSION['first_name'] . ' ' . $_SESSION['last_name'])) ?></a>
+        <a href="#" class="d-block text-truncate"><?= e(strtoupper($_SESSION['first_name'])) ?></a>
       </div>
     </div>
 
@@ -43,8 +43,6 @@
           </a>
         </li>
 
-        <!-- <li class="nav-header">MEMBERS</li> -->
-
         <li class="nav-item">
           <a href="./official_members.php" class="nav-link <?= e($currentPage === 'official_members.php' || $currentPage === 'edit_member.php' ? 'active' : '') ?>">
             <i class="nav-icon fa-solid fa-user-check"></i>
@@ -55,13 +53,18 @@
         </li>
 
         <li class="nav-item">
-          <a href="./user_accounts.php" class="nav-link <?= e($currentPage === 'users_account.php' ? 'active' : '') ?>">
+          <a href="./user_accounts.php" class="nav-link <?= e($currentPage === 'user_accounts.php' ? 'active' : '') ?>">
             <i class="nav-icon fa-solid fa-users"></i>
             <p>User Accounts</p>
           </a>
         </li>
 
-        <!-- <li class="nav-header">CONTENT MANAGEMENT</li> -->
+        <li class="nav-item">
+          <a href="./contacts.php" class="nav-link <?= e($currentPage === 'messages.php' || $currentPage === 'contacts.php' ? 'active' : '') ?>">
+            <i class="nav-icon fa-solid fa-message"></i>
+            <p>Messages</p>
+          </a>
+        </li>
 
         <li class="nav-item">
           <a href="./posts_management.php" class="nav-link <?= e($currentPage === 'posts_management.php' ? 'active' : '') ?>">
@@ -69,8 +72,6 @@
             <p>Posts Management</p>
           </a>
         </li>
-
-        <!-- <li class="nav-header">FINANCES</li> -->
 
         <li class="nav-item">
           <a href="./donations.php" class="nav-link <?= e($currentPage === 'donations.php' ? 'active' : '') ?>">
@@ -85,17 +86,6 @@
             <p>Merchandise</p>
           </a>
         </li>
-
-        <!-- <li class="nav-header">COMMUNICATION</li> -->
-
-        <li class="nav-item">
-          <a href="./contacts.php" class="nav-link <?= e($currentPage === 'messages.php' || $currentPage === 'contacts.php' ? 'active' : '') ?>">
-            <i class="nav-icon fa-solid fa-message"></i>
-            <p>Messages</p>
-          </a>
-        </li>
-
-        <!-- <li class="nav-header">SYSTEM</li> -->
 
         <li class="nav-item">
           <a href="./settings.php" class="nav-link <?= e($currentPage === 'settings.php' ? 'active' : '') ?>">

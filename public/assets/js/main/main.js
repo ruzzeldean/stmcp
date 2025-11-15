@@ -1,5 +1,5 @@
 $(function () {
   $('#act-page').on('click', () => {
-    sessionStorage.removeItem('past_page');
+    sessionStorage.removeItem('activities_page');
   });
 });

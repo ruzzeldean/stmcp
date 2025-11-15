@@ -130,7 +130,7 @@
           <div class="row row-gap-4">
             <div class="col-md-6">
               <div class="lead card shadow p-4 h-100">
-                <i class="fa-solid fa-bullseye mb-4 text-center text-warning fs-1"></i>
+                <p class="text-center mb-0"><i class="fa-solid fa-bullseye mb-4 text-warning fs-1"></i></p>
 
                 <h4 class="text-center mb-3">Mission</h4>
 
@@ -144,7 +144,7 @@
 
             <div class="col-md-6">
               <div class="lead card shadow p-4 h-100">
-                <i class="fa-solid fa-eye mb-4 text-center text-warning fs-1"></i>
+                <p class="text-center mb-0"><i class="fa-solid fa-eye mb-4 text-warning fs-1"></i></p>
 
                 <h4 class="text-center mb-3">Vision</h4>
 

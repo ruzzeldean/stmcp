@@ -1,10 +1,6 @@
-.env
-
 config.ini
 
 /vendor/
-
-old
 
 ignore
 

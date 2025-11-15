@@ -55,6 +55,7 @@ $csrfToken = $_SESSION['csrf_token'];
                     <label for="category">Category</label>
                     <select class="custom-select" id="category">
                       <option value="" selected disabled>Select category</option>
+                      <option value="Announcement">Announcement</option>
                       <option value="Upcoming">Upcoming</option>
                       <option value="Past Event">Past Event</option>
                     </select>

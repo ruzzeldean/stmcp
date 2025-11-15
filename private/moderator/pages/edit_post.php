@@ -80,34 +80,33 @@ $content = $post['content'];
                 <div class="card-body">
                   <div class="form-group">
                     <label for="title">Post Title</label>
-                    <input class="form-control" type="text" id="title" placeholder="Enter title (max: 100 characters)" maxlength="100" value="<?php echo e($title); ?>">
+                    <input class="form-control" type="text" id="title" placeholder="Enter title (max: 100 characters)" maxlength="100" value="<?= e($title) ?>">
                   </div>
 
                   <div class="form-group">
                     <label for="category">Category</label>
                     <select class="custom-select" id="category">
                       <option value="" selected disabled>Select category</option>
-                      <option value="Upcoming" <?php echo $category === 'Upcoming' ? 'selected' : ''; ?>>Upcoming</option>
-                      <option value="Past Event" <?php echo ($category === 'Past Event' ? 'selected' : ''); ?>>Past Event</option>
+                      <option value="Announcement" <?= e($category === 'Announcement' ? 'selected' : '') ?>>Announcement</option>
+                      <option value="Upcoming" <?= e($category === 'Upcoming' ? 'selected' : '') ?>>Upcoming</option>
+                      <option value="Past Event" <?= e($category === 'Past Event' ? 'selected' : '') ?>>Past Event</option>
                     </select>
                   </div>
-
-                  <!-- <p><?php echo e($image); ?></p> -->
 
                   <div class="form-group">
                     <label for="image">Image</label>
                     <input class="form-control-file border rounded p-1" type="file" id="image" accept="image/*">
                     <br>
-                    <img id="image-preview" class="img-fluid rounded" src="/stmcp/uploads/posts/<?php echo e($image); ?>" alt="Image Preview">
+                    <img id="image-preview" class="img-fluid rounded" src="/stmcp/uploads/posts/<?= e($image) ?>" alt="Image Preview">
                   </div>
 
                   <div class="form-group">
                     <label for="content">Content</label>
-                    <textarea class="form-control" id="content" rows="5" placeholder="Post content..." maxlength="5000"><?php echo e($content); ?></textarea>
+                    <textarea class="form-control" id="content" rows="5" placeholder="Post content..." maxlength="5000"><?= e($content) ?></textarea>
                   </div>
 
                   <div class="form-group">
-                    <button id="update-btn" class="btn btn-primary w-100" data-post-id="<?php echo e($postID); ?>" data-csrf-token="<?php echo e($csrfToken); ?>">Update</button>
+                    <button id="update-btn" class="btn btn-primary w-100" data-post-id="<?= e($postID) ?>" data-csrf-token="<?= e($csrfToken) ?>">Update</button>
                   </div>
                 </div> <!-- /.card-body -->
               </div> <!-- /.card -->

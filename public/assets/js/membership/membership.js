@@ -152,6 +152,8 @@ $(document).ready(function () {
     }
 
     if (valid) {
+      $('#page-overlay').removeClass('d-none');
+
       $.ajax({
         url: './actions/membership/membership.php',
         method: 'POST',
@@ -162,16 +164,19 @@ $(document).ready(function () {
             loading();
             displayToast('success', 'Success', response.message);
           } else {
+            $('#page-overlay').addClass('d-none');
             $btn.prop('disabled', false);
             displayToast('error', 'Error', response.message);
           }
         },
         error: () => {
+          $('#page-overlay').addClass('d-none');
           $btn.prop('disabled', false);
           displayToast('error', 'Error', 'Oops, something went wrong');
         },
       });
     } else {
+      $('#page-overlay').addClass('d-none');
       $btn.prop('disabled', false);
       displayToast('warning', '', 'Please fill out all required fields correctly');
     }

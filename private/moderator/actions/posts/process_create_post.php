@@ -27,7 +27,7 @@ if (strlen($content) > $maxContentLength) {
   sendResponse('error', 'Content must be less that ' . $maxContentLength . ' characters');
 }
 
-$validCategories = ['Upcoming', 'Past Event'];
+$validCategories = ['Announcement', 'Upcoming', 'Past Event'];
 if (!in_array($category, $validCategories)) {
   sendResponse('error', 'Invalid category');
 }

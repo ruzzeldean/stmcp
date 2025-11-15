@@ -81,40 +81,40 @@ $csrfToken = $_SESSION['csrf_token'];
                           $sql = 'SELECT official_members.*, chapters.chapter_name
                                   FROM official_members
                                   JOIN chapters ON official_members.chapter_id = chapters.chapter_id';
-                          $rows = $db->fetchAll($sql);
+                          $members = $db->fetchAll($sql);
 
-                          foreach ($rows as $row) :
+                          foreach ($members as $member) :
                         ?>
                             <tr>
                               <td></td>
-                              <td><?= e($row['member_id']) ?></td>
-                              <td><?= e($row['first_name']) ?></td>
-                              <td><?= e($row['middle_name'] ?? '') ?></td>
-                              <td><?= e($row['last_name']) ?></td>
-                              <td><?= e($row['chapter_name']) ?></td>
-                              <td><?= e($row['date_of_birth']) ?></td>
-                              <td><?= e($row['civil_status']) ?></td>
-                              <td><?= e($row['blood_type']) ?></td>
-                              <td><?= e($row['home_address']) ?></td>
-                              <td><?= e($row['phone_number']) ?></td>
-                              <td><?= e($row['email']) ?></td>
-                              <td><?= e($row['emergency_contact_name']) ?></td>
-                              <td><?= e($row['emergency_contact_number']) ?></td>
-                              <td><?= e($row['occupation']) ?></td>
-                              <td><?= e($row['license_number']) ?></td>
-                              <td><?= e($row['motorcycle_brand']) ?></td>
-                              <td><?= e($row['motorcycle_model']) ?></td>
-                              <td><?= e($row['sponsor']) ?></td>
-                              <td><?= e($row['other_club_affiliation']) ?></td>
-                              <td><?= e($row['date_joined']) ?></td>
-                              <td><?= e($row['created_at']) ?></td>
-                              <td><?= e($row['updated_at']) ?></td>
+                              <td><?= e($member['member_id']) ?></td>
+                              <td><?= e($member['first_name']) ?></td>
+                              <td><?= e($member['middle_name'] ?? '') ?></td>
+                              <td><?= e($member['last_name']) ?></td>
+                              <td><?= e($member['chapter_name']) ?></td>
+                              <td><?= e($member['date_of_birth']) ?></td>
+                              <td><?= e($member['civil_status']) ?></td>
+                              <td><?= e($member['blood_type']) ?></td>
+                              <td><?= e($member['home_address']) ?></td>
+                              <td><?= e($member['phone_number']) ?></td>
+                              <td><?= e($member['email']) ?></td>
+                              <td><?= e($member['emergency_contact_name']) ?></td>
+                              <td><?= e($member['emergency_contact_number']) ?></td>
+                              <td><?= e($member['occupation']) ?></td>
+                              <td><?= e($member['license_number']) ?></td>
+                              <td><?= e($member['motorcycle_brand']) ?></td>
+                              <td><?= e($member['motorcycle_model']) ?></td>
+                              <td><?= e($member['sponsor']) ?></td>
+                              <td><?= e($member['other_club_affiliation']) ?></td>
+                              <td><?= e($member['date_joined']) ?></td>
+                              <td><?= e($member['created_at']) ?></td>
+                              <td><?= e($member['updated_at']) ?></td>
                               <td>
                                 <a class="edit-btn btn btn-secondary"
-                                  href="./edit_member.php?id=<?= e($row['member_id']) ?>">Edit</a>
+                                  href="./edit_member.php?id=<?= e($member['member_id']) ?>">Edit</a>
 
                                 <button class="reject-btn btn btn-danger"
-                                  data-member-id="<?= e($row['member_id']) ?>" data-csrf-token="<?= e($csrfToken) ?>">Delete</button>
+                                  data-member-id="<?= e($member['member_id']) ?>" data-csrf-token="<?= e($csrfToken) ?>">Delete</button>
                               </td>
                             </tr>
                         <?php

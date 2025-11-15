@@ -28,7 +28,7 @@ if (mb_strlen($content) < 1 || mb_strlen($content) > 5000) {
   sendResponse('error', 'Content must be between 1 and 5000 characters');
 }
 
-$allowedCategories = ['Upcoming', 'Past Event'];
+$allowedCategories = ['Announcement', 'Upcoming', 'Past Event'];
 if (!in_array($category, $allowedCategories)) {
   sendResponse('error', 'Invalid category');
 }

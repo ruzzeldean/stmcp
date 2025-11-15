@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../../includes/admin_auth_check.php';
 
-if (empty($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+  if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+  }
 
-$csrfToken = $_SESSION['csrf_token'];
+  $csrfToken = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,11 +73,12 @@ $csrfToken = $_SESSION['csrf_token'];
                       $sql =
                         'SELECT
                           posts.*,
-                          om.first_name,
+                          om.first_name,  
                           om.last_name
                         FROM posts
                         JOIN users ON posts.created_by = users.user_id
-                        JOIN official_members AS om ON users.member_id = om.member_id';
+                        JOIN official_members AS om ON users.member_id = om.member_id
+                        ORDER BY posts.created_at DESC';
 
                       $posts = $db->fetchAll($sql);
 

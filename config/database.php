@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/error_logging.php';
 
 class Database
@@ -35,6 +34,11 @@ class Database
     }
   }
 
+  public function getConnection()
+  {
+    return $this->conn;
+  }
+
   public function execute($query, $params = [])
   {
     $stmt = $this->conn->prepare($query);
@@ -56,9 +60,19 @@ class Database
     return $stmt->fetch() ?: null;
   }
 
+  public function lastInsertId()
+  {
+    return $this->conn->lastInsertId();
+  }
+
   public function beginTransaction()
   {
     return $this->conn->beginTransaction();
+  }
+
+  public function inTransaction()
+  {
+    return $this->conn->inTransaction();
   }
 
   public function commit()
@@ -71,11 +85,21 @@ class Database
     return $this->conn->rollBack();
   }
 
-
   public function getUserID($userID)
   {
     $sql = 'SELECT users.user_id FROM users WHERE user_id = :user_id LIMIT 1';
 
     return $this->fetchOne($sql, [':user_id' => $userID]);
+  }
+
+  public function getPostById($postId)
+  {
+    $sql = "SELECT
+              post_id, title, category, content, image_path, status, created_at
+            FROM posts
+            WHERE post_id = :post_id AND status = 'Published'
+            LIMIT 1";
+
+    return $this->fetchOne($sql, ['post_id' => $postId]);
   }
 }

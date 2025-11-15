@@ -1,9 +1,13 @@
 <?php
-require_once __DIR__ . '/../config/connection.php';
-require_once __DIR__ . '/includes/functions/functions.php';
+require_once __DIR__ . '/../config/database.php';
+// require_once __DIR__ . '/includes/functions/functions.php';
 
-// view post (main):
+function e($value)
+{
+  return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+}
 
+$db = new Database();
 $postID = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
 if (!$postID) {
@@ -11,7 +15,7 @@ if (!$postID) {
   exit('Invalid Post ID');
 }
 
-$post = getPostByID($conn, $postID);
+$post = $db->getPostByID($postID);
 
 if (!$post) {
   http_response_code(404);
@@ -20,8 +24,8 @@ if (!$post) {
 
 // latest post (right column):
 
-$limit = 3;
-$latestPosts = getLatestPosts($conn, $limit);
+// $limit = 3;
+// $latestPosts = getLatestPosts($conn, $limit);
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -43,23 +47,24 @@ $latestPosts = getLatestPosts($conn, $limit);
                 <a id="back-btn" class="btn btn-secondary mb-4"><i class="fa-solid fa-arrow-left"></i> <span class="fw-medium">Back</span></a>
 
                 <div class="mb-4">
-                  <h1><?= htmlspecialchars($post['title']) ?></h1>
+                  <h1><?= e($post['title']) ?></h1>
 
                   <?php
                     $category = $post['category'];
                     $badge = match($category) {
+                      'Announcement' => 'info',
                       'Upcoming' => 'warning',
                       'Past Event' => 'success',
                       default => 'secondary'
                     }
                   ?>
 
-                  <p class="card-text"><small class="text-muted">Published on <?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge text-bg-<?= htmlspecialchars($badge) ?>"><?= htmlspecialchars($post['category']) ?></span></p>
+                  <p class="card-text"><small class="text-muted">Published on <?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge text-bg-<?= e($badge) ?>"><?= e($post['category']) ?></span></p>
                 </div>
 
-                <div id="view-post-img" class="mb-4 text-center rounded" style="background: url('/stmcp/uploads/posts/<?= htmlspecialchars($post['image_path']) ?>') center/cover;"></div>
+                <div id="view-post-img" class="mb-4 text-center rounded" style="background: url('/stmcp/uploads/posts/<?= e($post['image_path']) ?>') center/cover;"></div>
 
-                <div class="view-post-content"><?= htmlspecialchars($post['content']) ?></div>
+                <div class="view-post-content"><?= e($post['content']) ?></div>
               </div>
             </div>
 
@@ -77,15 +82,15 @@ $latestPosts = getLatestPosts($conn, $limit);
                   <?php else: ?>
                     <?php foreach ($latestPosts as $post): ?>
                       <div class="col-12">
-                        <div class="card shadow overflow-hidden" title="<?= htmlspecialchars($post['title']) ?>">
+                        <div class="card shadow overflow-hidden" title="<?= e($post['title']) ?>">
                           <div class="row g-0">
                             <div class="col-lg-4 order-lg-last">
-                              <img class="latest-posts-img img-fluid" src="../uploads/posts/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
+                              <img class="latest-posts-img img-fluid" src="../uploads/posts/<?= e($post['image_path']) ?>" alt="<?= e($post['title']) ?>">
                             </div>
 
                             <div class="col-lg-8 order-lg-first">
                               <div class="card-body">
-                                <h4 class="card-title custom-text-truncate-1"><?= htmlspecialchars($post['title']) ?></h4>
+                                <h4 class="card-title custom-text-truncate-1"><?= e($post['title']) ?></h4>
 
                                 <?php
                                   $category = $post['category'];
@@ -96,9 +101,9 @@ $latestPosts = getLatestPosts($conn, $limit);
                                   }
                                 ?>
 
-                                <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge text-bg-<?= htmlspecialchars($badge) ?>"><?= htmlspecialchars($post['category']) ?></span></p>
+                                <p class="card-text"><small class="text-muted"><?= date('M j, Y', strtotime($post['created_at'])) ?></small> | <span class="badge text-bg-<?= e($badge) ?>"><?= e($post['category']) ?></span></p>
 
-                                <a href="./view.php?id=<?= htmlspecialchars($post['post_id']) ?>" class="stretched-link"></a>
+                                <a href="./view.php?id=<?= e($post['post_id']) ?>" class="stretched-link"></a>
                               </div>
                             </div>
                           </div>
