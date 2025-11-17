@@ -1,5 +1,6 @@
 $(function () {
-  $(document).on('click', '.reject-btn', function () {
+  $('.reject-btn').prop('disabled', true);
+  /* $(document).on('click', '.reject-btn', function () {
     const memberID = $(this).data('member-id');
     const csrfToken = $(this).data('csrf-token');
 
@@ -33,5 +34,5 @@ $(function () {
         });
       }
     });
-  });
+  }); */
 });

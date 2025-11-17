@@ -13,12 +13,12 @@ if ($search === '') {
 
 $sql = 'SELECT
           u.user_id,
-          CONCAT(m.first_name, " ", m.last_name) AS full_name,
+          CONCAT(p.first_name, " ", p.last_name) AS full_name,
           u.username
-        FROM users u
-        INNER JOIN official_members m ON u.member_id = m.member_id
+        FROM users AS u
+        INNER JOIN people AS p ON u.person_id = p.person_id
         WHERE
-          (m.first_name LIKE ? OR m.last_name LIKE ? OR CONCAT(m.first_name, " ", m.last_name) LIKE ?)
+          (p.first_name LIKE ? OR p.last_name LIKE ? OR CONCAT(p.first_name, " ", p.last_name) LIKE ?)
           AND u.user_id != ?
           AND u.user_id NOT IN (
             SELECT IF (sender_id = ?, receiver_id, sender_id)

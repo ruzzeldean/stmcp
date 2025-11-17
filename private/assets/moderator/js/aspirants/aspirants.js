@@ -14,7 +14,7 @@ $(function () {
           method: 'POST',
           dataType: 'json',
           data: {
-            aspirantID: aspirantID,
+            aspirant_id: aspirantID,
             csrf_token: csrfToken,
           },
           success: (res) => {
@@ -49,7 +49,7 @@ $(function () {
           method: 'POST',
           dataType: 'json',
           data: {
-            aspirantID: aspirantID,
+            aspirant_id: aspirantID,
             csrf_token: csrfToken,
           },
           success: (res) => {

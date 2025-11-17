@@ -5,60 +5,41 @@ requireLogin();
 requirePost();
 requireCsrf();
 
-if (!isset($_POST['aspirantID'])) {
+if (!isset($_POST['aspirant_id'])) {
   sendResponse('error', 'Invalid Aspirant ID');
 }
 
-$aspirantID = (int) $_POST['aspirantID'];
+$aspirantId = (int) $_POST['aspirant_id'];
 $db = new Database();
 
 try {
   $db->beginTransaction();
 
   $sql = 'SELECT first_name, last_name, email
-          FROM aspirants
-          WHERE aspirant_id = :aspirant_id
+          FROM people
+          WHERE person_id = :person_id
           LIMIT 1';
-  $aspirant = $db->fetchOne($sql, ['aspirant_id' => $aspirantID]);
+  $aspirant = $db->fetchOne($sql, ['person_id' => $aspirantId]);
 
   if (!$aspirant) {
-    $db->rollBack();
     sendResponse('error', 'Aspirant not found');
   }
 
   $recipientName = $aspirant['first_name'] . ' ' . $aspirant['last_name'];
   $recipientEmail = $aspirant['email'];
 
-  $sql = 'INSERT INTO official_members (
-      first_name, last_name, middle_name, date_of_birth, civil_status, blood_type, home_address, phone_number, email, emergency_contact_name, emergency_contact_number, occupation, license_number, motorcycle_brand, motorcycle_model, sponsor, other_club_affiliation, chapter_id, date_joined
-    )
-    SELECT
-      first_name, last_name, middle_name, date_of_birth, civil_status, blood_type, home_address, phone_number, email, emergency_contact_name, emergency_contact_number, occupation, license_number, motorcycle_brand, motorcycle_model, sponsor, other_club_affiliation, chapter_id, date_joined
-    FROM aspirants
-    WHERE aspirant_id = :aspirant_id';
+  $sql = 'INSERT INTO official_members (person_id)
+          VALUES (:person_id)';
+  $db->execute($sql, ['person_id' => $aspirantId]);
 
-  $transfer = $db->execute($sql, ['aspirant_id' => $aspirantID]);
-
-  if ($transfer->rowCount() === 0) {
-    $db->rollBack();
-    sendResponse('error', 'Failed transfer record');
-  }
-
-  $newMemberID = $db->lastInsertId();
+  $sql = 'DELETE FROM aspirants
+          WHERE person_id = :person_id';
+  $db->execute($sql, ['person_id' => $aspirantId]);
 
   $sql = 'UPDATE users
-          SET member_id = :new_id,
-              member_type = "official"
-          WHERE member_id = :old_id
-            AND member_type = "aspirant"';
-
-  $db->execute($sql, [
-    'new_id' => $newMemberID,
-    'old_id' => $aspirantID
-  ]);
-
-  $sql = 'DELETE FROM aspirants WHERE aspirant_id = :aspirant_id';
-  $db->execute($sql, ['aspirant_id' => $aspirantID]);
+          SET role_id = 4
+          WHERE person_id = :person_id';
+  $db->execute($sql, ['person_id' => $aspirantId]);
 
   $db->commit();
 
@@ -66,7 +47,9 @@ try {
 
   sendResponse('success', 'Application approved');
 } catch (Throwable $e) {
-  $db->rollBack();
+  if ($db->inTransaction()) {
+    $db->rollBack();
+  }
   error_log('Error: ' . $e);
   sendResponse('error', 'Something went wrong. Please try again later');
 }

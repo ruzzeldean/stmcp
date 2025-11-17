@@ -11,7 +11,7 @@ $(function () {
       $('#login-btn').prop('disabled', true);
 
       $.ajax({
-        url: './login_process.php',
+        url: './login_handler.php',
         method: 'POST',
         dataType: 'json',
         data: {
@@ -27,8 +27,8 @@ $(function () {
                 location.href = './admin/pages/';
               } else if (response.message === '3') {
                 location.href = './moderator/pages/';
-              } else if (response.message === '4') {
-                location.href = './member/pages';
+              } else if (response.message === '4' || response.message === '5') {
+                location.href = './member/pages/';
               }
             });
           } else {

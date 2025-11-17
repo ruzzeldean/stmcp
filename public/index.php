@@ -21,7 +21,7 @@
                 <p class="lead text-muted fs-4 fw-normal mb-4">People on their quest to share and explore the Philippines's greatest adventures.</p>
           
                 <div class="d-flex gap-3 justify-content-center justify-content-xl-start">
-                  <button class="btn btn-warning btn-lg">Join us</button>
+                  <a class="btn btn-warning btn-lg" href="./join_us.php">Join us</a>
                   <a class="btn btn-outline-light btn-lg" href="./about.php">About us</a>
                 </div> <!-- End of buttons -->
               </div> <!-- End of #hero-content -->

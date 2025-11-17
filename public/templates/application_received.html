@@ -1,16 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <style>
+    code {
+      background: #dadada;
+      border-radius: 5px;
+      padding: 1px 1.2px;
+    }
+
+    #login-btn {
+      display: inline-block;
+      background-color: #007bff;
+      color: #ffffff;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 12px 14px;
+      text-decoration: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    #login-btn:hover,
+    #login-btn:focus {
+      background: #0056b3;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
 <body>
   <h3>Hello {{name}}!</h3>
 
-  <p>Your application has been received! Below are your login credentials:</p>
+  <p>Thank you for joining Star Touring Motorcycle Club (STMCP)! Your membership application has been successfully received.</p>
+  
+  <hr>
+
+  <p>Below are your <strong>initial login credentials</strong>. For your account's security, you <strong>must</strong> log in immediately and set a new, permanent password.</p>
   
   <ul>
-    <li><b>Username:</b> {{temp_username}}</li>
-    <li><b>Password:</b> {{temp_password}}</li>
+    <li><strong>Username:</strong> <code>{{temp_username}}</code></li>
+    <li><strong>Password:</strong> <code>{{temp_password}}</code></li>
   </ul>
 
-  <p>Please log in using these credentials and change your username and password immediately.</p>
+  <a id="login-btn" href="http://localhost/stmcp/private/">Log in</a>
+
+  <p>Upon your first login, you will be automatically prompted to create your new, permanent password. We strongly recommend using a unique combination of letters, numbers, and symbols.</p>
+
+  <p>We look forward to seeing you inside!</p>
+
+  <p style="margin-bottom: 0;">Best regards,</p>
+  <p style="margin-top: 0;"><strong>The STMCP Team</strong></p>
+
+  <br>
 
   <img src="cid:{{one_star_logo}}" alt="One star logo">
 </body>

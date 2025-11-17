@@ -43,8 +43,6 @@
           </a>
         </li>
 
-        <!-- <li class="nav-header">MEMBERS</li> -->
-
         <li class="nav-item">
           <a href="./aspirants.php" class="nav-link <?= e($currentPage === 'aspirants.php' ? 'active' : '') ?>">
             <i class="nav-icon fa-solid fa-user-check"></i>
@@ -54,7 +52,12 @@
           </a>
         </li>
 
-        <!-- <li class="nav-header">CONTENT MANAGEMENT</li> -->
+        <li class="nav-item">
+          <a href="./contacts.php" class="nav-link <?= e($currentPage === 'messages.php' || $currentPage === 'contacts.php' ? 'active' : '') ?>">
+          <i class="nav-icon fa-solid fa-message"></i>
+            <p>Messages</p>
+          </a>
+        </li>
 
         <li class="nav-item">
           <a href="./posts.php" class="nav-link <?= e($currentPage === 'posts.php' || $currentPage === 'create_post.php' || $currentPage === 'edit_post.php' ? 'active' : '') ?>">
@@ -62,8 +65,6 @@
             <p>Posts</p>
           </a>
         </li>
-
-        <!-- <li class="nav-header">FINANCES</li> -->
 
         <li class="nav-item">
           <a href="./donations.php" class="nav-link <?= e($currentPage === 'donations.php' ? 'active' : '') ?>">
@@ -78,17 +79,6 @@
             <p>Merchandise</p>
           </a>
         </li>
-
-        <!-- <li class="nav-header">COMMUNICATION</li> -->
-
-        <li class="nav-item">
-          <a href="./messages.php" class="nav-link <?= e($currentPage === 'messages.php' ? 'active' : '') ?>">
-          <i class="nav-icon fa-solid fa-message"></i>
-            <p>Messages</p>
-          </a>
-        </li>
-
-        <!-- <li class="nav-header">SYSTEM</li> -->
 
         <li class="nav-item">
           <a href="./settings.php" class="nav-link <?= e($currentPage === 'settings.php' ? 'active' : '') ?>">

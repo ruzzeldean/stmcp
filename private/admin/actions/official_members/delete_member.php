@@ -11,10 +11,9 @@ if (!isset($_POST['memberID'])) {
 
 $memberID = (int) $_POST['memberID'];
 
-$db = new Database();
-
 try {
-  $db->beginTransaction();
+  $db = new Database();
+/* $db->beginTransaction();
 
   $sql = 'DELETE FROM official_members WHERE member_id = :member_id';
   $stmt = $db->execute($sql, ['member_id' => $memberID]);
@@ -32,12 +31,15 @@ try {
     sendResponse('error', 'An error has occured. Please try again later');
   }
 
-  $db->commit();
-  sendResponse('success', 'Member deleted successfully');
+  $db->commit(); */
+
+
+
+  // sendResponse('success', 'Member deleted successfully');
 } catch (Throwable $e) {
-  if ($db->inTransaction()) {
+  /* if ($db->inTransaction()) {
     $db->rollBack();
-  }
-  error_log('Failed deleting member: ' . $e->getMessage());
+  } */
+  error_log('Failed deleting member: ' . $e);
   sendResponse('error', 'An error has occured. Please try again later');
 }

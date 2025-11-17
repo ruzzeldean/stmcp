@@ -47,7 +47,7 @@ $csrfToken = $_SESSION['csrf_token'];
             </a>
           </div> <!-- /.row -->
 
-          <div class="xxl">
+          <div class="">
             <div class="card p-3">
               <div class="card-header border-bottom-0">
                 <select id="post-status" class="custom-select" style="max-width: 150px;">
@@ -75,11 +75,16 @@ $csrfToken = $_SESSION['csrf_token'];
                   <tbody>
                     <?php
                     try {
-                      $sql = 'SELECT p.*, om.first_name, om.last_name
-                              FROM posts p
-                              JOIN users u ON p.created_by = u.user_id
-                              JOIN official_members AS om ON u.member_id = om.member_id
-                              WHERE p.created_by = :user_id';
+                      $sql = 'SELECT
+                                posts.*,
+                                p.first_name,
+                                p.last_name
+                              FROM posts
+                              INNER JOIN users AS u
+                                ON posts.created_by = u.user_id
+                              JOIN people AS p
+                                ON u.person_id = p.person_id
+                              WHERE posts.created_by = :user_id';
 
                       $posts = $db->fetchAll($sql, ['user_id' => $_SESSION['user_id']]);
 

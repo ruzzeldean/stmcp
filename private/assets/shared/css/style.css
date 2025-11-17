@@ -24,7 +24,8 @@
   height: auto;
 }
 
-#update-member-form {
+#update-member-form,
+#edit-user-acc {
   max-width: 500px;
 }
 

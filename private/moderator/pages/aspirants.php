@@ -78,16 +78,22 @@ $csrfToken = $_SESSION['csrf_token'];
                         <?php
 
                         try {
-                          $sql = 'SELECT aspirants.*, chapters.chapter_name
-                                  FROM aspirants
-                                  JOIN chapters ON aspirants.chapter_id = chapters.chapter_id';
+                          $sql = 'SELECT
+                                    p.*,
+                                    a.person_id,
+                                    c.chapter_name
+                                  FROM people p
+                                  INNER JOIN aspirants a
+                                    ON p.person_id = a.person_id
+                                  LEFT JOIN chapters c
+                                    ON p.chapter_id = c.chapter_id';
                           $rows = $db->fetchAll($sql);
 
                           foreach ($rows as $row) :
                         ?>
                             <tr>
                               <td></td>
-                              <td><?= e($row['aspirant_id']) ?></td>
+                              <td><?= e($row['person_id']) ?></td>
                               <td><?= e($row['first_name']) ?></td>
                               <td><?= e($row['middle_name'] ?? '') ?></td>
                               <td><?= e($row['last_name']) ?></td>
@@ -111,16 +117,16 @@ $csrfToken = $_SESSION['csrf_token'];
                               <td><?= e($row['created_at']) ?></td>
                               <td>
                                 <button class="approve-btn btn btn-success"
-                                  data-aspirant-id="<?= e($row['aspirant_id']) ?>" data-csrf-token="<?= $csrfToken; ?>">Approve</button>
+                                  data-aspirant-id="<?= e($row['person_id']) ?>" data-csrf-token="<?= $csrfToken; ?>">Approve</button>
 
                                 <button class="reject-btn btn btn-danger"
-                                  data-aspirant-id="<?= e($row['aspirant_id']) ?>" data-csrf-token="<?= e($csrfToken); ?>">Reject</button>
+                                  data-aspirant-id="<?= e($row['person_id']) ?>" data-csrf-token="<?= e($csrfToken); ?>">Reject</button>
                               </td>
                             </tr>
                         <?php
                           endforeach;
                         } catch (Throwable $e) {
-                          error_log("Database error in: " . __FILE__ . " at line " . __LINE__ . $e->getMessage());
+                          error_log("Fetching aspirants error: " . $e);
                           echo '<div class="alert alert-warning" role="alert">An error occured while fetching data. Please try again later.</div>';
                         }
                         ?>

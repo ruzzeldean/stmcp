@@ -74,7 +74,9 @@ $data['sponsor'] = trim($_POST['sponsor'] ?? '');
 $data['other_club_affiliation'] = trim($_POST['other_club_affiliation'] ?? '');
 
 try {
-  $sql = 'INSERT INTO aspirants (
+  $db->beginTransaction();
+
+  $sql = 'INSERT INTO people (
     first_name, last_name, date_of_birth, civil_status, blood_type, home_address, phone_number, email, emergency_contact_name, emergency_contact_number, occupation, license_number, motorcycle_brand, motorcycle_model, chapter_id, date_joined, middle_name, sponsor, other_club_affiliation
   ) VALUES (
     :first_name, :last_name, :date_of_birth, :civil_status, :blood_type, :home_address, :phone_number, :email, :emergency_contact_name, :emergency_contact_number, :occupation, :license_number, :motorcycle_brand, :motorcycle_model, :chapter_id, :date_joined, :middle_name, :sponsor, :other_club_affiliation
@@ -85,32 +87,48 @@ try {
   if ($stmt) {
     $aspirantId = $db->lastInsertId();
 
-    $username = strtolower(substr($data['first_name'], 0, 1) . $data['last_name']);
-    $username = preg_replace('/[^a-z0-9]/', '', $username) . rand(100, 999);
+    $sql = 'INSERT INTO aspirants (person_id)
+            VALUES (:person_id)';
 
-    $password = bin2hex(random_bytes(4));
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $db->execute($sql, ['person_id' => $aspirantId]);
 
-    $sql = 'INSERT INTO users (member_id, username, password, role_id)
-            VALUES (:member_id, :username, :password, :role_id)';
+    if ($stmt) {
+      $username = strtolower(substr($data['first_name'], 0, 1) . $data['last_name']);
+      $username = preg_replace('/[^a-z0-9]/', '', $username) . rand(100, 999);
 
-    $db->execute($sql, [
-      'member_id' => $aspirantId,
-      'username' => $username,
-      'password' => $hashedPassword,
-      'role_id' => 5
-    ]);
+      $password = bin2hex(random_bytes(4));
+      $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $recipientEmail = $data['email'];
-    $recipientName = $data['first_name'] . ' ' . $data['last_name'];
-    $tempUsername = $username;
-    $tempPassword = $password;
+      $sql = 'INSERT INTO users (person_id, username, password, role_id)
+            VALUES (:person_id, :username, :password, :role_id)';
 
-    require __DIR__ . '/send_email.php';
+      $db->execute($sql, [
+        'person_id' => $aspirantId,
+        'username' => $username,
+        'password' => $hashedPassword,
+        'role_id' => 5
+      ]);
 
-    sendResponse('success', 'Application submitted');
+      $db->commit();
+
+      $recipientEmail = $data['email'];
+      $recipientName = $data['first_name'] . ' ' . $data['last_name'];
+      $tempUsername = $username;
+      $tempPassword = $password;
+
+      require __DIR__ . '/send_email.php';
+
+      sendResponse('success', 'Application submitted');
+    } else {
+      $db->rollBack();
+    }
+  } else {
+    $db->rollBack();
   }
 } catch (Throwable $e) {
-  error_log('Error member registration: ' . $e/* ->getMessage() */);
+  if ($db->inTransaction()) {
+    $db->rollBack();
+  }
+  error_log('Error member registration: ' . $e);
   sendResponse('error', 'Something went wrong. Please try again later');
 }

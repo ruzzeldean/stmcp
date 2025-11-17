@@ -14,7 +14,7 @@ function validateDate($date)
 }
 
 $requiredFields = [
-  'member_id',
+  'person_id',
   'first_name',
   'last_name',
   'date_of_birth',
@@ -42,14 +42,14 @@ foreach ($requiredFields as $field) {
   $data[$field] = trim($_POST[$field]);
 }
 
-$memberID = filter_input(INPUT_POST, 'member_id', FILTER_VALIDATE_INT);
+$personId = filter_input(INPUT_POST, 'person_id', FILTER_VALIDATE_INT);
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 $dateOfBirth = trim((string) $_POST['date_of_birth']);
 $dateJoined = trim((string) $_POST['date_joined']);
 $phone_number = trim((string) $_POST['phone_number']);
 $emergency_contact_name = trim((string) $_POST['emergency_contact_name']);
 
-if (!$memberID) {
+if (!$personId) {
   sendResponse('error', 'Invalid member ID');
 }
 
@@ -63,15 +63,15 @@ if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
 
 /* if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['phone_number'])) {
   sendResponse('error', 'Invalid phone number');
-}
+} */
 
 $data['phone_number'] = preg_replace('/[^0-9+]/', '', $data['phone_number']);
 
-if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['emergency_contact_number'])) {
+/* if (!preg_match('/^(?:\+63-?|0)\d{3}-\d{3}-\d{4}$/', $data['emergency_contact_number'])) {
   sendResponse('error', 'Invalid emergency contact number');
-}
+} */
 
-$data['emergency_contact_number'] = preg_replace('/[^0-9+]/', '', $data['emergency_contact_number']); */
+$data['emergency_contact_number'] = preg_replace('/[^0-9+]/', '', $data['emergency_contact_number']);
 
 if (!validateDate($data['date_joined'])) {
   sendResponse('error', 'Invalid date joined');
@@ -82,7 +82,7 @@ $data['sponsor'] = trim($_POST['sponsor'] ?? '');
 $data['other_club_affiliation'] = trim($_POST['other_club_affiliation'] ?? '');
 
 try {
-  $sql = 'UPDATE official_members SET
+  $sql = 'UPDATE people SET
     first_name = :first_name,
     last_name = :last_name,
     date_of_birth = :date_of_birth,
@@ -102,16 +102,16 @@ try {
     middle_name = :middle_name,
     sponsor = :sponsor,
     other_club_affiliation = :other_club_affiliation
-    WHERE member_id = :member_id';
+    WHERE person_id = :person_id';
 
   $update = $db->execute($sql, $data);
 
   if ($update->rowCount() > 0) {
     sendResponse('success', 'Member updated successfully');
   } else {
-    $sql = 'SELECT member_id FROM official_members
-            WHERE member_id = :member_id LIMIT 1';
-    $check = $db->fetchOne($sql, ['member_id' => $memberID]);
+    $sql = 'SELECT person_id FROM people
+            WHERE person_id = :person_id LIMIT 1';
+    $check = $db->fetchOne($sql, ['person_id' => $personId]);
 
     if ($check) {
       sendResponse('success', 'No changes were made. Data is already up to date');
@@ -120,6 +120,6 @@ try {
     }
   }
 } catch (Throwable $e) {
-  error_log('Failed updating member: ' . $e->getMessage());
+  error_log('Failed updating member: ' . $e);
   sendResponse('error', 'An error occured while updating the member. Please try again later');
 }

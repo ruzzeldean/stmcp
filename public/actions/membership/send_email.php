@@ -28,7 +28,7 @@ try {
   $mail->addAddress($recipientEmail, $recipientName); // (name is optional)
 
   $mail->isHTML(true);
-  $mail->Subject = 'Membership Application [sent using PHPMailer]';
+  $mail->Subject = 'Application Received! Welcome to the club!';
 
   $templatePath = __DIR__ . '/../../templates/application_received.html';
   $body = file_get_contents($templatePath);

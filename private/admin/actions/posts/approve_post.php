@@ -23,9 +23,9 @@ try {
   if ($stmt->rowCount() > 0) {
     sendResponse('success', 'Post is now published');
   } else {
-    $sql = 
-      'SELECT post_id FROM posts
-      WHERE post_id = :post_id';
+    $sql = 'SELECT post_id
+            FROM posts
+            WHERE post_id = :post_id';
     $check = $db->fetchOne($sql, ['post_id' => $postID]);
 
     if ($check) {

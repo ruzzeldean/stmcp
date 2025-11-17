@@ -5,15 +5,15 @@ requireLogin();
 requirePost();
 requireCsrf();
 
-if (!isset($_POST['aspirantID'])) {
+if (!isset($_POST['aspirant_id'])) {
   sendResponse('error', 'Invalid Aspirant ID');
 }
 
-$aspirantID = (int) $_POST['aspirantID'];
+$aspirantID = (int) $_POST['aspirant_id'];
 $db = new Database();
 
 try {
-  $sql = 'DELETE FROM aspirants WHERE aspirant_id = :aspirant_id';
+  $sql = 'DELETE FROM people WHERE person_id = :aspirant_id';
 
   $reject = $db->execute($sql, ['aspirant_id' => $aspirantID]);
 
@@ -23,6 +23,6 @@ try {
 
   sendResponse('success', 'Application rejected');
 } catch (Throwable $e) {
-  error_log('Error: ' . $e->getMessage());
+  error_log('Error: ' . $e);
   sendResponse('error', 'Something went wrong. Please try again later');
 }

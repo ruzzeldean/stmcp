@@ -73,11 +73,13 @@ require_once __DIR__ . '/../../includes/admin_auth_check.php';
                       $sql =
                         'SELECT
                           posts.*,
-                          om.first_name,  
-                          om.last_name
+                          p.first_name,  
+                          p.last_name
                         FROM posts
-                        JOIN users ON posts.created_by = users.user_id
-                        JOIN official_members AS om ON users.member_id = om.member_id
+                        INNER JOIN users AS u
+                          ON posts.created_by = u.user_id
+                        INNER JOIN people AS p
+                          ON u.person_id = p.person_id
                         ORDER BY posts.created_at DESC';
 
                       $posts = $db->fetchAll($sql);

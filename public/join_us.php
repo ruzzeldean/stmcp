@@ -61,7 +61,7 @@
                         <option value="" selected disabled>Select Civil Status</option>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
-                        <option value="widowed">Widowed</option>
+                        <option value="Widowed">Widowed</option>
                         <option value="Separated">Separated</option>
                       </select>
                       <div class="invalid-feedback"></div>

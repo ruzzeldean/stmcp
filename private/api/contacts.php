@@ -10,12 +10,13 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $sql = 'SELECT
           u.user_id,
           u.username,
-          CONCAT(m.first_name, " ", m.last_name) AS full_name,
+          CONCAT(p.first_name, " ", p.last_name) AS full_name,
           msg.sender_id,
           msg.message AS last_message,
           msg.created_at AS last_message_time
-        FROM users u
-        INNER JOIN official_members m ON u.member_id = m.member_id
+        FROM users AS u
+        INNER JOIN people AS p
+          ON u.person_id = p.person_id
         INNER JOIN (
           SELECT
             IF(sender_id = ?, receiver_id, sender_id) AS contact_id,
@@ -29,7 +30,7 @@ $sql = 'SELECT
 $params = [$currentUser, $currentUser, $currentUser];
 
 if ($search !== '') {
-  $sql .= ' WHERE CONCAT(m.first_name, " ", m.last_name) LIKE ?';
+  $sql .= ' WHERE CONCAT(p.first_name, " ", p.last_name) LIKE ?';
   $params[] = "%$search%";
 }
 

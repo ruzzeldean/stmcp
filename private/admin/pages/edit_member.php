@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../../includes/admin_auth_check.php';
 
-$memberID = $_GET['id'] ?? null;
+$personId = $_GET['id'] ?? null;
 
-if (! filter_var($memberID, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
+if (! filter_var($personId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
   error_log('Invalid request: Missing or invalid Member ID');
   http_response_code(400);
   exit('Invalid request.');
@@ -16,18 +16,18 @@ if (empty($_SESSION['csrf_token'])) {
 $csrfToken = $_SESSION['csrf_token'];
 
 try {
-  $sql = 'SELECT * FROM official_members
-          WHERE member_id = :member_id LIMIT 1';
+  $sql = 'SELECT * FROM people
+          WHERE person_id = :person_id LIMIT 1';
 
-  $member = $db->fetchOne($sql, ['member_id' => $memberID]);
+  $member = $db->fetchOne($sql, ['person_id' => $personId]);
 
   if (!$member) {
-    error_log('No member found for ID: ' . $memberID);
+    error_log('No member found for ID: ' . $personId);
     http_response_code(400);
     exit('Member not found.');
   }
 } catch (Throwable $e) {
-  error_log('Error fetching member info: ' . $e->getMessage());
+  error_log('Error fetching member info: ' . $e);
   exit('An unexpected error occurred. Please try again later.');
 }
 
@@ -85,7 +85,7 @@ $dateJoined = $member['date_joined'];
 
       <!-- Main content -->
       <div class="content">
-        <div class="container-fluid">
+        <div class="container-fluid pb-3">
           <div class="xxl card shadow bg-body-tertiary px-1 py-2">
             <div class="card-body">
               <form id="membership-form" novalidate>
@@ -309,7 +309,7 @@ $dateJoined = $member['date_joined'];
 
                 <input type="hidden" name="csrf_token" value="<?= e($csrfToken) ?>">
 
-                <input type="hidden" name="member_id" value="<?= e($memberID) ?>">
+                <input type="hidden" name="person_id" value="<?= e($personId) ?>">
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6">

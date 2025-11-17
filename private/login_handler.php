@@ -3,10 +3,6 @@ require_once __DIR__ . '/includes/helpers.php';
 
 requirePost();
 
-if (!isset($_POST['username']) || !isset($_POST['password'])) {
-  sendResponse('error', 'Invalid username or password');
-}
-
 $username = trim($_POST['username'] ?? '');
 $password = trim($_POST['password'] ?? '');
 
@@ -18,18 +14,24 @@ if (empty($password)) {
   sendResponse('error', 'Password is required');
 }
 
-$db = new Database();
-
 try {
+  $db = new Database();
+
   $sql = 'SELECT
             u.user_id,
-            u.username,
             u.password,
-            u.role_id,
-            u.member_id,
-            u.member_type
-          FROM users AS u
-          WHERE u.username = :username
+            u.status,
+            p.first_name,
+            p.last_name,
+            r.role_id
+          FROM
+              users AS u
+          LEFT JOIN
+              people AS p ON u.person_id = p.person_id
+          LEFT JOIN
+              roles AS r ON u.role_id = r.role_id
+          WHERE
+              u.username = :username
           LIMIT 1';
 
   $user = $db->fetchOne($sql, ['username' => $username]);
@@ -38,24 +40,11 @@ try {
     sendResponse('error', 'Incorrect username or password');
   }
 
-  $memberTable = $user['member_type'] === 'official' ? 'official_members' : 'aspirants';
-  $memberIdCol = $user['member_type'] === 'official' ? 'member_id' : 'aspirant_id';
-
-  $sql = "SELECT first_name, last_name
-          FROM {$memberTable}
-          WHERE {$memberIdCol} = :member_id
-          LIMIT 1";
-  $member = $db->fetchOne($sql, ['member_id' => $user['member_id']]);
-
-  if (!$member) {
-    sendResponse('error', 'Member record not found');
-  }
-
   session_regenerate_id(true);
 
   $_SESSION['user_id'] = $user['user_id'];
-  $_SESSION['first_name'] = $member['first_name'];
-  $_SESSION['last_name'] = $member['last_name'];
+  $_SESSION['first_name'] = $user['first_name'];
+  $_SESSION['last_name'] = $user['last_name'];
   $_SESSION['role_id'] = $user['role_id'];
 
   switch ($_SESSION['role_id']) {
@@ -88,6 +77,6 @@ try {
       sendResponse('error', 'Invalid role assigned');
   }
 } catch (Throwable $e) {
-  error_log('Login failed: ' . $e->getMessage());
+  error_log('Login failed: ' . $e);
   sendResponse('error', 'An error occurred. Please try again later');
 }

@@ -53,7 +53,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="./user_accounts.php" class="nav-link <?= e($currentPage === 'user_accounts.php' ? 'active' : '') ?>">
+          <a href="./user_accounts.php" class="nav-link <?= e($currentPage === 'user_accounts.php' || $currentPage === 'edit_user_account.php' ? 'active' : '') ?>">
             <i class="nav-icon fa-solid fa-users"></i>
             <p>User Accounts</p>
           </a>

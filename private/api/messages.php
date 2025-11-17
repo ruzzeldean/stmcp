@@ -25,7 +25,7 @@ switch ($action) {
       sendResponse('error', 'Missing requiredfields');
     }
 
-    $sql = 'SELECT u.user_id FROM users u WHERE user_id = :user_id LIMIT 1';
+    $sql = 'SELECT u.user_id FROM users AS u WHERE user_id = :user_id LIMIT 1';
     $recipient = $db->fetchOne($sql, ['user_id' => $receiverID]);
 
     if (!$recipient) {

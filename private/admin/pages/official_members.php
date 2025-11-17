@@ -78,16 +78,22 @@ $csrfToken = $_SESSION['csrf_token'];
                       <tbody>
                         <?php
                         try {
-                          $sql = 'SELECT official_members.*, chapters.chapter_name
-                                  FROM official_members
-                                  JOIN chapters ON official_members.chapter_id = chapters.chapter_id';
+                          $sql = 'SELECT
+                                    p.*,
+                                    om.person_id,
+                                    c.chapter_name
+                                  FROM people p
+                                  INNER JOIN official_members om
+                                    ON p.person_id = om.person_id
+                                  LEFT JOIN chapters c
+                                    ON p.chapter_id = c.chapter_id';
                           $members = $db->fetchAll($sql);
 
                           foreach ($members as $member) :
                         ?>
                             <tr>
                               <td></td>
-                              <td><?= e($member['member_id']) ?></td>
+                              <td><?= e($member['person_id']) ?></td>
                               <td><?= e($member['first_name']) ?></td>
                               <td><?= e($member['middle_name'] ?? '') ?></td>
                               <td><?= e($member['last_name']) ?></td>
@@ -111,16 +117,16 @@ $csrfToken = $_SESSION['csrf_token'];
                               <td><?= e($member['updated_at']) ?></td>
                               <td>
                                 <a class="edit-btn btn btn-secondary"
-                                  href="./edit_member.php?id=<?= e($member['member_id']) ?>">Edit</a>
+                                  href="./edit_member.php?id=<?= e($member['person_id']) ?>">Edit</a>
 
-                                <button class="reject-btn btn btn-danger"
-                                  data-member-id="<?= e($member['member_id']) ?>" data-csrf-token="<?= e($csrfToken) ?>">Delete</button>
+                                <button class="reject-btn btn btn-danger disabled"
+                                  data-member-id="<?= e($member['person_id']) ?>" data-csrf-token="<?= e($csrfToken) ?>">Delete</button>
                               </td>
                             </tr>
                         <?php
                           endforeach;
                         } catch (Throwable $e) {
-                          error_log('Error in: ' . $e->getMessage());
+                          error_log('Error in: ' . $e);
                           echo '<div class="alert alert-warning" role="alert">An error occured while fetching data. Please try again later.</div>';
                         }
                         ?>

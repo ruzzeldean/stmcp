@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../includes/admin_auth_check.php';
+require_once __DIR__ . '/../../includes/moderator_auth_check.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
   exit('Invalid or missing contact ID');
@@ -24,13 +24,13 @@ $lastName = $user['last_name'];
 <html lang="en">
 
 <head>
-  <?php require_once __DIR__ . '/../../includes/admin/head.php'; ?>
+  <?php require_once __DIR__ . '/../../includes/moderator/head.php'; ?>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
   <div class="wrapper">
 
-    <?php require_once __DIR__ . '/../../includes/admin/aside.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/moderator/aside.php'; ?>
 
     <!-- Content Wrapper. Contains page content -->
     <div id="chat-wrapper" class="content-wrapper px-3 py-1">
@@ -91,7 +91,7 @@ $lastName = $user['last_name'];
   </div>
   <!-- ./wrapper -->
 
-  <?php require_once __DIR__ . '/../../includes/admin/scripts.php'; ?>
+  <?php require_once __DIR__ . '/../../includes/moderator/scripts.php'; ?>
   <script>
     const CURRENT_USER_ID = <?= e((int) $_SESSION['user_id']) ?>;
     const CONTACT_ID = <?= e((int) $contactID) ?>;
