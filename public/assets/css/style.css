@@ -26,7 +26,9 @@ footer {
 }
 
 .custom-text-truncate-1,
-.custom-text-truncate-2 {
+.custom-text-truncate-2,
+.custom-text-truncate-3,
+.custom-text-truncate-4 {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -38,6 +40,13 @@ footer {
 
 .custom-text-truncate-2 {
   -webkit-line-clamp: 2;
+}
+
+.custom-text-truncate-3 {
+  -webkit-line-clamp: 3;
+}
+.custom-text-truncate-4 {
+  -webkit-line-clamp: 4;
 }
 
 /* Styles for navbar toggler and close button */
@@ -145,6 +154,11 @@ footer {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.news-updates-img {
+
+  object-fit: cover;
 }
 
 @media (max-width: 576px) {

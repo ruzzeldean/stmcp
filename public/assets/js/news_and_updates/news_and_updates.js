@@ -1,12 +1,12 @@
 $(document).ready(function () {
-  const savedPage = sessionStorage.getItem('activities_page') || 1;
+  const savedPage = sessionStorage.getItem('news_updates_page') || 1;
   loadPosts(savedPage);
 
   $(document).on('click', '.pagination-link', function (e) {
     e.preventDefault();
 
     const page = $(this).data('page');
-    sessionStorage.setItem('activities_page', page);
+    sessionStorage.setItem('news_updates_page', page);
     loadPosts(page);
   });
 });
@@ -15,7 +15,7 @@ function loadPosts(page = 1) {
   $('#loading-spinner').removeClass('d-none');
 
   $.ajax({
-    url: './actions/posts/fetch_all_posts.php',
+    url: './actions/news_and_updates/fetch_all_news.php',
     method: 'GET',
     data: { page },
     dataType: 'json',
@@ -31,35 +31,27 @@ function loadPosts(page = 1) {
           const dateObject = new Date(post.created_at);
           const created_at = formatDate(dateObject);
 
-          let badge;
-          switch (post.category) {
-            case 'Upcoming':
-              badge = 'primary';
-              break;
-
-            case 'Past Event':
-              badge = 'success';
-              break;
-
-            default:
-              badge = 'secondary';
-          }
-
           const card = `
-              <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow overflow-hidden">
-                  <img class="bg-secondary card-img-top past-act-img" src="/stmcp/uploads/posts/${post.image_path}" alt="${post.title}">
+              <div class="col-lg-6">
+                <div class="card h-100 overflow-hidden">
+                  <div class="row g-0">
+                    <div class="col-lg-6">
+                      <img class="news-updates-img img-fluid h-100" src="/stmcp/uploads/posts/${post.image_path}">
+                    </div>
 
-                  <div class="card-body">
-                    <h5 class="card-title custom-text-truncate-1 mb-0 pb-1" title="${post.title}">${post.title}</h5>
-
-                    <p class="card-text"><small class="text-muted">${created_at}</small> | <span class="badge text-bg-${badge}">${post.category}</span></p>
-
-                    <p class="card-text custom-text-truncate-2">${post.content}</p>
-                  </div>
-
-                  <div class="card-footer bg-dark border-0 py-3">
-                    <a class="btn btn-warning" href="./view.php?id=${post.post_id}">Read more</a>
+                    <div class="col-lg-6">
+                      <div class="card-body p-lg-4 d-flex flex-column gap-5">
+                        <div>
+                          <h5 class="card-title custom-text-truncate-1">${post.title}</h5>
+                          <p class="card-subtitle text-muted mb-3"><small>${created_at}</small></p>
+                          <p class="card-text custom-text-truncate-3">${post.content}</p>
+                        </div>
+                        
+                        <div>
+                          <a class="btn btn-warning stretched-link" href="./view.php?id=${post.post_id}">Read More</a>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
