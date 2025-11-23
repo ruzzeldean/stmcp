@@ -74,7 +74,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="./donations.php" class="nav-link <?= e($currentPage === 'merchandise.php' ? 'active' : '') ?>">
+          <a href="./merchandise.php" class="nav-link <?= e($currentPage === 'merchandise.php' ? 'active' : '') ?>">
             <i class="nav-icon fa-solid fa-tags"></i>
             <p>Merchandise</p>
           </a>
