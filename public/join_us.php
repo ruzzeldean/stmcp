@@ -269,9 +269,7 @@
     </main>
     <!-- End of main -->
     
-    <footer class="py-5">
-
-    </footer> <!-- End of footer -->
+    <?php require_once __DIR__ . '/includes/footer.php' ?>
   </div>
 
   <!-- Page overlay (loading) -->
@@ -282,7 +280,7 @@
   </div>
   <!-- End of .wrapper -->
   
-  <?php require_once './includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/scripts.php' ?>
   <script src="./assets/js/membership/membership.js"></script>
 </body>
 </html>

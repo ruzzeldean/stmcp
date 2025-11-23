@@ -166,12 +166,10 @@
     </main>
     <!-- End of main -->
     
-    <footer class="py-5">
-
-    </footer> <!-- End of footer -->
+    <?php require_once __DIR__ . '/includes/footer.php' ?>
   </div>
   <!-- End of .wrapper -->
   
-  <?php require_once './includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/scripts.php' ?>
 </body>
 </html>

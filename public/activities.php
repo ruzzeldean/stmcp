@@ -32,7 +32,7 @@
           <div id="loading-spinner" class="text-center my-3 d-none">
           <div class="spinner-border" role="status"></div>
         </div>
-          <div id="posts-container" class="row row-gap-3">
+          <div id="posts-container" class="row row-gap-4">
             <!-- Posts goes here -->
           </div> <!-- /.past-posts-wrapper -->
         </div>
@@ -48,14 +48,11 @@
     </main>
     <!-- End of main -->
 
-    <footer class="py-5">
-
-    </footer>
-    <!-- End of footer -->
+    <?php require_once __DIR__ . '/includes/footer.php' ?>
   </div>
   <!-- End of .wrapper -->
 
-  <?php require_once './includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/scripts.php' ?>
   <!-- Custom script -->
   <script src="./assets/js/posts/posts.js"></script>
 </body>

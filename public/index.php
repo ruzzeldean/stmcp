@@ -73,15 +73,15 @@
               <div class="h-100">
                 <div class="card overflow-hidden h-100">
                   <div class="overflow-hidden">
-                    <img class="card-img-top post-thumbnail" src="./assets/img/home-page/posts-page/haerin-1.png" alt="Post thumbnail">
+                    <img class="card-img-top post-thumbnail" src="./assets/img/home-page/posts-page/club_activities_cover.jpg" alt="Post thumbnail">
                   </div> <!-- End of card-img -->
 
                   <div class="card-body d-flex flex-column">
-                    <h3 class="card-title mb-4">Post Title</h3>
+                    <h3 class="card-title mb-4">Club Activities</h3>
 
-                    <p class="card-text pb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolorem expedita exercitationem quo corrupti omnis, quaerat nostrum reprehenderit ex, accusamus a ab odio magni minima vero laborum, debitis fugit eaque?</p>
+                    <p class="card-text pb-3">At Star Touring Motorcycle Club Philippines, we take pride in making a positive impact on the community.</p>
 
-                    <a class="btn btn-secondary mt-auto w-100" href="">View Activities</a>
+                    <a class="btn btn-secondary mt-auto w-100" href="./activities.php">View Activities</a>
                   </div> <!-- End of .card-body -->
                 </div> <!-- End of .card -->
               </div> <!-- End of div -->
@@ -91,15 +91,15 @@
               <div class="h-100">
                 <div class="card overflow-hidden h-100">
                   <div class="overflow-hidden">
-                    <img class="card-img-top post-thumbnail" src="./assets/img/home-page/posts-page/haerin-3.jpg" alt="Post thumbnail">
+                    <img class="card-img-top post-thumbnail" src="./assets/img/home-page/posts-page/news_and_update_cover.jpg" alt="Post thumbnail">
                   </div> <!-- End of card-img -->
 
                   <div class="card-body d-flex flex-column">
-                    <h3 class="card-title mb-4">Post Title</h3>
+                    <h3 class="card-title mb-4">News and Updates</h3>
 
-                    <p class="card-text pb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti provident minus accusantium repellendus blanditiis, quidem ratione nihil beatae libero non, quasi similique quos dolore ipsa earum veniam dolor, accusamus eveniet.</p>
+                    <p class="card-text pb-3">Stay updated with the latest news, events, and activities of the Star Touring Motorcycle Club Philippines.</p>
 
-                    <a class="btn btn-secondary mt-auto w-100" href="">View News and Updates</a>
+                    <a class="btn btn-secondary mt-auto w-100" href="./news_and_updates.php">View News and Updates</a>
                   </div> <!-- End of .card-body -->
                 </div> <!-- End of .card -->
               </div> <!-- End of div -->
@@ -120,12 +120,10 @@
     </main>
     <!-- End of main -->
     
-    <footer class="py-5">
-
-    </footer> <!-- End of footer -->
+    <?php require_once __DIR__ . '/includes/footer.php' ?>
   </div>
   <!-- End of .wrapper -->
   
-  <?php require_once './includes/footer.php'; ?>
+  <?php require_once __DIR__ . '/includes/scripts.php' ?>
 </body>
 </html>
