@@ -19,22 +19,30 @@ try {
   $offset = ($page - 1) * $limit;
 
   $countSql = 'SELECT
-                COUNT(*) AS total 
+                COUNT(*) AS total
               FROM posts
               WHERE status = "Published"
-                AND category != "Announcement"';
+                AND category = "Announcement"';
 
   $count = $db->fetchOne($countSql);
   $totalPosts = $count ? (int) $count['total'] : 0;
   $totalPages = $totalPosts > 0 ? ceil($totalPosts / $limit) : 1;
 
-  $sql = 'SELECT post_id, title, category, content, image_path, created_at
+  $sql = 'SELECT
+            post_id,
+            title,
+            content,
+            category,
+            image_path,
+            created_at
           FROM posts
-          WHERE status = "Published" AND category != "Announcement"
+          WHERE status = :status
+            AND category = "Announcement"
           ORDER BY created_at DESC
           LIMIT :limit OFFSET :offset';
 
   $stmt = $conn->prepare($sql);
+  $stmt->bindValue(':status', 'Published', PDO::PARAM_STR);
   $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
   $stmt->execute();
@@ -49,7 +57,7 @@ try {
     ]
   ]);
 } catch (Throwable $e) {
-  error_log('Error fetching posts (activities): ' . $e);
+  error_log('Error fetching public posts: ' . $e);
   http_response_code(500);
   sendResponse('error', 'Error fetching posts');
 }
