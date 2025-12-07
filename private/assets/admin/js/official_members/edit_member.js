@@ -157,7 +157,8 @@ $(function () {
             Swal.fire('Error', res.message, 'error');
           }
         },
-        error: () => {
+        error: (err) => {
+          console.error(err)
           $btn.prop('disabled', false);
           Swal.fire('Oops!', 'Something went wrong', 'error');
         },

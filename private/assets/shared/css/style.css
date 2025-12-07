@@ -14,6 +14,18 @@
   max-width: 1200px !important;
 }
 
+.max-w-250 {
+  max-width: 250px !important;
+}
+
+.max-w-500 {
+  max-width: 500px !important;
+}
+
+.ws-pre-wrap {
+  white-space: pre-wrap;
+}
+
 #login-form {
   width: 100%;
   max-width: 350px;
