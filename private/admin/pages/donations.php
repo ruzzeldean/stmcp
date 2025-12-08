@@ -58,10 +58,10 @@
               </div>
             </div>
 
-            <?php if ($_SESSION['role_id'] === 2 || $_SESSION['role_id' === 3]) : ?>
+            <?php if ($_SESSION['role_id'] === 2 || $_SESSION['role_id'] === 3) : ?>
               <div class="col-md-3 col-sm-6 col-12">
                 <div class="info-box shadow-sm">
-                  <span class="info-box-icon bg-secondary"><i class="fa-solid fa-plus"></i></span>
+                  <span class="info-box-icon bg-secondary"><i class="fa-solid fa-heart-circle-plus"></i></span>
 
                   <div class="info-box-content">
                     <span class="info-box-text">Create</span>
@@ -73,7 +73,7 @@
               <?php if ($_SESSION['role_id'] === 2) : ?>
                 <div class="col-md-3 col-sm-6 col-12">
                   <div class="info-box shadow-sm">
-                    <span class="info-box-icon bg-warning"><i class="fa-solid fa-bell"></i></span>
+                    <span class="info-box-icon bg-warning"><i class="fa-solid fa-heart-circle-exclamation"></i></span>
 
                     <div class="info-box-content">
                       <span class="info-box-text">Requests</span>
