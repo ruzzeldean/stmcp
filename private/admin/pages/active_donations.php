@@ -35,25 +35,11 @@
       <div class="content">
         <div class="container-fluid pb-1">
           <div class="card shadow-sm">
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-striped table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th data-type="string">Purpose</th>
-                      <th data-type="date">Start Date</th>
-                      <th data-type="date">Due Date</th>
-                      <th data-type="string">Status</th>
-                      <?php if ($_SESSION['role_id'] === 2) : ?>
-                        <th>Created By</th>
-                        <th>Approved By</th>
-                      <?php endif; ?>
-                      <th data-type="">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="table-body">
-                  </tbody>
-                </table>
+            <div id="donation-container" class="card-body" data-status="active">
+              <div class="text-center">
+                <div class="spinner-border text-warning" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -71,7 +57,7 @@
   <!-- ./wrapper -->
 
   <?php require_once __DIR__ . '/../../includes/admin/scripts.php'; ?>
-  <script src="../../assets/shared/js/active_donations.js"></script>
+  <script src="../../assets/shared/js/donations_pagination.js"></script>
 </body>
 
 </html>
