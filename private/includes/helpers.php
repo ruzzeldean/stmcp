@@ -1,5 +1,7 @@
 <?php
-header('Content-Type: application/json');
+if (!defined('RENDER_HTML')) {
+  header('Content-Type: application/json; charset=utf-8');
+}
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
@@ -19,10 +21,21 @@ function sendResponse($status, $message, $data = [])
   exit;
 }
 
+function e($value)
+{
+  return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+}
+
 function requireLogin()
 {
   if (!isset($_SESSION['user_id'])) {
     sendResponse('error', 'You must be logged in');
+  }
+}
+
+function requireAdmin() {
+  if ($_SESSION['role_id'] !== 2) {
+    sendResponse('error', 'Unauthorized access');
   }
 }
 
@@ -48,4 +61,9 @@ function getConversationID($sender, $receiver)
   return md5(implode('_', $IDs));
 }
 
-// $db = new Database();
+function validateDate($date)
+{
+  $d = DateTime::createFromFormat('Y-m-d', $date);
+  return $d && $d->format('Y-m-d') === $date;
+}
+
