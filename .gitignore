@@ -1,0 +1,10 @@
+ignore
+
+/vendor/
+/storage/
+storage/
+
+config.ini
+
+*.log
+.sql

@@ -1,0 +1,276 @@
+.max-w-50 {
+  max-width: 75px !important;
+}
+
+.max-w-200 {
+  max-width: 200px !important;
+}
+
+.max-w-250 {
+  max-width: 250px !important;
+}
+
+.max-w-500 {
+  max-width: 500px !important;
+}
+
+.ws-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.asterisk {
+  color: var(--bs-danger);
+}
+
+textarea {
+  resize: none;
+}
+
+/* Messages styles */
+
+#contacts-content-wrapper {
+  position: relative;
+}
+
+.search-container {
+  position: relative;
+}
+
+#add-contact {
+  font-size: 1.5rem;
+  height: 3.5rem;
+  width: 3.5rem;
+  position: absolute; /* absolute | fixed */
+  bottom: 25px; /* 25px | 70px */
+  right: 25px;
+  transition: 0.5s ease;
+}
+
+#add-contact:hover {
+  transform: scale(1.1) /* rotate(90deg) */;
+}
+
+.search-input {
+  padding-left: 2.7rem;
+}
+
+#search-icon,
+#search-new-icon {
+  color: #3b3b3b;
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+}
+
+.contact-card:hover {
+  color: var(--bs-light);
+  background: var(--bs-tertiary-color);
+  cursor: pointer;
+}
+
+.contact-card:hover .time-label {
+  color: var(--bs-gray-300);
+}
+
+.time-label {
+  color: var(--bs-tertiary-color);
+}
+
+#new-contact-results p {
+  margin-bottom: 0 !important;
+}
+
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  height: 75vh;
+  max-width: 1000px;
+}
+
+.conversation-body {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+#msg-back-icon {
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+#msg-back-icon:hover {
+  color: var(--bs-light);
+  background: var(--bs-secondary);
+}
+
+#chatting-with-con {
+  max-width: 225px;
+}
+
+.chat-avatar,
+.contact-avatar {
+  max-width: 45px;
+}
+
+#chat-option-icon {
+  cursor: pointer;
+  border-radius: 50% !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: grid;
+  place-content: center;
+}
+
+#chat-option-icon:hover {
+  color: var(--bs-light);
+  background: var(--bs-secondary);
+}
+
+.left-bubble,
+.right-bubble {
+  width: fit-content;
+  max-width: 350px;
+}
+
+.message-container {
+  width: fit-content;
+  white-space: pre-wrap;
+}
+
+.right-bubble {
+  display: flex;
+  flex-direction: column;
+  align-self: self-end;
+  margin-right: 5px;
+}
+
+.left-bubble {
+  display: grid;
+  grid-template-rows: repeat(3, auto);
+  grid-template-columns: repeat(2, auto);
+}
+
+.left-bubble .chat-avatar {
+  grid-area: 1 / 1 / 4 / 2;
+  max-width: 40px;
+}
+
+.left-bubble .message-container {
+  color: var(--bs-light);
+  background: var(--bs-secondary);
+  grid-area: 1 / 2 / 2 / 3;
+  max-width: 200px;
+}
+
+.image-container {
+  grid-area: 2 / 2 / 3 / 3;
+  max-width: 150px;
+}
+
+.left-bubble .time {
+  grid-area: 3 / 2 / 4 / 3;
+}
+
+.right-bubble .message-container {
+  color: var(--bs-white);
+  background: var(--bs-primary);
+  max-width: 200px;
+  align-self: self-end;
+}
+
+.right-bubble .time {
+  align-self: self-end;
+}
+
+#image-preview-wrapper {
+  position: relative;
+  width: 60px;
+}
+
+#image-preview {
+  object-fit: cover;
+  width: 60px;
+  height: 60px;
+}
+
+#remove-image-btn {
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 4px;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+#remove-image-btn i {
+  font-size: 7px;
+}
+
+#chat-footer button {
+  border-radius: 50% !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: grid;
+  place-content: center;
+}
+
+#chat-footer button:hover {
+  color: var(--bs-light);
+  background: var(--bs-secondary);
+}
+
+@media screen and (min-width: 576px) {
+  #chatting-with-con {
+    max-width: 500px;
+  }
+
+  .left-bubble,
+  .right-bubble,
+  .left-bubble .message-container,
+  .right-bubble .message-container,
+  .image-container {
+    max-width: 250px;
+  }
+}
+
+/* @media screen and (max-width: 576px) {
+  .image-container {
+    max-width: 150px;
+  }
+} */
+
+/* End of messages styles */
+
+/* Posts */
+#posts-main-con,
+#donations-main-con {
+  position: relative;
+}
+
+#create-post-btn,
+#create-donation-btn {
+  display: grid;
+  place-content: center;
+  place-items: center;
+  font-size: 1.5rem;
+  height: 3.5rem;
+  width: 3.5rem;
+  position: absolute; /* absolute | fixed */
+  bottom: 25px; /* 25px | 70px */
+  right: 25px;
+  transition: 0.5s ease;
+}
+
+#create-post-btn:hover,
+#create-donation-btn:hover {
+  transform: scale(1.1) /* rotate(90deg) */;
+}
