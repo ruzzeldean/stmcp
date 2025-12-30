@@ -2,7 +2,6 @@
 include __DIR__ . '/../../includes/helpers.php';
 
 requireLogin();
-/* requireCsrf(); */
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = ['image/jpg', 'image/jpeg', 'image/png'];
@@ -58,7 +57,7 @@ switch ($type) {
 
   default:
     http_response_code(400);
-    sendResponse('Invalid request type', [], 'error');
+    sendResponse('Invalid request type');
 }
 
 function fetchDonations($db = new Database)
@@ -115,9 +114,10 @@ function fetchDonations($db = new Database)
         'total_records' => (int)$totalRows
       ],
       'my_donations' => $myDonations
-    ]);
+    ], 'success');
   } catch (\Throwable $e) {
     error_log("Error fetching records $e");
+    sendResponse("Error fetching donations $e");
   }
 }
 
@@ -164,7 +164,7 @@ function createDonation($payload, $db = new Database)
     $stmt = $db->execute($sql, $params);
 
     if ($stmt) {
-      sendResponse('Donation created successfully');
+      sendResponse('Donation created successfully', [], 'success');
     }
   } catch (PDOException $e) {
     error_log("Server Error $e");
@@ -181,11 +181,11 @@ function handlePendingDonation($payload, $db = new Database)
   $donationId = isset($payload['donation_id']) ? trim($payload['donation_id']) : null;
 
   if (empty($action)) {
-    sendResponse('Invalid action', [], 'error');
+    sendResponse('Invalid action');
   }
 
   if (empty($donationId)) {
-    sendResponse('Missing donation ID', [], 'error');
+    sendResponse('Missing donation ID');
   }
 
   $status = $action === 'approve' ? 'Active' : 'Rejected';
@@ -197,20 +197,20 @@ function handlePendingDonation($payload, $db = new Database)
     $db->execute($sql, [$status, $donationId]);
 
     if ($action === 'approve') {
-      sendResponse('Donation successfully approved');
+      sendResponse('Donation successfully approved', [], 'success');
     } else {
-      sendResponse('Donation successfully rejected');
+      sendResponse('Donation successfully rejected', [], 'success');
     }
   } catch (\Throwable $e) {
     error_log("Error approving/rejecting donation: $e");
-    sendResponse('Action failed. Please try again later', [], 'erorr');
+    sendResponse('Action failed. Please try again later');
   }
 }
 
 function donationsList($db = new Database)
 {
   if (!in_array($_GET['status'], ['active', 'closed', 'pending', 'rejected'])) {
-    sendResponse('Invalid status', [], 'error');
+    sendResponse('Invalid status');
   }
 
   $status = $_GET['status'] ?? null;
@@ -266,7 +266,7 @@ function donationsList($db = new Database)
         'total_records' => (int)$totalRows
       ],
       'donations' => $donations
-    ]);
+    ], 'success');
   } catch (\Throwable $e) {
     error_log("Error fetching records $e");
   }
@@ -279,18 +279,18 @@ function donate($db = new Database)
   $inputAmount = $_POST['amount'] ?? null;
 
   if ($donationId === '') {
-    sendResponse('Missing donation ID', [], 'error');
+    sendResponse('Missing donation ID');
   }
 
   if ($inputAmount === null || trim($inputAmount) === '') {
-    sendResponse('Amount is required', [], 'error');
+    sendResponse('Amount is required');
   } else {
     $amount = filter_var($inputAmount, FILTER_VALIDATE_FLOAT);
 
     if ($amount === false) {
-      sendResponse('Please enter a numeric amount', [], 'error');
+      sendResponse('Please enter a numeric amount');
     } elseif ($amount <= 0) {
-      sendResponse('Amount must be greater than zero', [], 'error');
+      sendResponse('Amount must be greater than zero');
     }
   }
 
@@ -300,21 +300,21 @@ function donate($db = new Database)
     !isset($_FILES[$uploadedFileKey]) ||
     $_FILES[$uploadedFileKey]['error'] === UPLOAD_ERR_NO_FILE
   ) {
-    sendResponse('Image is required. Please select a file', [], 'error');
+    sendResponse('Image is required. Please select a file');
   }
 
   $file = $_FILES[$uploadedFileKey];
 
   if ($file['error'] !== UPLOAD_ERR_OK) {
-    sendResponse('Image upload failed, Please try again', [], 'error');
+    sendResponse('Image upload failed, Please try again');
   }
 
   if ($file['size'] === 0) {
-    sendResponse('Uploaded file is empty', [], 'error');
+    sendResponse('Uploaded file is empty');
   }
 
   if ($file['size'] > MAX_FILE_SIZE) {
-    sendResponse('File too large. Maximum allowed is 5 MB', [], 'error');
+    sendResponse('File too large. Maximum allowed is 5 MB');
   }
 
   $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -324,17 +324,17 @@ function donate($db = new Database)
     $detectedMimeType === false ||
     !in_array($detectedMimeType, ALLOWED_MIME_TYPES, true)
   ) {
-    sendResponse('Invalid file type. Only JPEG/JPG and PNG are allowed', [], 'error');
+    sendResponse('Invalid file type. Only JPEG/JPG and PNG are allowed');
   }
 
   $imageInfo = getimagesize($file['tmp_name']);
   if ($imageInfo === false) {
-    sendResponse('File is not a valid image', [], 'error');
+    sendResponse('File is not a valid image');
   }
 
   $fileExtension = ALLOWED_EXTENSIONS[$detectedMimeType] ?? null;
   if ($fileExtension === null) {
-    sendResponse('Unsupported file format', [], 'error');
+    sendResponse('Unsupported file format');
   }
 
   $fileExtension = strtolower($fileExtension);
@@ -346,7 +346,7 @@ function donate($db = new Database)
   }
 
   if (!move_uploaded_file($file['tmp_name'], $destinationPath)) {
-    sendResponse('Failed to save image. Please try again later', [], 'error');
+    sendResponse('Failed to save image. Please try again later');
   }
 
   try {
@@ -359,7 +359,7 @@ function donate($db = new Database)
       if (isset($destinationPath) && file_exists($destinationPath)) {
         unlink($destinationPath);
       }
-      sendResponse('Donation not found or already closed', [], 'error');
+      sendResponse('Donation not found or already closed');
     }
 
     $sql = 'INSERT INTO donors (donation_id, user_id, proof_image, amount)
@@ -368,7 +368,7 @@ function donate($db = new Database)
 
     $db->execute($sql, $params);
 
-    sendResponse('Thank you! Your donation has been record');
+    sendResponse('Thank you! Your donation has been record', [], 'success');
   } catch (\Throwable $e) {
     if ($e->getCode() === '23000') {
       if (isset($destinationPath) && file_exists($destinationPath)) {
@@ -381,7 +381,7 @@ function donate($db = new Database)
       unlink($destinationPath);
     }
     error_log("Error processing donation: $e");
-    sendResponse('Error processing donation. Please try again later', [], 'error');
+    sendResponse('Error processing donation. Please try again later');
   }
 }
 
@@ -390,7 +390,7 @@ function fetchDonors($db = new Database)
   $donationId = $_GET['donation_id'] ?? '';
 
   if (empty($donationId)) {
-    sendResponse('Missing donation ID', [], 'error');
+    sendResponse('Missing donation ID');
   }
 
   $sql = 'SELECT
@@ -405,5 +405,5 @@ function fetchDonors($db = new Database)
           WHERE d.donation_id = ?';
   $donors = $db->fetchAll($sql, [$donationId]);
 
-  sendResponse('Sumakses', $donors);
+  sendResponse('Successfully fetched', $donors, 'success');
 }

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Successful Application</title>
+  </head>
+  <style>
+    code {
+      background: #dadada;
+      border-radius: 5px;
+      padding: 1px 1.2px;
+    }
+
+    #login-btn {
+      display: inline-block;
+      background-color: #007bff;
+      color: #ffffff;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 12px 14px;
+      text-decoration: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    #login-btn:hover,
+    #login-btn:focus {
+      background: #0056b3;
+      transform: translateY(-1px);
+    }
+  </style>
+  <body>
+    <h3>Hello {{name}}!</h3>
+
+    <p>
+      Thank you for joining Star Touring Motorcycle Club (STMCP)! Your
+      membership application has been successfully received.
+    </p>
+
+    <hr />
+
+    <p>Below are your <strong>initial login credentials:</strong>.</p>
+
+    <ul>
+      <li><strong>Username:</strong> <code>{{temp_username}}</code></li>
+      <li><strong>Password:</strong> <code>{{temp_password}}</code></li>
+    </ul>
+
+    <a id="login-btn" href="http://localhost/stmcp/private/">Log in</a>
+
+    <p>
+      For your account's security, you <strong>must</strong> log in immediately
+      and set a new, permanent password.
+    </p>
+
+    <p>We look forward to seeing you inside!</p>
+
+    <p style="margin-bottom: 0">Best regards,</p>
+    <p style="margin-top: 0"><strong>The STMCP Family</strong></p>
+
+    <br />
+
+    <img src="cid:{{one_star_logo}}" alt="One star logo" />
+  </body>
+</html>

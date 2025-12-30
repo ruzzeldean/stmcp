@@ -1,5 +1,5 @@
 .max-w-50 {
-  max-width: 75px !important;
+  max-width: 50px !important;
 }
 
 .max-w-200 {
@@ -24,6 +24,21 @@
 
 textarea {
   resize: none;
+}
+
+#page-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  cursor: wait;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Messages styles */
@@ -193,7 +208,7 @@ textarea {
   width: 60px;
 }
 
-#image-preview {
+#img-preview-before-sending {
   object-fit: cover;
   width: 60px;
   height: 60px;

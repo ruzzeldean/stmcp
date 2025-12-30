@@ -78,7 +78,7 @@
                   class="rounded-circle shadow"
                   alt="User Image" />
                 <p>
-                  <?= e($_SESSION['full_name']) ?> - Web Developer
+                  <?= e($_SESSION['full_name']) ?> - <?= e($_SESSION['role']) ?>
                   <small>Member since Nov. 2023</small>
                 </p>
               </li>

@@ -39,7 +39,8 @@ try {
 
   $contacts = $db->fetchAll($sql, $params);
 
-  sendResponse('Contacts successfully fetched', $contacts);
+  sendResponse('Contacts successfully fetched', $contacts, 'success');
 } catch (Throwable $e) {
-  error_log("Error fetching contacts: $e");
+  error_log('Error fetching contacts: ' . $e->getMessage());
+  sendResponse('Error fetching contacts: ');
 }

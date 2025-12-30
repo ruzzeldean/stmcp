@@ -40,7 +40,8 @@ try {
             p.first_name,
             p.last_name,
             CONCAT(p.first_name, " ", p.last_name) AS full_name,
-            r.role_id
+            r.role_id,
+            r.role
           FROM users AS u
           LEFT JOIN people AS p
             ON u.person_id = p.person_id
@@ -69,6 +70,8 @@ try {
   $_SESSION['last_name'] = $user['last_name'];
   $_SESSION['full_name'] = $user['full_name'];
   $_SESSION['role_id'] = $user['role_id'];
+  $_SESSION['role'] = $user['role'];
+  $_SESSION['last_activity'] = time();
 
   http_response_code(200);
   echo json_encode([

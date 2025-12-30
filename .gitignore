@@ -1,5 +1,7 @@
 ignore
 
+.env
+
 /vendor/
 /storage/
 storage/

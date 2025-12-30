@@ -83,6 +83,19 @@ const Toast = Swal.mixin({
   toast: true,
   position: 'center',
   showConfirmButton: false,
-  timer: 1500,
+  timer: 3000,
   timerProgressBar: true,
 });
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) {
+    return '';
+  }
+
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}

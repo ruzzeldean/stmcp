@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../../config/database.php';
 
-function sendResponse($message, $data = [], $status = 'success')
+function sendResponse($message, $data = [], $status = 'error')
 {
   $response = [
     'message' => $message,

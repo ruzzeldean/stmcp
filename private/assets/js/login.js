@@ -59,7 +59,7 @@ loginForm.addEventListener('submit', async function (e) {
     }
 
     if (response.ok) {
-      Toast.fire({ icon: 'success', title: result.message }).then(() => {
+      Swal.fire({ icon: 'success', text: result.message }).then(() => {
         window.location.href = result.redirect;
       });
     }

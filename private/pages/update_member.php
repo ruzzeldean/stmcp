@@ -3,14 +3,13 @@ include __DIR__ . '/../includes/auth.php';
 
 requireAdmin();
 
-$personId = $_GET['id'] ?? null;
+$personId = (int)$_GET['id'] ?? null;
 
 if (!filter_var($personId, FILTER_VALIDATE_INT, [
   'options' => ['min_range' => 1]
 ])) {
-  error_log('Invalid request: Missing or invalid Member ID');
   http_response_code(400);
-  exit('Invalid request.');
+  exit('Invalid request: Missing or invalid member ID');
 }
 
 try {
@@ -41,7 +40,7 @@ $chapter = $member['chapter_id'];
 
     <?php include __DIR__ . '/../partials/aside.php'; ?>
 
-    <main class="app-main">
+    <main class="app-main" data-active-page="update-member">
       <div class="app-content-header">
         <div class="container-fluid">
           <div class="row">
@@ -244,8 +243,8 @@ $chapter = $member['chapter_id'];
 
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label class="form-label" for="chapter_id">Chapter <span class="asterisk">*</span></label>
-                        <select id="chapter_id" name="chapter_id" class="form-select">
+                        <label class="form-label" for="chapter-id">Chapter <span class="asterisk">*</span></label>
+                        <select id="chapter-id" name="chapter_id" class="form-select">
                           <option value="" selected disabled>Select chapter near to you</option>
                           <option value="1" <?= e($chapter === 1 ? 'selected' : '') ?>>Cavite</option>
                           <option value="2" <?= e($chapter === 2 ? 'selected' : '') ?>>Ilocos (Sur, Norte)</option>
@@ -286,9 +285,11 @@ $chapter = $member['chapter_id'];
 
                 <input type="hidden" name="person_id" value="<?= e($member['person_id']) ?>">
 
+                <input type="hidden" name="action" value="updateMember">
+
                 <div class="row justify-content-center">
                   <div class="col-lg-6">
-                    <button id="update-btn" class="btn btn-warning w-100" type="submit">Update</button>
+                    <button id="update-btn" class="btn btn-primary w-100" type="submit">Update</button>
                   </div>
                 </div>
               </form>
@@ -301,8 +302,14 @@ $chapter = $member['chapter_id'];
     <?php include __DIR__ . '/../partials/footer.php'; ?>
   </div>
 
+  <div id="page-overlay" class="d-none text-light">
+    <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
   <?php include __DIR__ . '/../partials/scripts.php'; ?>
-  <script src="../assets/js/official_members/update_member.js"></script>
+  <script src="../assets/js/official_members/official_members.js"></script>
 </body>
 
 </html>

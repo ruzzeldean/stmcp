@@ -16,7 +16,7 @@ requireModerator();
 
     <?php include __DIR__ . '/../partials/aside.php'; ?>
 
-    <main class="app-main">
+    <main class="app-main" data-csrf-token="<?= $csrfToken ?>">
       <div class="app-content-header">
         <div class="container-fluid">
           <div class="row">
@@ -40,7 +40,6 @@ requireModerator();
                 <table class="data-table display table table-borderless table-striped table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th></th>
                       <th>Actions</th>
                       <th>First Name </th>
                       <th>Middle Name </th>
@@ -65,8 +64,26 @@ requireModerator();
                       <th>Updated At </th>
                     </tr>
                   </thead>
-                  <tbody></tbody>
+                  <tbody id="table-body">
+                    <tr>
+                      <td colspan="100%" class="text-muted">
+                        Loading...
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
+              </div>
+              <div class="row row-gap-2 mt-0 mt-md-3">
+                <div class="col-md-6 order-md-last">
+                  <nav class="">
+                    <ul id="pagination-controls"
+                      class="pagination pagination-sm justify-content-center justify-content-md-end mb-0 mt-3 mt-lg-0"></ul>
+                  </nav>
+                </div>
+
+                <div id="pagination-info"
+                  class="col-md-6 d-flex align-items-center justify-content-center justify-content-md-start">
+                </div>
               </div>
             </div>
           </div>

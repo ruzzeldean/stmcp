@@ -2,78 +2,91 @@
 
 // store current page (localstorage)
 
-const tableBody = document.getElementById('table-body');
-const userName = tableBody.dataset.userName;
-const userRole = tableBody.dataset.userRole;
+const state = { currentPage: 1, limit: 5 };
+
+const elements = {
+  tableBody: document.getElementById('table-body'),
+  paginationControl: document.getElementById('pagination-controls'),
+  paginationInfo: document.getElementById('pagination-info'),
+  updatepostForm: document.getElementById('update-post-form'),
+  userName: document.getElementById('table-body')?.dataset?.userName ?? null,
+  userRole: (
+    document.getElementById('table-body')?.dataset?.userRole ?? ''
+  ).toLowerCase(),
+  csrfToken: document.querySelector('.app-main')?.dataset?.csrfToken ?? null,
+};
 
 let currentPost = [];
 
-const getPaginationRange = (current, last) => {
-  const delta = 1;
-  const left = current - delta;
-  const right = current + delta + 1;
-  const range = [];
-  const rangeWithDots = [];
-  let l;
+async function fetchPosts(page = 1) {
+  if (!Number.isInteger(page) || page < 1) return;
+  state.currentPage = page;
 
-  for (let i = 1; i <= last; i++) {
-    if (i === 1 || i === last || (i >= left && i < right)) {
-      range.push(i);
-    }
-  }
-
-  for (const i of range) {
-    if (l) {
-      if (i - l === 2) {
-        rangeWithDots.push(l + 1);
-      } else if (i - l !== 1) {
-        rangeWithDots.push('...');
-      }
-    }
-    rangeWithDots.push(i);
-    l = i;
-  }
-
-  return rangeWithDots;
-};
-
-async function loadTableData(event, page = 1) {
-  if (event && typeof event.preventDefault === 'function') {
-    event.preventDefault();
-  }
+  const apiBackendUrl = `../api/posts/posts.php?page=${page}`;
 
   try {
-    const response = await fetch(`../api/posts/posts.php?page=${page}`, {
+    const response = await fetch(apiBackendUrl, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: {
+        Accept: 'application/json',
+      },
     });
 
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.message || 'Error fetching posts');
+      throw new Error(result.message || 'Fetching post details failed');
+    }
+
+    if (result.status !== 'success') {
+      Swal.fire('', result.message, result.status);
+      return;
     }
 
     currentPost = result.data.posts;
     renderTable(result.data.posts);
-    renderPagination(result.data.total_pages, result.data.current_page);
+    renderPagination(
+      result.data.pagination.total_pages,
+      result.data.pagination.current_page
+    );
+    renderPaginationInfo(result.data.pagination);
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error(error);
+    Swal.fire('Error', error.message, 'error');
   }
 }
 
 function renderTable(posts) {
-  tableBody.innerHTML = posts
+  if (!elements.tableBody) return;
+
+  if (!Array.isArray(posts) || posts.length === 0) {
+    elements.tableBody.innerHTML = `
+      <tr>
+        <td colspan="100%" class="text-md-center text-muted">
+          No post data found
+        </td>
+      </tr>`;
+    return;
+  }
+
+  elements.tableBody.innerHTML = posts
     .map((post) => {
+      const title = post.title ?? '';
+      const createdBy = post.created_by ?? '';
+      const createdAt = post.created_at ?? '';
+      const imagePath = post.image_path ?? '';
+      const rawCategory = post.category ?? '';
+      const rawStatus = post.status ?? '';
+
       const categoryConfig = {
         Announcement: { class: 'text-bg-warning', label: 'Announcement' },
         Upcoming: { class: 'text-bg-info', label: 'Upcoming' },
         'Past Event': { class: 'text-bg-success', label: 'Past Event' },
       };
 
-      const category = categoryConfig[post.category] || {
+      const category = categoryConfig[String(rawCategory)] || {
         class: 'text-bg-secondary',
-        label: post.category,
+        label: String(rawCategory || 'Unspecified'),
       };
 
       const statusConfig = {
@@ -82,145 +95,231 @@ function renderTable(posts) {
         Rejected: { class: 'text-bg-danger', label: 'Rejected' },
       };
 
-      const status = statusConfig[post.status] || {
+      const status = statusConfig[String(rawStatus)] || {
         class: 'text-bg-info',
-        label: post.status,
+        label: String(rawStatus || 'Unknown'),
       };
 
-      const display = userRole === 'moderator' ? 'd-none' : '';
-      const editBtn = userName !== post.created_by ? 'd-none' : '';
+      const display = elements.userRole === 'moderator' ? 'd-none' : '';
+      const editBtn =
+        elements.userName && elements.userName === createdBy ? '' : 'd-none';
+      const alreadyApproved = rawStatus === 'Published' ? 'd-none' : '';
+      const alreadyRejected = rawStatus === 'Rejected' ? 'd-none' : '';
 
       return `
-        <tr>
-          <td>${post.title}</td>
-          <td>
-            <span class="badge rounded-pill ${category.class}">
-              ${category.label}
-            </span>
-          </td>
-          <td>
-            <img class="img-thumbnail max-w-50"
-            src="../storage/uploads/posts/${post.image_path}"
-            alt="${post.title}" />
-          </td>
-          <td>
-            <span class="badge rounded-pill ${status.class}">
-              ${status.label}
-            </span>
-          </td>
-          <td>${post.created_by}</td>
-          <td>${post.created_at}</td>
-          <td>
-            <button class="preview-btn btn btn-primary" type="button"
-            data-bs-toggle="modal" data-bs-target="#preview-modal"
-            data-post-id="${post.post_id}" title="Preview">
-              <i class="fa-solid fa-eye"></i>
-            </button>
-            
-            <button class="approve-btn btn btn-success ${display}"
-            data-post-id="${post.post_id}" title="Approve">
-              <i class="fa-solid fa-check"></i>
-            </button>
+      <tr>
+        <td>${escapeHtml(title)}</td>
+        <td>
+          <span class="badge rounded-pill ${category.class}">
+            ${escapeHtml(category.label)}
+          </span>
+        </td>
+        <td>
+          <img class="img-thumbnail max-w-50" src="../../public/assets/${escapeHtml(
+            imagePath
+          )}" alt="${escapeHtml(title)}">
+        </td>
+        <td>
+          <span class="badge rounded-pill ${status.class}">
+            ${escapeHtml(status.label)}
+          </span>
+        </td>
+        <td>${escapeHtml(createdBy)}</td>
+        <td>${escapeHtml(createdAt)}</td>
+        <td>
+          <button class="preview-btn btn btn-primary" type="button"
+          data-bs-toggle="modal" data-bs-target="#preview-modal"
+          data-post-id="${post.post_id}" title="Preview">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+          
+          <button class="approve-btn btn btn-success ${display} ${alreadyApproved}"
+          data-post-id="${post.post_id}" title="Approve">
+            <i class="fa-solid fa-check"></i>
+          </button>
 
-            <button class="reject-btn btn btn-danger ${display}"
-            data-post-id="${post.post_id}" title="Reject">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+          <button class="reject-btn btn btn-danger ${display} ${alreadyRejected}"
+          data-post-id="${post.post_id}" title="Reject">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
 
-            <a class="edit-btn btn btn-info ${editBtn}"
-            href="update_post.php?id=${post.post_id}"
-            data-post-id="${post.post_id}" title="Edit">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </a>
-          </td>
-        </tr>
-      `;
+          <a class="edit-btn btn btn-info ${editBtn}"
+          href="update_post.php?id=${encodeURIComponent(
+            post.post_id
+          )}" title="Edit">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </a>
+        </td>
+      </tr>`;
     })
     .join('');
 }
 
 function renderPagination(totalPages, currentPage) {
-  const nav = document.getElementById('paginationControls');
-  const pages = getPaginationRange(currentPage, totalPages);
+  if (!elements.paginationControl) return;
 
+  if (totalPages <= 1) {
+    elements.paginationControl.innerHTML = '';
+    return;
+  }
+
+  const pages = getPaginationRange(currentPage, totalPages);
   let html = '';
 
-  html += `
-    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-      <a class="page-link" href="#" onclick="loadTableData(event, ${
-        currentPage - 1
-      })">&lsaquo;</a>
-    </li>
-  `;
+  html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+    <button class="page-link" data-page="${Math.max(1, currentPage - 1)}">
+      &lsaquo;
+    </button>
+  </li>`;
 
   pages.forEach((page) => {
     if (page === '...') {
       html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
     } else {
-      html += `
-        <li class="page-item ${currentPage === page ? 'active' : ''}">
-          <a class="page-link" href="#" onclick="loadTableData(event, ${page})">${page}</a>
-        </li>
-      `;
+      html += `<li class="page-item ${
+        currentPage === page ? 'active disabled' : ''
+      }">
+        <button class="page-link" data-page="${page}">${page}</button>
+      </li>`;
     }
   });
 
   html += `
     <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-      <a class="page-link" href="#" onclick="loadTableData(event, ${
+      <button class="page-link" data-page="${Math.min(
+        totalPages,
         currentPage + 1
-      })">&rsaquo;</a>
+      )}">
+        &rsaquo;
+      </button>
     </li>
   `;
 
-  nav.innerHTML = html;
+  elements.paginationControl.innerHTML = html;
 }
 
-document.addEventListener('DOMContentLoaded', () => loadTableData(null, 1));
+if (elements.paginationControl) {
+  elements.paginationControl.addEventListener('click', (e) => {
+    const item = e.target.closest('.page-item');
+    if (!item || item.classList.contains('disabled')) return;
+
+    const btn = item.querySelector('button[data-page]');
+    if (!btn) return;
+
+    const page = Number(btn.dataset.page);
+    if (!Number.isInteger(page) || page < 1) return;
+
+    fetchPosts(page);
+  });
+}
+
+function getPaginationRange(current, last) {
+  const delta = 1;
+  const range = [];
+  const rangeWithEllipsis = [];
+  let l;
+
+  for (let i = 1; i <= last; i++) {
+    if (
+      i === 1 ||
+      i === last ||
+      (i >= current - delta && i <= current + delta)
+    ) {
+      range.push(i);
+    }
+  }
+
+  for (const i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithEllipsis.push(l + 1);
+      } else if (i - l !== 1) {
+        rangeWithEllipsis.push('...');
+      }
+    }
+    rangeWithEllipsis.push(i);
+    l = i;
+  }
+
+  return rangeWithEllipsis;
+}
+
+function renderPaginationInfo(pagination) {
+  if (!elements.paginationInfo) return;
+
+  const { current_page, total_pages } = pagination;
+
+  if (total_pages === 0) {
+    elements.paginationInfo.innerHTML = '';
+    return;
+  }
+
+  elements.paginationInfo.innerHTML = `
+    <small class="text-muted">
+      Page <strong>${current_page}</strong> of <strong>${total_pages}</strong>
+    </small>
+  `;
+}
+
+const initialize = () => fetchPosts();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initialize);
+} else {
+  initialize();
+}
 
 // preview btn
-document.addEventListener('click', function (event) {
-  const previewBtn = event.target.closest('.preview-btn');
+document.addEventListener('click', function (e) {
+  const previewBtn = e.target.closest('.preview-btn');
   if (!previewBtn) return;
 
   const postId = previewBtn.dataset.postId;
-
   const post = currentPost.find((p) => p.post_id == postId);
+
+  if (!post) {
+    Swal.fire('Error', 'Post not found', 'error');
+    return;
+  }
+
   const categoryConfig = {
     Announcement: { class: 'text-bg-warning', label: 'Announcement' },
     Upcoming: { class: 'text-bg-info', label: 'Upcoming' },
     'Past Event': { class: 'text-bg-success', label: 'Past Event' },
   };
 
-  const category = categoryConfig[post.category] || {
+  const category = categoryConfig[String(post.category)] || {
     class: 'text-bg-secondary',
     label: post.category,
   };
 
-  if (post) {
-    const modalBody = document.querySelector('.modal-body');
-    modalBody.innerHTML = `
-      <h3 id="post-title" class="mb-1">${post.title}</h3>
+  const modalBody = document.querySelector('.modal-body');
+  if (!modalBody) return;
 
-      <div>
-        <span id="post-category"
-        class="badge rounded-pill ${category.class}">
-          ${category.label}
-        </span> |
-        <small id="post-date" class="badge text-muted">${post.created_at}</small>
-      </div>
+  modalBody.innerHTML = `
+    <h3 id="post-title" class="mb-1">${escapeHtml(post.title)}</h3>
 
-      <img id="post-image" class="img-fluid rounded my-3"
-      src="../storage/uploads/posts/${post.image_path}" alt="${post.title}">
+    <div>
+      <span id="post-category"
+      class="badge rounded-pill ${category.class}">
+        ${escapeHtml(category.label)}
+      </span> |
+      <small id="post-date" class="badge text-muted">${escapeHtml(
+        post.created_at
+      )}</small>
+    </div>
 
-      <div class="ws-pre-wrap">${post.content}</div>
-    `;
-  }
+    <img id="post-image" class="img-fluid rounded my-3"
+    src="../../public/assets/${escapeHtml(post.image_path)}" alt="${escapeHtml(
+    post.title
+  )}">
+
+    <div class="ws-pre-wrap">${escapeHtml(post.content)}</div>
+  `;
 });
 
 // aprove btn
-document.addEventListener('click', function (event) {
-  const approveBtn = event.target.closest('.approve-btn');
+document.addEventListener('click', function (e) {
+  const approveBtn = e.target.closest('.approve-btn');
 
   if (!approveBtn) return;
 
@@ -257,8 +356,8 @@ document.addEventListener('click', function (event) {
           return;
         }
 
-        Swal.fire('Success', result.message, result.status).then(() => {
-          loadTableData(null, 1);
+        Swal.fire('Approved', result.message, result.status).then(() => {
+          fetchPosts();
         });
       } catch (error) {
         console.error(error);
@@ -269,8 +368,8 @@ document.addEventListener('click', function (event) {
 });
 
 // reject btn
-document.addEventListener('click', function (event) {
-  const rejectBtn = event.target.closest('.reject-btn');
+document.addEventListener('click', function (e) {
+  const rejectBtn = e.target.closest('.reject-btn');
   if (!rejectBtn) return;
 
   const postId = rejectBtn.dataset.postId;
@@ -306,7 +405,7 @@ document.addEventListener('click', function (event) {
         }
 
         Swal.fire('Success', result.message, result.status).then(() => {
-          loadTableData(null, 1);
+          fetchPosts();
         });
       } catch (error) {
         console.error(error);

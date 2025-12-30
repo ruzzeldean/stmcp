@@ -1,11 +1,14 @@
 <?php
 session_start();
 
+define('SESSION_TIMEOUT', 9000);
 requireLogin();
+checkSessionTimeout();
 
 include __DIR__ . '/../../config/database.php';
 
 $currentPage = basename($_SERVER['PHP_SELF']);
+
 
 if (empty($_SESSION['csrf_token'])) {
   $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -23,7 +26,7 @@ $aspirant = $sessionRoleId === 5;
 
 if ($superAdmin || $admin) {
   $userRole = 'admin';
-} 
+}
 
 if ($superAdmin || $moderator) {
   $userRole = 'moderator';
@@ -40,9 +43,19 @@ if ($superAdmin || $aspirant) {
 function requireLogin()
 {
   if (!isset($_SESSION['user_id'], $_SESSION['role_id'])) {
-    header('Location: ../auth/login.php');
+    header('Location: ../auth/logout.php');
     exit;
   }
+}
+
+function checkSessionTimeout()
+{
+  if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] >= SESSION_TIMEOUT)) {
+    header('Location: ../auth/logout.php');
+    exit;
+  }
+
+  $_SESSION['last_activity'] = time();
 }
 
 function requireAdmin()

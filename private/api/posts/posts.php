@@ -18,7 +18,7 @@ if ($method === 'POST') {
 
 switch ($action) {
   case 'fetchPosts':
-    fetchPosts();
+    handleFetch();
     break;
 
   case 'approvePost':
@@ -36,10 +36,11 @@ switch ($action) {
     sendResponse('Invalid action');
 }
 
-function fetchPosts($db = new Database)
+function handleFetch($db = new Database)
 {
-  $limit = 10;
+  $conn = $db->getConnection();
   $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+  $limit = 5;
   $offset = ($currentPage - 1) * $limit;
 
   try {
@@ -47,7 +48,7 @@ function fetchPosts($db = new Database)
     $totalRows = $totalPosts['total'] ?? 0;
     $totalPages = ceil($totalRows / $limit);
 
-    $sql =  "SELECT
+    $sql =  'SELECT
               posts.post_id,
               posts.title,
               posts.category,
@@ -55,21 +56,36 @@ function fetchPosts($db = new Database)
               posts.image_path,
               posts.status,
               posts.created_at,
-              CONCAT(p.first_name, ' ', p.last_name) AS created_by
+              CONCAT(p.first_name, " ", p.last_name) AS created_by
             FROM posts
             INNER JOIN users AS u
               ON posts.created_by = u.user_id
             INNER JOIN people AS p
               ON u.person_id = p.person_id
             ORDER BY posts.created_at DESC
-            LIMIT $limit OFFSET $offset";
-    $posts = $db->fetchAll($sql);
+            LIMIT ? OFFSET ?';
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(2, (int)$offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($posts as &$post) {
+      $createdAt = new DateTime($post['created_at']);
+      $post['created_at'] = $createdAt->format('M j, Y');
+    }
+    unset($post);
 
     sendResponse('Posts successfully fetched', [
       'posts' => $posts,
-      'total_pages' => (int)$totalPages,
-      'current_page' => (int)$currentPage
-    ]);
+      'pagination' => [
+        'current_page' => $currentPage,
+        'total_pages' => (int)$totalPages,
+        'total_records' => (int)$totalRows
+      ]
+    ], 'success');
   } catch (PDOException $e) {
     http_response_code(500);
     error_log("Server error: $e");
@@ -88,7 +104,7 @@ function approvePost($db = new Database)
 
   if (!$postId) {
     http_response_code(422);
-    sendResponse('Missing post ID', [], 'error');
+    sendResponse('Missing post ID');
   }
 
   try {
@@ -98,7 +114,7 @@ function approvePost($db = new Database)
     $stmt = $db->execute($sql, ['post_id' => $postId]);
 
     if ($stmt->rowCount() > 0) {
-      sendResponse('Post is now published');
+      sendResponse('Post is now published', [], 'success');
     } else {
       $sql = 'SELECT post_id
             FROM posts
@@ -109,13 +125,13 @@ function approvePost($db = new Database)
         sendResponse('Post is already published', [], 'info');
       } else {
         http_response_code(422);
-        sendResponse('Post not found', [], 'error');
+        sendResponse('Post not found');
       }
     }
   } catch (PDOException $e) {
     http_response_code(500);
     error_log('Error approving post: ' . $e->getMessage());
-    sendResponse('Something went wrong. Please try again later', [], 'error');
+    sendResponse('Something went wrong. Please try again later');
   }
 }
 
@@ -126,7 +142,7 @@ function rejectPost($db = new Database)
 
   if (!$postId) {
     http_response_code(422);
-    sendResponse('Missing post ID', [], 'error');
+    sendResponse('Missing post ID');
   }
 
   try {
@@ -136,7 +152,7 @@ function rejectPost($db = new Database)
     $stmt = $db->execute($sql, [$postId]);
 
     if ($stmt->rowCount() > 0) {
-      sendResponse('Post rejected successfully');
+      sendResponse('Post rejected successfully', [], 'success');
     } else {
       $sql = 'SELECT post_id
             FROM posts
@@ -147,7 +163,7 @@ function rejectPost($db = new Database)
         sendResponse('Post is already rejected', [], 'info');
       } else {
         http_response_code(422);
-        sendResponse('Post not found', [], 'error');
+        sendResponse('Post not found');
       }
     }
   } catch (Throwable $e) {

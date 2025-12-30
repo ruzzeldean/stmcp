@@ -18,14 +18,6 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <?php if (
-    $currentPage === 'official_members.php' ||
-    $currentPage === 'aspirants.php'
-  ) : ?>
-    <!-- DataTables -->
-    <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-2.3.5/b-3.2.5/b-colvis-3.2.5/b-html5-3.2.5/r-3.0.7/datatables.min.css" rel="stylesheet" integrity="sha384-yiaqfxol8CCW+WZ56tGq4sdr/H9PdaQLkf0Jdlve6yB8PCL/G+UbptqPbh5aAHR3" crossorigin="anonymous">
-  <?php endif; ?>
-
   <link rel="stylesheet" href="../../src/css/adminlte.min.css" />
 
   <link rel="stylesheet" href="../assets/css/style.css">

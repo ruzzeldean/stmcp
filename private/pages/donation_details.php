@@ -109,7 +109,7 @@ $statusClass = match ($status) {
                     <span class="badge rounded-pill text-bg-<?= e($statusClass) ?>"><?= e($status) ?></span>
                   </p>
 
-                  <?php if (!$alreadyDonated && e($status) !== 'Closed' && e($status) !== 'Pending') : ?>
+                  <?php if (!$alreadyDonated && e($status) !== 'Closed' && e($status) !== 'Pending' && e($status) !== 'Rejected') : ?>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donate-modal">
                       Donate
                     </button>

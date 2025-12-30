@@ -2,109 +2,195 @@
 include __DIR__ . '/../../includes/helpers.php';
 
 requireLogin();
-/* requireCsrf(); */
 requireModerator();
 
 $userId = $_SESSION['user_id'];
 
-try {
-  $db = new Database();
-  $method = $_SERVER['REQUEST_METHOD'];
-  $action = 'fetchAspirants';
-  $input = [];
+$db = new Database();
+$method = $_SERVER['REQUEST_METHOD'];
+$action = 'fetchAspirants';
+$payload = [];
 
-  if ($method === 'POST') {
-    $input = json_decode(file_get_contents('php://input'), true) ?? [];
-    $action = $input['action'] ?? $action;
-  }
-
-  switch ($action) {
-    case 'fetchAspirants':
-      fetchAspirants($db);
-      break;
-
-    case 'approveAspirant':
-      updateMember($db);
-      break;
-
-    case 'rejectAspirant':
-      deleteMember($db, $input, $userId);
-      break;
-
-    default:
-      http_response_code(400);
-      sendResponse('Invalid action');
-  }
-} catch (PDOException $e) {
-  if ($db->inTransaction()) {
-    $db->rollBack();
-  }
-  error_log("Server error: $e");
-  http_response_code(500);
-  sendResponse('Server error');
-} catch (Throwable $e) {
-  if ($db->inTransaction()) {
-    $db->rollBack();
-  }
-  error_log("Login error: $e");
-  http_response_code(500);
-  sendResponse('Server error');
+if ($method === 'POST') {
+  requireCsrf();
+  $payload = json_decode(file_get_contents('php://input'), true) ?? [];
+  $action = $payload['action'] ?? $action;
 }
 
-function fetchAspirants(Database $db)
-{
-  $sql = 'SELECT
-            p.*,
-            c.chapter_name
-          FROM people AS p
-          LEFT JOIN chapters AS c
-            ON p.chapter_id = c.chapter_id
-          INNER JOIN aspirants AS a
-            ON p.person_id = a.person_id';
-  $aspirants = $db->fetchAll($sql);
+switch ($action) {
+  case 'fetchAspirants':
+    fetchAspirants();
+    break;
 
-  http_response_code(200);
-  sendResponse('Aspirant records fetched', $aspirants);
+  case 'approve':
+    handleApprove();
+    break;
+
+  case 'reject':
+    handleReject();
+    break;
+
+  default:
+    http_response_code(400);
+    sendResponse('Invalid action');
 }
 
-function updateMember(Database $db)
+function fetchAspirants($db = new Database)
 {
+  $conn = $db->getConnection();
+  $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+  $limit = 5;
+  $offset = ($currentPage - 1) * $limit;
+
+  try {
+    $countSql = 'SELECT COUNT(*) AS total
+                FROM people AS p
+                INNER JOIN aspirants AS a
+                  ON p.person_id = a.person_id';
+    $totalMyDonations = $db->fetchOne($countSql);
+    $totalRows = $totalMyDonations['total'] ?? 0;
+    $totalPages = ceil($totalRows / $limit);
+
+    $sql = 'SELECT
+              p.*,
+              c.chapter_name
+            FROM people AS p
+            LEFT JOIN chapters AS c
+              ON p.chapter_id = c.chapter_id
+            INNER JOIN aspirants AS a
+              ON p.person_id = a.person_id
+            LIMIT ? OFFSET ?';
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(2, (int)$offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    $aspirants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($aspirants as &$aspirant) {
+      $dateOfBirth = new DateTime($aspirant['date_of_birth']);
+      $dateJoined = new DateTime($aspirant['date_joined']);
+      $createdAt = new DateTime($aspirant['created_at']);
+      $updatedAt = new DateTime($aspirant['updated_at']);
+
+      $aspirant['date_of_birth'] = $dateOfBirth->format('M j, Y');
+      $aspirant['date_joined'] = $dateJoined->format('M j, Y');
+      $aspirant['created_at'] = $createdAt->format('M j, Y');
+      $aspirant['updated_at'] = $updatedAt->format('M j, Y');
+
+      $aspirant['middle_name'] = $aspirant['middle_name'] ?? '';
+      $aspirant['sponsor'] = $aspirant['sponsor'] ?? '';
+      $aspirant['other_club_affiliation'] = $aspirant['other_club_affiliation'] ?? '';
+    }
+    unset($aspirant);
+
+    sendResponse('Aspirants list fetched', [
+      'aspirants_list' => $aspirants,
+      'pagination' => [
+        'current_page' => $currentPage,
+        'total_pages' => (int)$totalPages,
+        'total_records' => (int)$totalRows
+      ]
+    ], 'success');
+  } catch (\Throwable $e) {
+    //throw $th;
+  }
+
+
   http_response_code(200);
-  sendResponse('Member updated successfully');
+  sendResponse('Aspirant records fetched', $aspirants, 'success');
 }
 
-function deleteMember(Database $db, $input, $userId)
+function handleApprove($db = new Database)
 {
-  $personId = $input['person_id'] ?? null;
-  $inputPassword = $input['password'] ?? null;
+  $payload = json_decode(file_get_contents('php://input'), true) ?? [];
+  $personId = $payload['person_id'] ?? null;
+  $inputPassword = $payload['password'] ?? null;
+  $userId = $_SESSION['user_id'] ?? null;
 
-  if (!$personId || !$inputPassword || !$userId) {
-    http_response_code(422);
-    sendResponse($personId);
-    return;
+  if (!$personId) {
+    // http_response_code(422);
+    sendResponse('Missing aspirant ID');
   }
 
-  $sql = 'SELECT password FROM users WHERE user_id = :user_id';
-  $user = $db->fetchOne($sql, ['user_id' => $userId]);
-
-  if (!password_verify($inputPassword, $user['password'])) {
-    http_response_code(401);
-    sendResponse('Incorrect password');
-    return;
+  if (!$inputPassword) {
+    sendResponse('Password is required');
   }
 
-  $db->beginTransaction();
+  try {
+    $user = $db->fetchOne('SELECT password FROM users WHERE user_id = ?', [$userId]);
+    if (!password_verify($inputPassword, $user['password'])) {
+      // http_response_code(401);
+      sendResponse('Incorrect password');
+      return;
+    }
 
-  $sql = 'DELETE FROM people WHERE person_id = :person_id';
-  $stmt = $db->execute($sql, ['person_id' => $personId]);
+    $db->beginTransaction();
 
-  if (!$stmt) {
-    $db->rollBack();
-    sendResponse('error', 'An error has occured. Please try again later');
+    $sql = 'SELECT first_name, last_name, email FROM people WHERE person_id = ?
+            LIMIT 1';
+    $aspirant = $db->fetchOne($sql, [$personId]);
+
+    if (!$aspirant) {
+      sendResponse('Aspirant not found');
+    }
+
+    $recipientName = $aspirant['first_name'] . ' ' . $aspirant['last_name'];
+    $recipientEmail = $aspirant['email'];
+
+    $db->execute(
+      'INSERT INTO official_members (person_id) VALUES (?)',
+      [$personId]
+    );
+
+    $db->execute('DELETE FROM aspirants WHERE person_id = ?', [$personId]);
+
+    $db->execute(
+      'UPDATE users SET role_id = 4 WHERE person_id = ?',
+      [$personId]
+    );
+
+    $db->commit();
+
+    require __DIR__ . '/send_email.php';
+
+    sendResponse('Aspirant successfully approved', [], 'success');
+  } catch (\Throwable $e) {
+    error_log("Error approving aspirant $e");
+    sendResponse('Failed to approve aspirant');
+  }
+}
+
+function handleReject($db = new Database)
+{
+  $payload = json_decode(file_get_contents('php://input'), true) ?? [];
+  $personId = $payload['person_id'] ?? null;
+  $inputPassword = $payload['password'] ?? null;
+  $userId = $_SESSION['user_id'] ?? null;
+
+  if (!$personId) {
+    // http_response_code(422);
+    sendResponse('Missing aspirant ID');
   }
 
-  $db->commit();
+  if (!$inputPassword) {
+    sendResponse('Password is required');
+  }
 
-  http_response_code(200);
-  sendResponse('Member successfully deleted');
+  try {
+    $user = $db->fetchOne('SELECT password FROM users WHERE user_id = ?', [$userId]);
+    if (!password_verify($inputPassword, $user['password'])) {
+      // http_response_code(401);
+      sendResponse('Incorrect password');
+      return;
+    }
+
+    $db->execute('DELETE FROM people WHERE person_id = ?', [$personId]);
+
+    sendResponse('Aspirant successfully deleted', [], 'success');
+  } catch (\Throwable $e) {
+    error_log("Error rejecting aspirant $e");
+    sendResponse('Failed to reject aspirant');
+  }
 }

@@ -30,16 +30,19 @@ switch ($action) {
 
 function fetchUserAccounts(Database $db)
 {
-  $limit = 10;
+  $conn = $db->getConnection();
   $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+  $limit = 5;
   $offset = ($currentPage - 1) * $limit;
 
   try {
-    $totalUsers = $db->fetchOne('SELECT COUNT(*) as total FROM users');
+    $totalUsers = $db->fetchOne(
+      'SELECT COUNT(*) as total FROM users WHERE users.role_id != 1'
+    );
     $totalRows = $totalUsers['total'] ?? 0;
     $totalPages = ceil($totalRows / $limit);
 
-    $sql = "SELECT
+    $sql = 'SELECT
               p.first_name,
               p.last_name,
               u.username,
@@ -51,8 +54,14 @@ function fetchUserAccounts(Database $db)
             LEFT JOIN users AS u
               ON p.person_id = u.person_id
             WHERE u.role_id != 1
-            LIMIT $limit OFFSET $offset";
-    $userAccounts = $db->fetchAll($sql);
+            LIMIT ? OFFSET ?';
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(2, (int)$offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    $userAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $roleMap = [
       1 => 'Super Admin',
@@ -68,11 +77,20 @@ function fetchUserAccounts(Database $db)
       return $user;
     }, $userAccounts);
 
+    foreach ($userAccounts as &$account) {
+      $updatedAt = new DateTime($account['updated_at']);
+      $account['updated_at'] = $updatedAt->format('M j, Y');
+    }
+    unset($account);
+
     sendResponse('Records successfully fetched', [
       'user_accounts' => $userAccounts,
-      'total_pages' => (int)$totalPages,
-      'current_page' => (int)$currentPage
-    ]);
+      'pagination' => [
+        'current_page' => $currentPage,
+        'total_pages' => (int)$totalPages,
+        'total_records' => (int)$totalRows
+      ]
+    ], 'success');
   } catch (PDOException $e) {
     error_log("Server error: $e");
     http_response_code(500);
@@ -142,7 +160,7 @@ function updateUserAccount(Database $db)
     $stmt = $db->execute($sql, $params);
 
     if ($stmt->rowCount() > 0) {
-      sendResponse('User updated successfully');
+      sendResponse('User updated successfully', [], 'success');
     } else {
       $check = $db->fetchOne(
         'SELECT user_id FROM users WHERE user_id = ?',
@@ -180,7 +198,7 @@ function disableUserAccount(Database $db)
     if (!$db->execute($sql, [$userId])) {
       sendResponse('Error disabling user account', [], 'error');
     }
-    sendResponse('User account disabled');
+    sendResponse('User account disabled', [], 'success');
   } catch (Throwable $e) {
     error_log("Error disabling user account: $e");
   }

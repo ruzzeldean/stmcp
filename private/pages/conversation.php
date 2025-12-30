@@ -16,8 +16,8 @@ $sql = 'SELECT
         FROM users AS u
         INNER JOIN people AS p
           ON u.person_id = p.person_id
-        WHERE user_id = :user_id LIMIT 1';
-$user = $db->fetchOne($sql, ['user_id' => $contactID]);
+        WHERE user_id = ? LIMIT 1';
+$user = $db->fetchOne($sql, [$contactID]);
 
 $firstName = $user['first_name'];
 $lastName = $user['last_name'];
@@ -83,7 +83,7 @@ $lastName = $user['last_name'];
 
             <div class="card-footer bg-transparent p-2">
               <div id="image-preview-wrapper" class="d-none mb-2">
-                <img id="image-preview" class="rounded" src="">
+                <img id="img-preview-before-sending" class="rounded" src="">
                 <button id="remove-image-btn" class="btn btn-secondary btn-sm ">
                   <i class="fa-solid fa-xmark"></i>
                 </button>

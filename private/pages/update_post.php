@@ -94,7 +94,7 @@ try {
                   <label class="form-label" for="image">Image <span class="asterisk">*</span></label>
                   <input class="form-control" type="file" id="image" name="image" accept="image/jpg, image/jpeg, image/png" required>
                   <div class="invalid-feedback"></div>
-                  <img id="image-preview" class="img-fluid rounded mt-3" src="../storage/uploads/posts/<?= e($post['image_path']) ?>" alt="Image Preview">
+                  <img id="image-preview" class="img-fluid rounded mt-3" src="../../public/assets/<?= e($post['image_path']) ?>" alt="Image Preview">
                 </div>
 
                 <div class="form-group mb-3">

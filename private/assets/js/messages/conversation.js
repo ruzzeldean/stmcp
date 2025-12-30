@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const imageInput = document.getElementById('image-input');
   const uploadBtn = document.getElementById('upload-image');
   const previewWrapper = document.getElementById('image-preview-wrapper');
-  const previewImage = document.getElementById('image-preview');
+  const previewImage = document.getElementById('img-preview-before-sending');
   const removeImageBtn = document.getElementById('remove-image-btn');
 
   // Initial UI Setup

@@ -52,10 +52,18 @@ requireAdmin();
                   <tbody id="table-body"></tbody>
                 </table>
               </div>
-              <nav>
-                <ul class="pagination pagination-sm justify-content-center
-                mt-3 mb-0 mt-md-0 mb-md-2" id="paginationControls"></ul>
-              </nav>
+              <div class="row row-gap-2">
+                <div class="col-md-6 order-md-last">
+                  <nav class="">
+                    <ul id="pagination-controls"
+                      class="pagination pagination-sm justify-content-center justify-content-md-end mb-0 mt-3 mt-lg-0"></ul>
+                  </nav>
+                </div>
+
+                <div id="pagination-info"
+                  class="col-md-6 d-flex align-items-center justify-content-center justify-content-md-start">
+                </div>
+              </div>
             </div>
           </div>
         </div>

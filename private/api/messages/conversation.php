@@ -7,7 +7,7 @@ $rawInput = file_get_contents('php://input');
 $requestData = json_decode($rawInput);
 
 if (!$requestData) {
-  sendResponse('Invalid JSON input', [], 'error');
+  sendResponse('Invalid JSON input', []);
 }
 
 $db = new Database();
@@ -47,7 +47,7 @@ switch ($action) {
     $recipient = $db->fetchOne($sql, ['user_id' => $receiverID]);
 
     if (!$recipient) {
-      sendResponse('User not found', [], 'error');
+      sendResponse('User not found');
     }
 
     $senderID = $_SESSION['user_id'];
@@ -66,7 +66,7 @@ switch ($action) {
     $insertSql = 'INSERT INTO messages (conversation_id, sender_id, receiver_id, message, image) VALUES (:conversation_id, :sender_id, :receiver_id, :message, :image)';
 
     if (!$db->execute($insertSql, $messageData)) {
-      sendResponse('Failed to send message', [], 'error');
+      sendResponse('Failed to send message');
     }
 
     sendResponse('Message sent successfully', [], 'success');
@@ -77,7 +77,7 @@ switch ($action) {
     $lastMessageID = (int) ($requestData->payload->lastMessageID ?? 0);
 
     if (!$receiverID) {
-      sendResponse('Missing user ID', [], 'error');
+      sendResponse('Missing user ID');
     }
 
     $senderID = $_SESSION['user_id'];
@@ -97,5 +97,5 @@ switch ($action) {
     break;
 
   default:
-    sendResponse('Unknown action', [], 'error');
+    sendResponse('Unknown action');
 }

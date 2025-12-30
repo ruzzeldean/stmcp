@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ . '/error_logging.php';
+include __DIR__ . '/../vendor/autoload.php';
+
+use Dotenv\Dotenv;
 
 class Database
 {
@@ -7,18 +10,23 @@ class Database
 
   public function __construct()
   {
+    if (!isset($_ENV['DB_HOST'])) {
+      $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+      $dotenv->load();
+    }
+
     $this->conn = $this->connect();
   }
 
   private function connect()
   {
-    $config = parse_ini_file(__DIR__ . '/../config.ini', true);
-    $dbHost = $config['database']['host'];
-    $dbName = $config['database']['database'];
-    $dbUsername = $config['database']['username'];
-    $dbPassword = $config['database']['password'];
+    $dbHost = $_ENV['DB_HOST'];
+    $dbName = $_ENV['DB_NAME'];
+    $dbUsername = $_ENV['DB_USER'];
+    $dbPassword = $_ENV['DB_PASS'];
+    $dbPort = $_ENV['DB_PORT'];
 
-    $dsn = "mysql:host=" . $dbHost . ";dbname=" . $dbName . ";charset=utf8mb4";
+    $dsn = "mysql:host={$dbHost};dbname={$dbName};port={$dbPort};charset=utf8mb4";
 
     try {
       $conn = new PDO($dsn, $dbUsername, $dbPassword);

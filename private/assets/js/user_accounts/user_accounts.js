@@ -1,24 +1,177 @@
 'use strict';
 
-const tableBody = document.getElementById('table-body');
+const state = { currentPage: 1, limit: 5 };
 
-/**
- * Generates an array of page numbers with ellipsis.
- * @param {number} current - Current active page
- * @param {number} last - Total number of pages
- * @returns {Array} List of page numbers and '...' strings
- */
-const getPaginationRange = (current, last) => {
-  const delta = 1; // Number of pages to show before and after current
-  const left = current - delta;
-  const right = current + delta + 1;
+const elements = {
+  tableBody: document.getElementById('table-body'),
+  paginationControl: document.getElementById('pagination-controls'),
+  paginationInfo: document.getElementById('pagination-info'),
+  activePage: document.querySelector('.app-main')?.dataset.activePage,
+  csrfToken: document.querySelector('.app-main')?.dataset.csrfToken,
+};
+
+async function fetchUserAccounts(page = 1) {
+  if (!Number.isInteger(page) || page < 1) return;
+  state.currentPage = page;
+
+  const apiBackendUrl = `../api/user_accounts/user_accounts.php?page=${page}`;
+
+  try {
+    const response = await fetch(apiBackendUrl, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Fetching user accounts failed');
+    }
+
+    if (result.status !== 'success') {
+      Swal.fire('', result.message, result.status);
+      return;
+    }
+
+    renderTable(result.data.user_accounts);
+    renderPagination(
+      result.data.pagination.total_pages,
+      result.data.pagination.current_page
+    );
+    renderPaginationInfo(result.data.pagination);
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error', error.message, 'error');
+  }
+}
+
+function renderTable(users) {
+  if (!elements.tableBody) return;
+
+  if (!Array.isArray(users) || users.length === 0) {
+    elements.tableBody.innerHTML = `
+      <tr>
+        <td colspan="100%" class="text-md-center text-muted">
+          No user data found
+        </td>
+      </tr>`;
+    return;
+  }
+
+  elements.tableBody.innerHTML = users
+    .map((user) => {
+      const firstName = user.first_name ?? '';
+      const lastName = user.last_name ?? '';
+      const username = user.username ?? '';
+      const role = user.role_name ?? '';
+      const rawStatus = user.status ?? '';
+      const updatedAt = user.updated_at ?? '';
+
+      const statusConfig = {
+        Active: { class: 'text-bg-success', label: 'Active' },
+        Disabled: { class: 'text-bg-secondary', label: 'Disabled' },
+      };
+
+      const status = statusConfig[String(rawStatus)] || {
+        class: 'text-bg-info',
+        label: String(rawStatus || 'Unknown'),
+      };
+
+      return `
+      <tr>
+        <td>${escapeHtml(firstName)}</td>
+        <td>${escapeHtml(lastName)}</td>
+        <td>${escapeHtml(username)}</td>
+        <td>${escapeHtml(role)}</td>
+        <td>
+          <span class="badge rounded-pill ${status.class}">
+            ${escapeHtml(status.label)}
+          </span>
+        </td>
+        <td>${escapeHtml(updatedAt)}</td>
+        <td>
+          <a class="btn btn-sm btn-primary" title="Update"
+          href="update_user_account.php?id=${encodeURIComponent(user.user_id)}">
+            Update
+          </a>
+        </td>
+      </tr>`;
+    })
+    .join('');
+}
+
+function renderPagination(totalPages, currentPage) {
+  if (!elements.paginationControl) return;
+
+  if (totalPages <= 1) {
+    elements.paginationControl.innerHTML = '';
+    return;
+  }
+
+  const pages = getPaginationRange(currentPage, totalPages);
+  let html = '';
+
+  html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+    <button class="page-link" data-page="${Math.max(1, currentPage - 1)}">
+      &lsaquo;
+    </button>
+  </li>`;
+
+  pages.forEach((page) => {
+    if (page === '...') {
+      html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+    } else {
+      html += `<li class="page-item ${
+        currentPage === page ? 'active disabled' : ''
+      }">
+        <button class="page-link" data-page="${page}">${page}</button>
+      </li>`;
+    }
+  });
+
+  html += `
+    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+      <button class="page-link" data-page="${Math.min(
+        totalPages,
+        currentPage + 1
+      )}">
+        &rsaquo;
+      </button>
+    </li>
+  `;
+
+  elements.paginationControl.innerHTML = html;
+}
+
+if (elements.paginationControl) {
+  elements.paginationControl.addEventListener('click', (e) => {
+    const item = e.target.closest('.page-item');
+    if (!item || item.classList.contains('disabled')) return;
+
+    const btn = item.querySelector('button[data-page]');
+    if (!btn) return;
+
+    const page = Number(btn.dataset.page);
+    if (!Number.isInteger(page) || page < 1) return;
+
+    fetchUserAccounts(page);
+  });
+}
+
+function getPaginationRange(current, last) {
+  const delta = 1;
   const range = [];
-  const rangeWithDots = [];
+  const rangeWithEllipsis = [];
   let l;
 
   for (let i = 1; i <= last; i++) {
-    // Always include first, last, and pages within the delta range
-    if (i === 1 || i === last || (i >= left && i < right)) {
+    if (
+      i === 1 ||
+      i === last ||
+      (i >= current - delta && i <= current + delta)
+    ) {
       range.push(i);
     }
   }
@@ -26,121 +179,46 @@ const getPaginationRange = (current, last) => {
   for (const i of range) {
     if (l) {
       if (i - l === 2) {
-        rangeWithDots.push(l + 1);
+        rangeWithEllipsis.push(l + 1);
       } else if (i - l !== 1) {
-        rangeWithDots.push('...');
+        rangeWithEllipsis.push('...');
       }
     }
-    rangeWithDots.push(i);
+    rangeWithEllipsis.push(i);
     l = i;
   }
 
-  return rangeWithDots;
-};
+  return rangeWithEllipsis;
+}
 
-/**
- * Fetches data from PHP and renders the table and pagination.
- * @param {Event|null} event - The click event (if applicable)
- * @param {number} page - The page number to load
- */
-async function loadTableData(event, page = 1) {
-  // Check if event exists and is an actual Event object before calling preventDefault
-  if (event && typeof event.preventDefault === 'function') {
-    event.preventDefault();
+function renderPaginationInfo(pagination) {
+  if (!elements.paginationInfo) return;
+
+  const { current_page, total_pages } = pagination;
+
+  if (total_pages === 0) {
+    elements.paginationInfo.innerHTML = '';
+    return;
   }
 
-  try {
-    const response = await fetch(
-      `../api/user_accounts/user_accounts.php?page=${page}`
-    );
-    const result = await response.json();
-
-    if (result.status === 'success') {
-      renderTable(result.data.user_accounts);
-      renderPagination(result.data.total_pages, result.data.current_page);
-    }
-  } catch (error) {
-    console.error('Error loading data:', error);
-  }
-}
-
-function renderTable(users) {
-  tableBody.innerHTML = users
-    .map((user) => {
-      const btnColor = user.status === 'Active' ? 'success' : 'secondary';
-
-      return `
-          <tr>
-            <td>${user.first_name}</td>
-            <td>${user.last_name}</td>
-            <td>${user.username}</td>
-            <td>${user.role_name}</td>
-            <td>${user.status}</td>
-            <td>${user.updated_at}</td>
-            <td>
-              <a class="btn btn-primary" href="update_user_account.php?id=${user.user_id}" title="Update">
-                <i class="fa-solid fa-user-pen"></i>
-              </a>
-              <button class="btn btn-secondary" data-user-id="${user.user_id}" title="Disable">
-                <i class="fa-solid fa-user-slash"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-    })
-    .join('');
-}
-
-function renderPagination(totalPages, currentPage) {
-  const nav = document.getElementById('paginationControls');
-  const pages = getPaginationRange(currentPage, totalPages);
-
-  let html = '';
-
-  // Previous Button
-  html += `
-    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-      <a class="page-link" href="#" onclick="loadTableData(event, ${
-        currentPage - 1
-      })">&lsaquo;</a>
-    </li>
+  elements.paginationInfo.innerHTML = `
+    <small class="text-muted">
+      Page <strong>${current_page}</strong> of <strong>${total_pages}</strong>
+    </small>
   `;
-
-  // Page Numbers & Ellipsis
-  pages.forEach((page) => {
-    if (page === '...') {
-      html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-    } else {
-      html += `
-        <li class="page-item ${currentPage === page ? 'active' : ''}">
-          <a class="page-link" href="#" onclick="loadTableData(event, ${page})">${page}</a>
-        </li>
-      `;
-    }
-  });
-
-  // Next Button - FIXED: Added 'event' argument here
-  html += `
-    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-      <a class="page-link" href="#" onclick="loadTableData(event, ${
-        currentPage + 1
-      })">&rsaquo;</a>
-    </li>
-  `;
-
-  nav.innerHTML = html;
 }
 
-// Initial load - Pass null for the event since there isn't one on page load
-document.addEventListener('DOMContentLoaded', () => loadTableData(null, 1));
+document.addEventListener('DOMContentLoaded', () => fetchUserAccounts());
 
-tableBody.addEventListener('click', async function (e) {
+elements.tableBody.addEventListener('click', async function (e) {
   const disableBtn = e.target.closest('.btn-secondary');
+  if (!disableBtn) return;
+
   const userId = disableBtn.dataset.userId;
 
   try {
     const response = await fetch('../api/user_accounts/user_accounts.php', {
-      method: 'POST',
+      method: 'user',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -156,8 +234,8 @@ tableBody.addEventListener('click', async function (e) {
       throw new Error('Action failed');
     }
 
-    Toast.fire({ icon: result.status, title: result.message });
-    loadTableData(null, 1);
+    Toast.fire({ icon: result.status, firstName: result.message });
+    fetchUserAccounts();
   } catch (error) {
     console.error(error);
   }

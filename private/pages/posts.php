@@ -16,7 +16,7 @@ requireAdminModerator();
 
     <?php include __DIR__ . '/../partials/aside.php'; ?>
 
-    <main id="posts-main-con" class="app-main">
+    <main id="posts-main-con" class="app-main" data-csrf-token="<?= $csrfToken ?>">
       <div class="app-content-header">
         <div class="container-fluid">
           <div class="row">
@@ -51,15 +51,25 @@ requireAdminModerator();
                   </thead>
                   <tbody id="table-body" data-user-name="<?= e($_SESSION['full_name']) ?>" data-user-role="<?= e($userRole) ?>">
                     <tr>
-                      <td colspan="8" class="w-100 text-center">Loading...</td>
+                      <td colspan="100%" class="text-muted">
+                        Loading...
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <nav>
-                <ul class="pagination pagination-sm justify-content-center
-                mt-3 mb-0 mb-md-2" id="paginationControls"></ul>
-              </nav>
+              <div class="row row-gap-2">
+                <div class="col-md-6 order-md-last">
+                  <nav class="">
+                    <ul id="pagination-controls"
+                      class="pagination pagination-sm justify-content-center justify-content-md-end mb-0 mt-3 mt-lg-0"></ul>
+                  </nav>
+                </div>
+
+                <div id="pagination-info"
+                  class="col-md-6 d-flex align-items-center justify-content-center justify-content-md-start">
+                </div>
+              </div>
             </div>
           </div>
         </div>
